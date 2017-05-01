@@ -18,7 +18,7 @@ namespace Erazer.DAL.Dapper.Repositories
         {
             using (var dbConnection = Connection)
             {
-                const string query = @"SELECT * FROM Tickets
+                const string query = @"SELECT * FROM TicketIV WITH (NOEXPAND)
                                        WHERE Id = @Id";
 
                 dbConnection.Open();
