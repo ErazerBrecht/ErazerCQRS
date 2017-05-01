@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Erazer.DAL.Dapper.Repositories;
+using Erazer.DAL.Dapper.Repositories.Base;
+using MediatR;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +12,8 @@ namespace Erazer.Web
 {
     public class Startup
     {
+        public IConfigurationRoot Configuration { get; }
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -18,12 +24,16 @@ namespace Erazer.Web
             Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
+            services.AddSingleton<IConfiguration>(Configuration);
+
+            services.AddAutoMapper();
+            services.AddMediatR();
+
+            services.AddScoped<ITicketRepository, TicketRepository>();
+
             services.AddMvc();
         }
 

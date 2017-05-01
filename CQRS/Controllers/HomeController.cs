@@ -1,11 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Erazer.Services.Queries.Requests;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Erazer.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly IMediator _mediator;
+
+        public HomeController(IMediator mediator)
         {
+            _mediator = mediator;
+        }
+        public async Task<IActionResult> Index()
+        {
+            var ticket = await _mediator.Send(new TicketQuery {Id = "20d0454a-a13d-46fc-842b-43287b6f1f2e" });
             return View();
         }
 
