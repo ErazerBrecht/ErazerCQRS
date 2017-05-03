@@ -33,6 +33,7 @@ namespace Erazer.Web
             services.AddMediatR();
 
             services.AddScoped<ITicketRepository, TicketRepository>();
+            services.AddScoped<ITicketEventRepository, TicketEventRepository>();
 
             services.AddMvc();
         }

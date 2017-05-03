@@ -23,5 +23,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Erazer.Services\Erazer.Services.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewComponents\" />
+  </ItemGroup>
 
 </Project>

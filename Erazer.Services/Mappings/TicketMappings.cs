@@ -9,6 +9,7 @@ namespace Erazer.Services.Mappings
         public TicketMappings()
         {
             CreateMap<TicketDto, TicketViewModel>();
+            CreateMap<TicketEventDto, TicketEventViewModel>();
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Erazer.DAL.Dapper.Repositories.Base;
-using Erazer.DAL.ReadModel;
 using Erazer.Services.Queries.Requests;
 using Erazer.Services.Queries.ViewModels;
 using MediatR;
@@ -22,7 +21,12 @@ namespace Erazer.Services.Queries.Handler
 
         public async Task<TicketViewModel> Handle(TicketQuery message)
         {
-            var ticket =  await _repository.Find(message.Id);
+            if (!Guid.TryParse(message?.Id, out Guid id))
+            {
+                throw new ArgumentException($"Not a valid ticket id: {message?.Id}", nameof(message));
+            }
+
+            var ticket =  await _repository.Find(id.ToString());
             return _mapper.Map<TicketViewModel>(ticket);
         }
     }

@@ -15,7 +15,9 @@ namespace Erazer.Web.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var ticket = await _mediator.Send(new TicketQuery {Id = "20d0454a-a13d-46fc-842b-43287b6f1f2e" });
+            const string id = "20d0454a-a13d-46fc-842b-43287b6f1f2e";
+            var ticket = await _mediator.Send(new TicketQuery {Id = id });
+            var events = await _mediator.Send(new TicketEventsQuery {Page = 1, TicketId = id});
             return View();
         }
 
