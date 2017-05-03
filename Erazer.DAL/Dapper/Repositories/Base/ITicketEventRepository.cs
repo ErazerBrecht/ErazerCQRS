@@ -6,7 +6,7 @@ namespace Erazer.DAL.Dapper.Repositories.Base
 {
     public interface ITicketEventRepository
     {
-        Task<IList<TicketEventDto>> Find(string ticketId, int offset, int amount);
+        Task<IList<TicketEventDto>> Find(string ticketId);
 
     }
 }

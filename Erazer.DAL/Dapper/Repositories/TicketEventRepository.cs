@@ -16,18 +16,17 @@ namespace Erazer.DAL.Dapper.Repositories
         {
         }
 
-        public async Task<IList<TicketEventDto>> Find(string ticketId, int offset, int amount)
+        public async Task<IList<TicketEventDto>> Find(string ticketId)
         {
             using (var dbConnection = Connection)
             {
                 const string query = @"SELECT * 
                                        FROM TicketEvents                                   
                                        WHERE TicketId = @Id
-                                       ORDER BY Created DESC
-                                       OFFSET @OffSet ROWS FETCH NEXT @Amount ROWS ONLY";
+                                       ORDER BY Created DESC";
 
                 dbConnection.Open();
-                var result = await dbConnection.QueryAsync<TicketEventDto>(query, new { Id = ticketId, OffSet = offset, Amount = amount });
+                var result = await dbConnection.QueryAsync<TicketEventDto>(query, new { Id = ticketId});
                 return result.ToList();
             }
         }

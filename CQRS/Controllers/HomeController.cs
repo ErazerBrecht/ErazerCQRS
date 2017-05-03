@@ -13,12 +13,16 @@ namespace Erazer.Web.Controllers
         {
             _mediator = mediator;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            const string id = "20d0454a-a13d-46fc-842b-43287b6f1f2e";
-            var ticket = await _mediator.Send(new TicketQuery {Id = id });
-            var events = await _mediator.Send(new TicketEventsQuery {Page = 1, TicketId = id});
+            //var ticket = await _mediator.Send(new TicketQuery {Id = id });
+            //var events = await _mediator.Send(new TicketEventsQuery {Page = 1, TicketId = id});
             return View();
+        }
+
+        public IActionResult Ticket(string id = "20d0454a-a13d-46fc-842b-43287b6f1f2e")
+        {
+            return View(model: id);
         }
 
         public IActionResult About()

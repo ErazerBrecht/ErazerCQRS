@@ -21,13 +21,7 @@ namespace Erazer.Services.Queries.Handler
 
         public async Task<List<TicketEventViewModel>> Handle(TicketEventsQuery message)
         {
-            const int rows = 35;      // TODO Config
-
-            if (message.Page > 1)
-                message.Page = 1;
-
-            var offset = (message.Page - 1) * rows;
-            var ticketEvents =  await _repository.Find(message.TicketId, offset, rows);
+            var ticketEvents =  await _repository.Find(message.TicketId);
             return _mapper.Map<List<TicketEventViewModel>>(ticketEvents);
         }
     }

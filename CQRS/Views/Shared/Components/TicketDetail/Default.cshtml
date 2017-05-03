@@ -1,0 +1,16 @@
+﻿@model Erazer.Services.Queries.ViewModels.TicketViewModel
+<div class="vertical-align">
+    <h2>Ticket details</h2>
+    <div style="margin-left: 15px;">
+        <span title="Priority" class="label label-primary">@Model.Priority</span>
+        <span title="Status" class="label label-info">@Model.Status</span>
+    </div>
+</div>
+
+<p>
+    <b>Title:</b> @Model.Title
+</p>
+
+<p>
+    <b>Description:</b> @Model.Description
+</p>

@@ -1,0 +1,68 @@
+﻿@model string
+@{
+    ViewData["Title"] = "Ticket";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        @await Component.InvokeAsync("TicketDetail", new { Id = Model })
+    </div>
+
+    <div class="col-md-6">
+        <h2>Ticket actions TODO</h2>
+        <div class="row">
+            <form class="col-md-10 bottom-space">
+                <div class="row vertical-align">
+                    <div class="col-md-2"><b>Priority:</b></div>
+                    <div class="col-md-3">
+                        <select class="form-control">
+                            <option>TODO</option>
+                            <option>TODO</option>
+                            <option>TODO</option>
+                            <option>TODO</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+
+            <form class="col-md-10">
+                <div class="row vertical-align">
+                    <div class="col-md-2"><b>Status:</b>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control">
+                            <option>TODO</option>
+                            <option>TODO</option>
+                            <option>TODO</option>
+                            <option>TODO</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary col-md-2">Undo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <h2>Ticket comment TODO</h2>
+        <div class="row">
+            <form>
+                <div class="col-md-12">
+                    <b>Comment:</b>
+                </div>
+                <div class="col-md-10 bottom-space">
+                    <textarea class="form-control" rows="3" style="min-width: 100%"></textarea>
+                </div>
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-default">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+    <div class="col-md-12">
+        @await Component.InvokeAsync("TicketEvents", new { Id = Model })    
+    </div>
+
+</div>

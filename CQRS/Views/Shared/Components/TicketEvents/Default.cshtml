@@ -1,0 +1,36 @@
+﻿@using Erazer.DAL.ReadModel.Enums
+@model List<Erazer.Services.Queries.ViewModels.TicketEventViewModel>
+    <h2>Ticket events</h2>
+
+    @foreach (var ticketEvent in Model)
+    {
+        <div class="row">
+            @if (ticketEvent.Type != EventType.Comment)
+            {
+                <div class="col-md-4">
+                    <span>ErazerBrecht made a change - @ticketEvent.Created</span>
+                </div>
+
+                <div class="col-md-2">
+                    <span>Type: @ticketEvent.Type.ToString()</span>
+                </div>
+
+                <div class="col-md-3">
+                    <span>From: @ticketEvent.From</span>
+                </div>
+
+                <div class="col-md-3">
+                    <span>To: @ticketEvent.To</span>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-4">
+                    <span>ErazerBrecht added a comment - @ticketEvent.Created</span>
+                </div>
+
+                <div class="col-md-8">@ticketEvent.To</div>
+            }
+
+        </div>
+    }
