@@ -29,11 +29,14 @@ namespace Erazer.Web
         {
             services.AddSingleton<IConfiguration>(Configuration);
 
+            // TODO Place in seperate file
             services.AddAutoMapper();
             services.AddMediatR();
 
             services.AddScoped<ITicketRepository, TicketRepository>();
             services.AddScoped<ITicketEventRepository, TicketEventRepository>();
+            services.AddScoped<IStatusRepository, StatusRepository>();
+            services.AddScoped<IPriorityRepository, PriorityRepository>();
 
             services.AddMvc();
         }

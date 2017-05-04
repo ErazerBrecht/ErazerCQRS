@@ -1,0 +1,17 @@
+﻿@model List<Erazer.Services.Queries.ViewModels.StatusViewModel>
+
+<form class="col-md-10">
+    <div class="row vertical-align">
+        <div class="col-md-2"><b>Status:</b></div>
+        <div class="col-md-4">
+            <select class="form-control">
+                @foreach (var status in Model)
+                {
+                    <option value="@status.Id">@status.Name</option>
+                }
+            </select>
+        </div>
+        <button type="button" class="btn btn-primary col-md-2">Undo</button>
+    </div>
+</form>
+

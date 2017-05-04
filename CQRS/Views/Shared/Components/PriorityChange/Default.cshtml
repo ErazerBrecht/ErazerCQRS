@@ -1,0 +1,16 @@
+﻿@model List<Erazer.Services.Queries.ViewModels.PriorityViewModel>
+
+<form class="col-md-10 bottom-space">
+    <div class="row vertical-align">
+        <div class="col-md-2"><b>Priority:</b></div>
+        <div class="col-md-4">
+            <select class="form-control">
+                @foreach (var priority in Model)
+                {
+                    <option value="@priority.Id">@priority.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+</form>
+

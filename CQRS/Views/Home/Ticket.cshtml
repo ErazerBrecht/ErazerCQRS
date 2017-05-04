@@ -11,35 +11,8 @@
     <div class="col-md-6">
         <h2>Ticket actions TODO</h2>
         <div class="row">
-            <form class="col-md-10 bottom-space">
-                <div class="row vertical-align">
-                    <div class="col-md-2"><b>Priority:</b></div>
-                    <div class="col-md-3">
-                        <select class="form-control">
-                            <option>TODO</option>
-                            <option>TODO</option>
-                            <option>TODO</option>
-                            <option>TODO</option>
-                        </select>
-                    </div>
-                </div>
-            </form>
-
-            <form class="col-md-10">
-                <div class="row vertical-align">
-                    <div class="col-md-2"><b>Status:</b>
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-control">
-                            <option>TODO</option>
-                            <option>TODO</option>
-                            <option>TODO</option>
-                            <option>TODO</option>
-                        </select>
-                    </div>
-                    <button type="button" class="btn btn-primary col-md-2">Undo</button>
-                </div>
-            </form>
+            @await Component.InvokeAsync("PriorityChange")
+            @await Component.InvokeAsync("StatusChange")
         </div>
     </div>
     
