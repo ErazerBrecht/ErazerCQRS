@@ -15,7 +15,7 @@
             @await Component.InvokeAsync("StatusChange")
         </div>
     </div>
-    
+
     <div class="col-md-6">
         <h2>Ticket comment TODO</h2>
         <div class="row">
@@ -32,10 +32,23 @@
             </form>
         </div>
     </div>
-    
+
 
     <div class="col-md-12">
-        @await Component.InvokeAsync("TicketEvents", new { Id = Model })    
+        @await Component.InvokeAsync("TicketEvents", new { Id = Model })
     </div>
 
 </div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var selectedPriority = $('#ticketPriority').data('priority-id');
+            var selectedStatus = $('#ticketStatus').data('status-id');
+
+            $('#priorityList').val(selectedPriority).change();
+            $('#statusList').val(selectedStatus).change();
+        });
+    </script>
+}

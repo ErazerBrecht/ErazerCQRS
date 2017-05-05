@@ -4,7 +4,7 @@
     <div class="row vertical-align">
         <div class="col-md-2"><b>Priority:</b></div>
         <div class="col-md-4">
-            <select class="form-control">
+            <select class="form-control" id="priorityList">
                 @foreach (var priority in Model)
                 {
                     <option value="@priority.Id">@priority.Name</option>

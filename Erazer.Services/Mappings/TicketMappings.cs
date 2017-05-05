@@ -8,7 +8,12 @@ namespace Erazer.Services.Mappings
     {
         public TicketMappings()
         {
-            CreateMap<TicketDto, TicketViewModel>();
+            CreateMap<TicketDto, TicketViewModel>()
+                .ForMember(vm => vm.Priority,
+                    opt => opt.MapFrom(dto => new PriorityViewModel {Id = dto.PriorityId, Name = dto.PriorityName}))
+                .ForMember(vm => vm.Status,
+                    opt => opt.MapFrom(dto => new StatusViewModel {Id = dto.StatusId, Name = dto.StatusName}));
+
             CreateMap<TicketEventDto, TicketEventViewModel>();
         }
     }
