@@ -1,18 +1,17 @@
 ﻿using System;
 using Erazer.Domain.Constants.Enums;
 
-namespace Erazer.Services.Queries.ViewModels
+namespace Erazer.Services.Queries.DTOs
 {
-    public class TicketEventViewModel
+    public class TicketEventDto
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
+        public Guid TicketId { get; set; }
         public DateTime Created { get; set; }
-
-        public string UserName { get; set; }
+        public Guid UserId { get; set; }
 
         public string From { get; set; }
         public string To { get; set; }
         public EventType Type { get; set; }
-
     }
 }

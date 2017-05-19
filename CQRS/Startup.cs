@@ -1,9 +1,16 @@
 ﻿using AutoMapper;
-using Erazer.DAL.Dapper.Repositories;
-using Erazer.DAL.Dapper.Repositories.Base;
+using Erazer.DAL.Dapper.AggregateRepositories;
+using Erazer.DAL.Dapper.QueryRepositories;
+using Erazer.DAL.EF;
+using Erazer.DAL.EF.Repositories;
+using Erazer.Domain;
+using Erazer.Domain.Aggregates.Repositories;
+using Erazer.Services.Events.Repositories;
+using Erazer.Services.Queries.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -29,14 +36,25 @@ namespace Erazer.Web
         {
             services.AddSingleton<IConfiguration>(Configuration);
 
+            // Add EF
+            services.AddDbContext<ErazerEventContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Erazer.Database")));
+
             // TODO Place in seperate file
             services.AddAutoMapper();
             services.AddMediatR();
 
-            services.AddScoped<ITicketRepository, TicketRepository>();
-            services.AddScoped<ITicketEventRepository, TicketEventRepository>();
-            services.AddScoped<IStatusRepository, StatusRepository>();
-            services.AddScoped<IPriorityRepository, PriorityRepository>();
+            // Query repositories
+            services.AddScoped<ITicketQueryRepository, TicketQueryRepository>();
+            services.AddScoped<ITicketEventQueryRepository, TicketEventQueryRepository>();
+            services.AddScoped<IStatusQueryRepository, StatusQueryRepository>();
+            services.AddScoped<IPriorityQueryRepository, PriorityQueryRepository>();
+
+            // Aggregate repositories
+            services.AddScoped<IAggregateRepository<Ticket>, TicketAggregrateRepository>();
+
+            // Event repositories
+            services.AddScoped<ITicketCommentEventRepository, TicketCommentEventRepository>();
+
 
             services.AddMvc();
         }

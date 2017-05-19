@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Erazer.DAL.ReadModel;
+using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Requests;
 using MediatR;
 

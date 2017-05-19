@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Erazer.DAL.Dapper.Repositories.Base;
+using Erazer.Services.Queries.Repositories;
 using Erazer.Services.Queries.Requests;
 using Erazer.Services.Queries.ViewModels;
 using MediatR;
@@ -11,10 +10,10 @@ namespace Erazer.Services.Queries.Handler
 {
     public class StatusAllQueryHandler : IAsyncRequestHandler<StatusAllQuery, List<StatusViewModel>>
     {
-        private readonly IStatusRepository _repository;
+        private readonly IStatusQueryRepository _repository;
         private readonly IMapper _mapper;
 
-        public StatusAllQueryHandler(IStatusRepository repository, IMapper mapper)
+        public StatusAllQueryHandler(IStatusQueryRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;

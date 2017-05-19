@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Erazer.DAL.ReadModel;
+using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.ViewModels;
 
 namespace Erazer.Services.Mappings

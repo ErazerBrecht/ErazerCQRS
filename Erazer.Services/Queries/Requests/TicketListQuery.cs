@@ -1,4 +1,4 @@
-﻿using Erazer.DAL.ReadModel;
+﻿using Erazer.Services.Queries.DTOs;
 using MediatR;
 
 namespace Erazer.Services.Queries.Requests

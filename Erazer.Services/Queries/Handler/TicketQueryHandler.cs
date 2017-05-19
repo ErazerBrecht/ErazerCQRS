@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using Erazer.DAL.Dapper.Repositories.Base;
+using Erazer.Services.Queries.Repositories;
 using Erazer.Services.Queries.Requests;
 using Erazer.Services.Queries.ViewModels;
 using MediatR;
@@ -10,10 +10,10 @@ namespace Erazer.Services.Queries.Handler
 {
     public class TicketQueryHandler : IAsyncRequestHandler<TicketQuery, TicketViewModel>
     {
-        private readonly ITicketRepository _repository;
+        private readonly ITicketQueryRepository _repository;
         private readonly IMapper _mapper;
 
-        public TicketQueryHandler(ITicketRepository repository, IMapper mapper)
+        public TicketQueryHandler(ITicketQueryRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;

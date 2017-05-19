@@ -19,12 +19,13 @@
     <div class="col-md-6">
         <h2>Ticket comment TODO</h2>
         <div class="row">
-            <form>
+            <form asp-action="AddComment">
                 <div class="col-md-12">
                     <b>Comment:</b>
                 </div>
                 <div class="col-md-10 bottom-space">
-                    <textarea class="form-control" rows="3" style="min-width: 100%"></textarea>
+                    <input type="hidden" name="TicketId" value="@Model" />
+                    <textarea name="Comment" class="form-control" rows="3" style="min-width: 100%"></textarea>
                 </div>
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-default">Save</button>
