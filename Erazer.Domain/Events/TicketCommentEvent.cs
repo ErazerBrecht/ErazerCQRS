@@ -1,4 +1,5 @@
 ﻿using System;
+using Erazer.Framework.Events;
 
 namespace Erazer.Domain.Events
 {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Erazer.Domain.Aggregates.Repositories
+namespace Erazer.Framework.Domain
 {
     public interface IAggregateRepository<T> where T : AggregateRoot
     {

@@ -4,7 +4,7 @@ using Erazer.DAL.Dapper.QueryRepositories;
 using Erazer.DAL.EF;
 using Erazer.DAL.EF.Repositories;
 using Erazer.Domain;
-using Erazer.Domain.Aggregates.Repositories;
+using Erazer.Framework.Domain;
 using Erazer.Services.Events.Repositories;
 using Erazer.Services.Queries.Repositories;
 using MediatR;

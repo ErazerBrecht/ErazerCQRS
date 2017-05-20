@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Erazer.Domain;
-using Erazer.Domain.Aggregates.Repositories;
 using Erazer.Domain.Events;
 using Erazer.Services.Commands.Requests;
 using Erazer.Services.Events.Entities;

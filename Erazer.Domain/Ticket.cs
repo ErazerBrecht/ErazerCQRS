@@ -1,7 +1,7 @@
 ﻿using System;
 using Erazer.DAL.Constants;
-using Erazer.Domain.Aggregates;
 using Erazer.Domain.Events;
+using Erazer.Framework.Domain;
 
 namespace Erazer.Domain
 {

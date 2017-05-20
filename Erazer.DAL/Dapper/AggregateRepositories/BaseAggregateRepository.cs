@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Erazer.DAL.Dapper.Repositories.Base;
-using Erazer.Domain.Aggregates;
-using Erazer.Domain.Aggregates.Repositories;
+using Erazer.Framework.Domain;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 

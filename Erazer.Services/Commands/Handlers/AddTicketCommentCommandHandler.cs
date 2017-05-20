@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Erazer.Domain;
-using Erazer.Domain.Aggregates.Repositories;
+using Erazer.Framework.Domain;
 using Erazer.Services.Commands.Requests;
 using MediatR;
 

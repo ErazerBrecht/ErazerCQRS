@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Erazer.Domain.Events;
+using Erazer.Framework.Events;
 
-namespace Erazer.Domain.Aggregates
+namespace Erazer.Framework.Domain
 {
     public abstract class AggregateRoot
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using MediatR;
 
-namespace Erazer.Domain.Events
+namespace Erazer.Framework.Events
 {
     public interface IEvent : IRequest
     {
