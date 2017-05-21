@@ -10,8 +10,9 @@ namespace Erazer.Services.Queries.DTOs
         public DateTime Created { get; set; }
         public Guid UserId { get; set; }
 
+        public EventType Type { get; set; }
         public string From { get; set; }
         public string To { get; set; }
-        public EventType Type { get; set; }
+
     }
 }

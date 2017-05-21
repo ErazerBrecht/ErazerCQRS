@@ -2,15 +2,16 @@
 using System.Threading.Tasks;
 using Dapper;
 using Erazer.Domain;
-using Erazer.Services.Queries.DTOs;
 using MediatR;
 using Microsoft.Extensions.Configuration;
+using Erazer.Framework.Domain.Repositories;
+using Erazer.Framework.Events;
 
 namespace Erazer.DAL.Dapper.AggregateRepositories
 {
-    public class TicketAggregrateRepository : BaseAggregateRepository<Ticket>
+    public class TicketAggregrateRepository : BaseAggregateRepository<Ticket>, IAggregateRepository<Ticket>
     {
-        public TicketAggregrateRepository(IMediator mediator, IConfiguration configuration) : base(mediator, configuration)
+        public TicketAggregrateRepository(IMediator mediator, IConfiguration configuration, IEventRepository eventRepository) : base(mediator, configuration, eventRepository)
         {
         }
 

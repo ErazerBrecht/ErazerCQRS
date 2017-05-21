@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Erazer.DAL.Dapper.Repositories.Base;
+using Erazer.DAL.Dapper.Base;
 using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Repositories;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +20,7 @@ namespace Erazer.DAL.Dapper.QueryRepositories
             using (var dbConnection = Connection)
             {
                 const string query = @"SELECT * 
-                                       FROM TicketEvents                                   
+                                       FROM [TicketEventsView]                                   
                                        WHERE TicketId = @Id
                                        ORDER BY Created DESC";
 

@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Erazer.DAL.Dapper.Repositories.Base;
+using Erazer.DAL.Dapper.Base;
 using Erazer.Framework.Domain;
+using Erazer.Framework.Domain.Repositories;
+using Erazer.Framework.Events;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 
@@ -9,10 +11,12 @@ namespace Erazer.DAL.Dapper.AggregateRepositories
     public abstract class BaseAggregateRepository<T> : BaseRepository, IAggregateRepository<T> where T : AggregateRoot
     {
         private readonly IMediator _mediator;
+        private readonly IEventRepository _eventRepository;
 
-        protected BaseAggregateRepository(IMediator mediator, IConfiguration configuration) : base(configuration)
+        protected BaseAggregateRepository(IMediator mediator, IConfiguration configuration, IEventRepository eventRepository) : base(configuration)
         {
             _mediator = mediator;
+            _eventRepository = eventRepository;
         }
 
         public abstract Task<T> Get(string aggregateId);
@@ -21,8 +25,10 @@ namespace Erazer.DAL.Dapper.AggregateRepositories
         {
             foreach (var @event in aggregate.FlushChanges())
             {
-               await _mediator.Send(@event);
+                _eventRepository.AddEvent(@event);
+                await _mediator.Send(@event);
             }
+            await _eventRepository.Commit();
         }
     }
 }

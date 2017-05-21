@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Erazer.Domain.Constants.Enums;
 
-namespace Erazer.Services.Events.Entities
+namespace Erazer.DAL.EF.Entities
 {
-    public class TicketCommentEventEntity : IEventEntity
+    public class TicketEventEntity
     {
         public Guid Id { get; set; }
         public DateTime Created { get; set; }
@@ -14,7 +15,7 @@ namespace Erazer.Services.Events.Entities
         [Required]
         public Guid UserId { get; set; }
 
-        [Required]
-        public string Comment { get; set; }
+        public EventType Type { get; set; }
+        public TicketCommentEventEntity CommentEvent { get; set; }
     }
 }

@@ -4,8 +4,8 @@ using Erazer.DAL.Dapper.QueryRepositories;
 using Erazer.DAL.EF;
 using Erazer.DAL.EF.Repositories;
 using Erazer.Domain;
-using Erazer.Framework.Domain;
-using Erazer.Services.Events.Repositories;
+using Erazer.Framework.Domain.Repositories;
+using Erazer.Framework.Events;
 using Erazer.Services.Queries.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -53,7 +53,7 @@ namespace Erazer.Web
             services.AddScoped<IAggregateRepository<Ticket>, TicketAggregrateRepository>();
 
             // Event repositories
-            services.AddScoped<ITicketCommentEventRepository, TicketCommentEventRepository>();
+            services.AddScoped<IEventRepository, EventRepository>();
 
 
             services.AddMvc();

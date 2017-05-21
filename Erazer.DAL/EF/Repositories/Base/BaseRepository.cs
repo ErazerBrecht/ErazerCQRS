@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Erazer.Services.Events.Entities;
-using Erazer.Services.Events.Repositories;
 
 namespace Erazer.DAL.EF.Repositories.Base
 {
-    public abstract class BaseRepository<T> : IBaseEventRepository<T> where T : class, IEventEntity 
+    public abstract class BaseRepository<T> where T : class 
     {
         protected ErazerEventContext Context;
 
