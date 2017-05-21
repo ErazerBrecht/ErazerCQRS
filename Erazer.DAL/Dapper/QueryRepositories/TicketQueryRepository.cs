@@ -32,5 +32,16 @@ namespace Erazer.DAL.Dapper.QueryRepositories
         {
             throw new NotImplementedException();
         }
+
+        public async Task Update(TicketDto ticket)
+        {
+            using (var dbConnection = Connection)
+            {
+                const string query = @"UPDATE[dbo].[Tickets] SET Title = @Title, Description = @Description, PriorityId = @PriorityId, StatusId = @StatusId WHERE Id = @Id";
+
+                dbConnection.Open();
+                var result = await dbConnection.ExecuteAsync(query, ticket);
+            }
+        }
     }
 }

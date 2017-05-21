@@ -25,7 +25,8 @@ namespace Erazer.Web.Controllers
 
         public IActionResult Ticket(string id = "20d0454a-a13d-46fc-842b-43287b6f1f2e")
         {
-            return View(model: id);
+            ViewBag.TicketId = id;
+            return View();
         }
 
         [HttpPost]
@@ -40,6 +41,19 @@ namespace Erazer.Web.Controllers
 
             return RedirectToAction(nameof(Ticket));
         }
+
+        public async Task<IActionResult> UpdatePriority(UpdateTicketPriorityViewModel model)
+        {
+            await _mediator.Send(new UpdateTicketPriorityCommand
+            {
+                PriorityId = model.PriorityId,
+                TicketId = model.TicketId,
+                UserId = Guid.Parse("88888888-8888-8888-8888-888888888888")
+            });
+
+            return RedirectToAction(nameof(Ticket));
+        }
+
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";

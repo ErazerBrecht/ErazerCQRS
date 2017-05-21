@@ -41,5 +41,18 @@ namespace Erazer.Domain
                 UserId = commenterId
             });
         }
+
+        public void UpdatePriority(int priorityId, Guid userId)
+        {
+            var currentPriority = _priorityId;
+            _priorityId = priorityId;
+
+            ApplyChange(new TicketPriorityEvent
+            {
+                FromPriorityId = currentPriority,
+                ToPriorityId = priorityId,
+                UserId = userId
+            });
+        }
     }
 }

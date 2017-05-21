@@ -1,11 +1,11 @@
-﻿@model string
-@{
+﻿@{
     ViewData["Title"] = "Ticket";
+    var ticketId = ViewBag.TicketId;
 }
 
 <div class="row">
     <div class="col-md-6">
-        @await Component.InvokeAsync("TicketDetail", new { Id = Model })
+        @await Component.InvokeAsync("TicketDetail", new { Id = ticketId })
     </div>
 
     <div class="col-md-6">
@@ -17,12 +17,12 @@
     </div>
 
     <div class="col-md-6">
-        @await Component.InvokeAsync("CommentBox", new {Id = Model})
+        @await Component.InvokeAsync("CommentBox", new { Id = ticketId })
     </div>
 
 
     <div class="col-md-12">
-        @await Component.InvokeAsync("TicketEvents", new { Id = Model })
+        @await Component.InvokeAsync("TicketEvents", new { Id = ticketId })
     </div>
 
 </div>
@@ -31,11 +31,15 @@
 {
     <script type="text/javascript">
         $(document).ready(function () {
-            var selectedPriority = $('#ticketPriority').data('priority-id');
-            var selectedStatus = $('#ticketStatus').data('status-id');
+            var currentPriority = $('#ticketPriority').data('priority-id');
+            var currentStatus = $('#ticketStatus').data('status-id');
 
-            $('#priorityList').val(selectedPriority).change();
-            $('#statusList').val(selectedStatus).change();
+            $('#priorityList').val(currentPriority).change();
+            $('#statusList').val(currentStatus).change();
+
+            $('#priorityList').change(function () {
+                $('#priorityForm').submit();
+            });
         });
     </script>
 }

@@ -17,5 +17,6 @@ namespace Erazer.DAL.EF.Entities
 
         public EventType Type { get; set; }
         public TicketCommentEventEntity CommentEvent { get; set; }
+        public TicketPriorityEventEntity PriorityEvent { get; set; }
     }
 }

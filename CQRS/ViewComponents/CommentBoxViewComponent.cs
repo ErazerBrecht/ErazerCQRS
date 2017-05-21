@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Erazer.Web.ViewComponents

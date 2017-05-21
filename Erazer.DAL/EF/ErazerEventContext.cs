@@ -12,6 +12,7 @@ namespace Erazer.DAL.EF
 
         public DbSet<TicketEventEntity> TicketEvents { get; set; }
         public DbSet<TicketCommentEventEntity> TicketCommentEvents { get; set; }
+        public DbSet<TicketPriorityEventEntity> TicketPriorityEvents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,6 +21,11 @@ namespace Erazer.DAL.EF
                 .HasOne(e => e.TicketEvent)
                 .WithOne(e => e.CommentEvent)
                 .HasForeignKey<TicketCommentEventEntity>(e => e.Id);
+
+            modelBuilder.Entity<TicketPriorityEventEntity>()
+                .HasOne(e => e.TicketEvent)
+                .WithOne(e => e.PriorityEvent)
+                .HasForeignKey<TicketPriorityEventEntity>(e => e.Id);
 
             base.OnModelCreating(modelBuilder);
         }
