@@ -1,31 +1,26 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
 using Erazer.DAL.ReadModel.Base;
+using Erazer.DAL.ReadModel.DTOs;
 using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Repositories;
-using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 
 namespace Erazer.DAL.ReadModel.QueryRepositories
 {
-    public class TicketQueryRepository : BaseRepository, ITicketQueryRepository
+    public class TicketQueryRepository : MongoDbBaseRepository, ITicketQueryRepository
     {
-        public TicketQueryRepository(IConfiguration configuration) : base(configuration)
+        private readonly IMongoCollection<TicketDto> _collection;
+
+        public TicketQueryRepository(IMongoDatabase database) : base(database)
         {
+           _collection = database.GetCollection<TicketDto>("Tickets");
         }
 
-        public async Task<TicketDto> Find(string id)
+        public async Task<ITicketDto> Find(string id)
         {
-            using (var dbConnection = Connection)
-            {
-                const string query = @"SELECT * FROM TicketIV WITH (NOEXPAND)
-                                       WHERE Id = @Id";
-
-                dbConnection.Open();
-                var result = await dbConnection.QueryAsync<TicketDto>(query, new {Id = id});
-                return result.FirstOrDefault();
-            }
+            var tickets = await _collection.FindAsync(t => t.Id == id);
+            return await tickets.SingleOrDefaultAsync();
         }
 
         public Task<TicketListDto> All()
@@ -33,15 +28,9 @@ namespace Erazer.DAL.ReadModel.QueryRepositories
             throw new NotImplementedException();
         }
 
-        public async Task Update(TicketDto ticket)
+        public Task Update(ITicketDto ticket)
         {
-            using (var dbConnection = Connection)
-            {
-                const string query = @"UPDATE[dbo].[Tickets] SET Title = @Title, Description = @Description, PriorityId = @PriorityId, StatusId = @StatusId WHERE Id = @Id";
-
-                dbConnection.Open();
-                var result = await dbConnection.ExecuteAsync(query, ticket);
-            }
+            throw new NotImplementedException();
         }
     }
 }

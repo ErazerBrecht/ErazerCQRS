@@ -7,5 +7,6 @@ namespace Erazer.Services.Queries.Repositories
     public interface IPriorityQueryRepository
     {
         Task<IList<IPriorityDto>> All();
+        Task<IPriorityDto> Find(string id);
     }
 }
