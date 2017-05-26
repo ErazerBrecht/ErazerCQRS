@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace Erazer.DAL.Dapper.Base
+namespace Erazer.DAL.ReadModel.Base
 {
     public abstract class BaseRepository
     {

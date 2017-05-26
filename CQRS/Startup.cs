@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
-using Erazer.DAL.Dapper.AggregateRepositories;
-using Erazer.DAL.Dapper.QueryRepositories;
 using Erazer.DAL.EF;
 using Erazer.DAL.EF.Repositories;
+using Erazer.DAL.ReadModel.AggregateRepositories;
+using Erazer.DAL.ReadModel.Base;
+using Erazer.DAL.ReadModel.QueryRepositories;
 using Erazer.Domain;
 using Erazer.Framework.Domain.Repositories;
 using Erazer.Framework.Events;
 using Erazer.Services.Queries.Repositories;
+using Erazer.Web.Extensions.DependencyInjection;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,12 +16,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace Erazer.Web
 {
     public class Startup
     {
-        public IConfigurationRoot Configuration { get; }
+        private readonly IConfigurationRoot _configuration;
 
         public Startup(IHostingEnvironment env)
         {
@@ -28,21 +33,23 @@ namespace Erazer.Web
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            _configuration = builder.Build();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddSingleton<IConfiguration>(_configuration);
+            services.Configure<MongoDbSettings>(_configuration.GetSection("MongoDbSettings"));
 
-            // Add EF
-            services.AddDbContext<ErazerEventContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Erazer.Database")));
+            // Add DB Providers
+            services.AddDbContext<ErazerEventContext>(options => options.UseSqlServer(_configuration.GetConnectionString("Erazer.Database")));
+            services.AddScopedFactory<IMongoDatabase, MongoDbFactory>();
 
-            // TODO Place in seperate file
             services.AddAutoMapper();
             services.AddMediatR();
 
+            // TODO Place in seperate file
             // Query repositories
             services.AddScoped<ITicketQueryRepository, TicketQueryRepository>();
             services.AddScoped<ITicketEventQueryRepository, TicketEventQueryRepository>();
@@ -55,7 +62,6 @@ namespace Erazer.Web
             // Event repositories
             services.AddScoped<IEventRepository, EventRepository>();
 
-
             services.AddMvc();
         }
 
@@ -64,7 +70,7 @@ namespace Erazer.Web
         {
             if (env.IsDevelopment())
             {
-                loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+                loggerFactory.AddConsole(_configuration.GetSection("Logging"));
                 loggerFactory.AddDebug();
 
                 app.UseDeveloperExceptionPage();

@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Erazer.DAL.Dapper.Base;
+using Erazer.DAL.ReadModel.Base;
 using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Repositories;
 using Microsoft.Extensions.Configuration;
 
-namespace Erazer.DAL.Dapper.QueryRepositories
+namespace Erazer.DAL.ReadModel.QueryRepositories
 {
     public class TicketQueryRepository : BaseRepository, ITicketQueryRepository
     {

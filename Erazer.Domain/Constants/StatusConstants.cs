@@ -1,4 +1,4 @@
-﻿namespace Erazer.DAL.Constants
+﻿namespace Erazer.Domain.Constants
 {
     public class StatusConstants
     {

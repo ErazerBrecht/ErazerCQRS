@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using Dapper;
 using Erazer.Domain;
-using MediatR;
-using Microsoft.Extensions.Configuration;
 using Erazer.Framework.Domain.Repositories;
 using Erazer.Framework.Events;
+using MediatR;
+using Microsoft.Extensions.Configuration;
 
-namespace Erazer.DAL.Dapper.AggregateRepositories
+namespace Erazer.DAL.ReadModel.AggregateRepositories
 {
     public class TicketAggregrateRepository : BaseAggregateRepository<Ticket>, IAggregateRepository<Ticket>
     {

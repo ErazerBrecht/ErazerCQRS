@@ -1,5 +1,6 @@
 ﻿using System;
 using Erazer.DAL.Constants;
+using Erazer.Domain.Constants;
 using Erazer.Domain.Events;
 using Erazer.Framework.Domain;
 

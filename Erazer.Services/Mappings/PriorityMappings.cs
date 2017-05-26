@@ -8,7 +8,7 @@ namespace Erazer.Services.Mappings
     {
         public PriorityMappings()
         {
-            CreateMap<PriorityDto, PriorityViewModel>();
+            CreateMap<IPriorityDto, PriorityViewModel>();
         }
     }
 }

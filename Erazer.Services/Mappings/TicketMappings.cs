@@ -10,9 +10,9 @@ namespace Erazer.Services.Mappings
         {
             CreateMap<TicketDto, TicketViewModel>()
                 .ForMember(vm => vm.Priority,
-                    opt => opt.MapFrom(dto => new PriorityViewModel {Id = dto.PriorityId, Name = dto.PriorityName}))
+                    opt => opt.MapFrom(dto => new PriorityViewModel {Id = dto.PriorityId.ToString(), Name = dto.PriorityName}))
                 .ForMember(vm => vm.Status,
-                    opt => opt.MapFrom(dto => new StatusViewModel {Id = dto.StatusId, Name = dto.StatusName}));
+                    opt => opt.MapFrom(dto => new StatusViewModel {Id = dto.StatusId.ToString(), Name = dto.StatusName}));
 
             CreateMap<TicketEventDto, TicketEventViewModel>();
         }
