@@ -28,6 +28,7 @@ namespace Erazer.DAL.ReadModel.Base
             var client = new MongoClient(_options.Value.ConnectionString);
             var db = client.GetDatabase(_options.Value.Database);
 
+            // TODO Check if connection was actually succeeded!
             _logger.LogInformation($"Created a succesful connection with the mongo db server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t Database: {_options.Value.Database}");
 
             return db;

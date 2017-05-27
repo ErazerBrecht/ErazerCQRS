@@ -8,7 +8,7 @@ namespace Erazer.Services.Mappings
     {
         public StatusMappings()
         {
-            CreateMap<IStatusDto, StatusViewModel>();
+            CreateMap<StatusDto, StatusViewModel>();
         }
     }
 }

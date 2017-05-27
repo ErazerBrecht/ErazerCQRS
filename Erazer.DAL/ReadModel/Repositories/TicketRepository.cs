@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Erazer.DAL.ReadModel.Base;
-using Erazer.DAL.ReadModel.DTOs;
 using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Repositories;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
-namespace Erazer.DAL.ReadModel.QueryRepositories
+namespace Erazer.DAL.ReadModel.Repositories
 {
-    public class TicketQueryRepository : MongoDbBaseRepository, ITicketQueryRepository
+    public class TicketRepository : MongoDbBaseRepository, ITicketQueryRepository
     {
         private readonly IMongoCollection<TicketDto> _collection;
 
-        public TicketQueryRepository(IMongoDatabase database) : base(database)
+        public TicketRepository(IMongoDatabase database) : base(database)
         {
-           _collection = database.GetCollection<TicketDto>("Tickets");
+            _collection = database.GetCollection<TicketDto>("Tickets");
         }
 
-        public async Task<ITicketDto> Find(string id)
+        public async Task<TicketDto> Find(string id)
         {
             var tickets = await _collection.FindAsync(t => t.Id == id);
             return await tickets.SingleOrDefaultAsync();
@@ -28,7 +28,7 @@ namespace Erazer.DAL.ReadModel.QueryRepositories
             throw new NotImplementedException();
         }
 
-        public Task Update(ITicketDto ticket)
+        public Task Update(TicketDto ticket)
         {
             throw new NotImplementedException();
         }

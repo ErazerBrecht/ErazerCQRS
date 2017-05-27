@@ -7,11 +7,11 @@ using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Repositories;
 using Microsoft.Extensions.Configuration;
 
-namespace Erazer.DAL.ReadModel.QueryRepositories
+namespace Erazer.DAL.ReadModel.Repositories
 {
-    public class TicketEventQueryRepository : BaseRepository, ITicketEventQueryRepository
+    public class TicketEventRepository : BaseRepository, ITicketEventQueryRepository
     {
-        public TicketEventQueryRepository(IConfiguration configuration) : base(configuration)
+        public TicketEventRepository(IConfiguration configuration) : base(configuration)
         {
         }
 

@@ -5,8 +5,8 @@ namespace Erazer.Services.Queries.Repositories
 {
     public interface ITicketQueryRepository 
     {
-        Task<ITicketDto> Find(string id);
+        Task<TicketDto> Find(string id);
         Task<TicketListDto> All();
-        Task Update(ITicketDto ticket);
+        Task Update(TicketDto ticket);
     }
 }

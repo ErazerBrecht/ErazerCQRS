@@ -3,11 +3,12 @@ using Erazer.DAL.EF;
 using Erazer.DAL.EF.Repositories;
 using Erazer.DAL.ReadModel.AggregateRepositories;
 using Erazer.DAL.ReadModel.Base;
-using Erazer.DAL.ReadModel.QueryRepositories;
+using Erazer.DAL.ReadModel.Repositories;
 using Erazer.Domain;
 using Erazer.Framework.Domain.Repositories;
 using Erazer.Framework.Events;
 using Erazer.Services.Queries.Repositories;
+using Erazer.Web.Extensions;
 using Erazer.Web.Extensions.DependencyInjection;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -51,10 +52,10 @@ namespace Erazer.Web
 
             // TODO Place in seperate file
             // Query repositories
-            services.AddScoped<ITicketQueryRepository, TicketQueryRepository>();
-            services.AddScoped<ITicketEventQueryRepository, TicketEventQueryRepository>();
-            services.AddScoped<IStatusQueryRepository, StatusQueryRepository>();
-            services.AddScoped<IPriorityQueryRepository, PriorityQueryRepository>();
+            services.AddScoped<ITicketQueryRepository, TicketRepository>();
+            services.AddScoped<ITicketEventQueryRepository, TicketEventRepository>();
+            services.AddScoped<IStatusQueryRepository, StatusRepository>();
+            services.AddScoped<IPriorityQueryRepository, PriorityRepository>();
 
             // Aggregate repositories
             services.AddScoped<IAggregateRepository<Ticket>, TicketAggregrateRepository>();
@@ -81,8 +82,8 @@ namespace Erazer.Web
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseMongoDbClassMaps();
             app.UseStaticFiles();
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
