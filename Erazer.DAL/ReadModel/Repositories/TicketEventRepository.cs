@@ -1,33 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
 using Erazer.DAL.ReadModel.Base;
 using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Repositories;
-using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 
 namespace Erazer.DAL.ReadModel.Repositories
 {
-    public class TicketEventRepository : BaseRepository, ITicketEventQueryRepository
+    public class TicketEventRepository : MongoDbBaseRepository, ITicketEventQueryRepository
     {
-        public TicketEventRepository(IConfiguration configuration) : base(configuration)
+        private readonly IMongoCollection<TicketEventDto> _collection;
+
+        public TicketEventRepository(IMongoDatabase database) : base(database)
         {
+            _collection = database.GetCollection<TicketEventDto>("TicketEvents");
+
         }
 
         public async Task<IList<TicketEventDto>> Find(string ticketId)
         {
-            using (var dbConnection = Connection)
-            {
-                const string query = @"SELECT * 
-                                       FROM [TicketEventsView]                                   
-                                       WHERE TicketId = @Id
-                                       ORDER BY Created DESC";
-
-                dbConnection.Open();
-                var result = await dbConnection.QueryAsync<TicketEventDto>(query, new { Id = ticketId});
-                return result.ToList();
-            }
+            var events = _collection.Find(t => t.TicketId == ticketId).SortByDescending(t => t.Created);
+            return await events.ToListAsync();
         }
     }
 }
