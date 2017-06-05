@@ -1,19 +1,18 @@
 ﻿using AutoMapper;
-using Erazer.DAL.EF;
-using Erazer.DAL.EF.Repositories;
-using Erazer.DAL.ReadModel.AggregateRepositories;
 using Erazer.DAL.ReadModel.Base;
 using Erazer.DAL.ReadModel.Repositories;
+using Erazer.DAL.WriteModel;
+using Erazer.DAL.WriteModel.Repositories;
 using Erazer.Domain;
-using Erazer.Framework.Domain.Repositories;
+using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
 using Erazer.Services.Queries.Repositories;
 using Erazer.Web.Extensions;
 using Erazer.Web.Extensions.DependencyInjection;
+using Marten;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -42,10 +41,11 @@ namespace Erazer.Web
         {
             services.AddSingleton<IConfiguration>(_configuration);
             services.Configure<MongoDbSettings>(_configuration.GetSection("MongoDbSettings"));
+            services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
 
             // Add DB Providers
-            services.AddDbContext<ErazerEventContext>(options => options.UseSqlServer(_configuration.GetConnectionString("Erazer.Database")));
             services.AddScopedFactory<IMongoDatabase, MongoDbFactory>();
+            services.AddScopedFactory<IDocumentStore, EventStoreFactory>();
 
             services.AddAutoMapper();
             services.AddMediatR();
@@ -58,10 +58,8 @@ namespace Erazer.Web
             services.AddScoped<IPriorityQueryRepository, PriorityRepository>();
 
             // Aggregate repositories
-            services.AddScoped<IAggregateRepository<Ticket>, TicketAggregrateRepository>();
+            services.AddScoped<IAggregateRepository<Ticket>, AggregateRepository<Ticket>>();
 
-            // Event repositories
-            services.AddScoped<IEventRepository, EventRepository>();
 
             services.AddMvc();
         }

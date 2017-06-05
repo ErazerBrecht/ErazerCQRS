@@ -22,5 +22,10 @@ namespace Erazer.DAL.ReadModel.Repositories
             var events = _collection.Find(t => t.TicketId == ticketId).SortByDescending(t => t.Created);
             return await events.ToListAsync();
         }
+
+        public Task Add(TicketEventDto ticketEvent)
+        {
+            return _collection.InsertOneAsync(ticketEvent);
+        }
     }
 }

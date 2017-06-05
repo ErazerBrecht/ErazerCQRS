@@ -10,7 +10,7 @@ namespace Erazer.DAL.ReadModel.ClassMaps
         {
             cm.SetDiscriminator("comment");
 
-            cm.MapField("_comment").SetElementName("comment");
+            cm.MapProperty("Comment").SetElementName("comment");
         }
     }
 }

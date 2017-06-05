@@ -5,8 +5,8 @@ namespace Erazer.Domain.Events
 {
     public class TicketPriorityEvent : IEvent
     {
-        public int FromPriorityId { get; set; }
-        public int ToPriorityId { get; set; }
+        public string FromPriorityId { get; set; }
+        public string ToPriorityId { get; set; }
 
         public Guid UserId { get; set; }
         public DateTime Created { get; set; }

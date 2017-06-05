@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Erazer.DAL.ReadModel.Base;
 using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Repositories;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace Erazer.DAL.ReadModel.Repositories
@@ -28,9 +27,9 @@ namespace Erazer.DAL.ReadModel.Repositories
             throw new NotImplementedException();
         }
 
-        public Task Update(TicketDto ticket)
+        public async Task Update(TicketDto ticket)
         {
-            throw new NotImplementedException();
+           await _collection.ReplaceOneAsync(t => t.Id == ticket.Id, ticket);
         }
     }
 }

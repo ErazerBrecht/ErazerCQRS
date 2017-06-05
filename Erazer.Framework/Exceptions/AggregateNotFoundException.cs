@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Erazer.Framework.Domain.Exceptions
+namespace Erazer.Framework.Exceptions
 {
     public class AggregateNotFoundException : Exception
     {

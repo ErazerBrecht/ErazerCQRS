@@ -1,5 +1,4 @@
 ﻿using System;
-using Erazer.Domain.Constants.Enums;
 using Erazer.Services.Queries.DTOs.Events;
 
 namespace Erazer.Services.Queries.DTOs

@@ -6,7 +6,7 @@ namespace Erazer.Framework.Domain
 {
     public abstract class AggregateRoot
     {
-        protected Guid Id;
+        public Guid Id { get; protected set; }
         private readonly List<IEvent> _changes = new List<IEvent>();
 
         protected void ApplyChange(IEvent @event)
@@ -22,6 +22,7 @@ namespace Erazer.Framework.Domain
             lock (_changes)
             {
                 var changes = _changes.ToArray();
+
                 foreach (var @event in changes)
                 {
                     if (@event.AggregateRootId == Guid.Empty)

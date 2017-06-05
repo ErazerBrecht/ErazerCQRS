@@ -7,8 +7,8 @@ namespace Erazer.Services.Queries.DTOs.Events
         public override EventType Type => EventType.Comment;
 
         public override string From => null;
-        public override string To => _comment;
+        public override string To => Comment;
 
-        private string _comment;
+        public string Comment { private get; set; }
     }
 }

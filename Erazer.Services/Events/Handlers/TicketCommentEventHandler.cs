@@ -1,19 +1,37 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Erazer.Domain.Events;
+using Erazer.Services.Queries.DTOs;
+using Erazer.Services.Queries.DTOs.Events;
+using Erazer.Services.Queries.Repositories;
 using MediatR;
 
 namespace Erazer.Services.Events.Handlers
 {
-    public class TicketCommentEventHandler : IAsyncRequestHandler<TicketCommentEvent>
+    public class TicketCommentEventHandler : IAsyncNotificationHandler<TicketCommentEvent>
     {
-        public TicketCommentEventHandler()
-        {
+        private readonly ITicketEventQueryRepository _repository;
 
+        public TicketCommentEventHandler(ITicketEventQueryRepository repository)
+        {
+            _repository = repository;
         }
 
-        public async Task Handle(TicketCommentEvent message)
+        public Task Handle(TicketCommentEvent message)
         {
-            // TicketCommentEvent doesn't change ReadModel for now!
+            var ticketEvent = new TicketEventDto
+            {
+                Id = Guid.NewGuid().ToString(),
+                TicketId = message.AggregateRootId.ToString(),
+                Created = message.Created,
+                UserId = message.UserId.ToString(),
+                Event = new CommentEventDto
+                {
+                    Comment = message.Comment
+                }
+            };
+
+            return _repository.Add(ticketEvent);
         }
     }
 }
