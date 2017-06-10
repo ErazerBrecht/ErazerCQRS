@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Erazer.Framework.Domain;
+using Erazer.Framework.Events;
 using Marten;
 using MediatR;
 
@@ -8,12 +9,12 @@ namespace Erazer.DAL.WriteModel.Repositories
 {
     public class AggregateRepository<T> : IAggregateRepository<T> where T : AggregateRoot, new()
     {
-        private readonly IMediator _mediator;
+        private readonly IEventPublisher _eventPublisher;
         private readonly IDocumentStore _store;
 
-        public AggregateRepository(IMediator mediator, IDocumentStore store)
+        public AggregateRepository(IEventPublisher eventPublisher, IDocumentStore store)
         {
-            _mediator = mediator;
+            _eventPublisher = eventPublisher;
             _store = store;
         }
 
@@ -34,7 +35,7 @@ namespace Erazer.DAL.WriteModel.Repositories
                 foreach (var @event in events)
                 {
                     session.Events.Append(aggregate.Id, @event);
-                    await _mediator.Publish(@event);
+                    await _eventPublisher.Publish(@event);
                 }
 
                 await session.SaveChangesAsync();

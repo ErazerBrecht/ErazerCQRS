@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.DAL", "Erazer.DAL\Er
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Framework", "Erazer.Framework\Erazer.Framework.csproj", "{48FF42D1-2EED-4334-8030-CC1326FFE65B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Servicebus", "Erazer.Servicebus\Erazer.Servicebus.csproj", "{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{48FF42D1-2EED-4334-8030-CC1326FFE65B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48FF42D1-2EED-4334-8030-CC1326FFE65B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48FF42D1-2EED-4334-8030-CC1326FFE65B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

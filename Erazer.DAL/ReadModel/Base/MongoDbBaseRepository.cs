@@ -1,6 +1,4 @@
-﻿using System.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 
 namespace Erazer.DAL.ReadModel.Base
 {

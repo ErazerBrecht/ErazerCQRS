@@ -6,6 +6,8 @@ using Erazer.DAL.WriteModel.Repositories;
 using Erazer.Domain;
 using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
+using Erazer.Servicebus;
+using Erazer.Servicebus.Extensions;
 using Erazer.Services.Queries.Repositories;
 using Erazer.Web.Extensions;
 using Erazer.Web.Extensions.DependencyInjection;
@@ -13,6 +15,7 @@ using Marten;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -42,15 +45,17 @@ namespace Erazer.Web
             services.AddSingleton<IConfiguration>(_configuration);
             services.Configure<MongoDbSettings>(_configuration.GetSection("MongoDbSettings"));
             services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
+            services.Configure<AzureServiceBusSettings>(_configuration.GetSection("AzureServiceBusSettings"));
 
-            // Add DB Providers
+            // Add 'Infrasructure' Providers
             services.AddScopedFactory<IMongoDatabase, MongoDbFactory>();
             services.AddScopedFactory<IDocumentStore, EventStoreFactory>();
+            services.AddScopedFactory<IQueueClient, QueueClientFactory>();
 
             services.AddAutoMapper();
             services.AddMediatR();
 
-            // TODO Place in seperate file
+            // TODO Place in seperate file (Arne)
             // Query repositories
             services.AddScoped<ITicketQueryRepository, TicketRepository>();
             services.AddScoped<ITicketEventQueryRepository, TicketEventRepository>();
@@ -60,6 +65,9 @@ namespace Erazer.Web
             // Aggregate repositories
             services.AddScoped<IAggregateRepository<Ticket>, AggregateRepository<Ticket>>();
 
+            // CQRS
+            services.AddScoped<IEventPublisher, EventPublisher>();
+            services.StartEventReciever();
 
             services.AddMvc();
         }
