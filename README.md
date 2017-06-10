@@ -10,7 +10,7 @@ My learning steps into the world of CQRS and EventSourcing
   - Write side -> Eventsourcing -> **Marten** (PostgreSQL)
     - TODO Validation of 'Commands'
     - TODO Caching of Aggregate -> **REDIS**
- - Decoupling Read side & Write side
+  - Decoupling Read side & Write side
     - Azure Servicebus
     - Consequence: Eventual Consistency 
 
