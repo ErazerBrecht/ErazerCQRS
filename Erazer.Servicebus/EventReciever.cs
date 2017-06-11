@@ -20,7 +20,7 @@ namespace Erazer.Servicebus
         }
 
         // Running this method on startup takes long
-        // TODO Check if normal or bug
+        // https://github.com/Azure/azure-service-bus-dotnet/issues/154
         public void RegisterEventReciever()
         {
             _queueClient.RegisterMessageHandler(

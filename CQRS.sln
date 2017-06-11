@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Web", "CQRS\Erazer.Web.csproj", "{3A54CA69-42F4-46FF-B1F6-7CD9B6EAC449}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Services", "Erazer.Services\Erazer.Services.csproj", "{CB038200-F5DB-4E05-9E34-D39A26924585}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Domain", "Erazer.Domain\Erazer.Domain.csproj", "{4A44F864-E2DA-482C-BCD1-5833D5D903C2}"
@@ -15,16 +13,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Framework", "Erazer.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Servicebus", "Erazer.Servicebus\Erazer.Servicebus.csproj", "{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web", "Erazer.Web\Erazer.Web.csproj", "{91412693-16CC-45C5-AE75-55BA8828194F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3A54CA69-42F4-46FF-B1F6-7CD9B6EAC449}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3A54CA69-42F4-46FF-B1F6-7CD9B6EAC449}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3A54CA69-42F4-46FF-B1F6-7CD9B6EAC449}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3A54CA69-42F4-46FF-B1F6-7CD9B6EAC449}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CB038200-F5DB-4E05-9E34-D39A26924585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CB038200-F5DB-4E05-9E34-D39A26924585}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB038200-F5DB-4E05-9E34-D39A26924585}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91412693-16CC-45C5-AE75-55BA8828194F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91412693-16CC-45C5-AE75-55BA8828194F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91412693-16CC-45C5-AE75-55BA8828194F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91412693-16CC-45C5-AE75-55BA8828194F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
