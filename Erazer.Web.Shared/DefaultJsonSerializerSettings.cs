@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Erazer.Servicebus
+namespace Erazer.Web.Shared
 {
     public class DefaultJsonSerializerSettings
     {

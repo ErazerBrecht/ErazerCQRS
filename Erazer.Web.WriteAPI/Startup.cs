@@ -1,11 +1,12 @@
-﻿using Erazer.DAL.WriteModel;
-using Erazer.DAL.WriteModel.Repositories;
+﻿using AutoMapper;
+using Erazer.DAL.WriteModel;
 using Erazer.Domain;
 using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
+using Erazer.Framework.Factories;
 using Erazer.Servicebus;
 using Erazer.Shared.Extensions.DependencyInjection;
-using Marten;
+using EventStore.ClientAPI;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,20 +41,22 @@ namespace Erazer.Web.WriteAPI
             services.Configure<AzureServiceBusSettings>(_configuration.GetSection("AzureServiceBusSettings"));
 
             // Add 'Infrasructure' Providers
-            services.AddScopedFactory<IDocumentStore, EventStoreFactory>();
-            services.AddScopedFactory<IQueueClient, QueueClientFactory>();
+            services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
+            services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
 
+            services.AddAutoMapper();
             services.AddMediatR();
 
             // TODO Place in seperate file (Arne)
-            // Aggregate repositories
+            services.AddSingleton<IFactory<Ticket>, AggregateFactory<Ticket>>();
             services.AddScoped<IAggregateRepository<Ticket>, AggregateRepository<Ticket>>();
+            services.AddScoped<IEventStore, DAL.WriteModel.EventStore>();
 
             // CQRS
             services.AddScoped<IEventPublisher, EventPublisher>();
 
             // Add MVC
-            services.AddMvcCore().AddJsonFormatters(); ;
+            services.AddMvcCore().AddJsonFormatters();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

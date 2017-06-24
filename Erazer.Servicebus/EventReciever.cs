@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Erazer.Framework.Events;
+using Erazer.Web.Shared;
 using MediatR;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;

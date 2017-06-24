@@ -3,21 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Services", "Erazer.Services\Erazer.Services.csproj", "{CB038200-F5DB-4E05-9E34-D39A26924585}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Services", "Erazer.Services\Erazer.Services.csproj", "{CB038200-F5DB-4E05-9E34-D39A26924585}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Domain", "Erazer.Domain\Erazer.Domain.csproj", "{4A44F864-E2DA-482C-BCD1-5833D5D903C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Domain", "Erazer.Domain\Erazer.Domain.csproj", "{4A44F864-E2DA-482C-BCD1-5833D5D903C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.DAL", "Erazer.DAL\Erazer.DAL.csproj", "{224BC0F5-BF29-4F1A-88A0-955194F1C560}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.DAL", "Erazer.DAL\Erazer.DAL.csproj", "{224BC0F5-BF29-4F1A-88A0-955194F1C560}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Framework", "Erazer.Framework\Erazer.Framework.csproj", "{48FF42D1-2EED-4334-8030-CC1326FFE65B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Framework", "Erazer.Framework\Erazer.Framework.csproj", "{48FF42D1-2EED-4334-8030-CC1326FFE65B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Servicebus", "Erazer.Servicebus\Erazer.Servicebus.csproj", "{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Servicebus", "Erazer.Servicebus\Erazer.Servicebus.csproj", "{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Web.ReadAPI", "Erazer.Web.ReadAPI\Erazer.Web.ReadAPI.csproj", "{8526C618-B58D-49EA-BBD8-4787E3E09119}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.ReadAPI", "Erazer.Web.ReadAPI\Erazer.Web.ReadAPI.csproj", "{8526C618-B58D-49EA-BBD8-4787E3E09119}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Shared", "Erazer.Shared\Erazer.Shared.csproj", "{F8524D58-3043-442C-AF15-463A6D856B4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.WriteAPI", "Erazer.Web.WriteAPI\Erazer.Web.WriteAPI.csproj", "{855EAD6C-7CB2-4DE6-9496-F0DBB2C05C82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Web.WriteAPI", "Erazer.Web.WriteAPI\Erazer.Web.WriteAPI.csproj", "{855EAD6C-7CB2-4DE6-9496-F0DBB2C05C82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.Shared", "Erazer.Web.Shared\Erazer.Web.Shared.csproj", "{F01C26ED-9439-4368-A542-E1E85DF56376}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Shared", "Erazer.Shared\Erazer.Shared.csproj", "{C18871BB-5DBB-41EC-A363-86964CD326D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,14 +51,18 @@ Global
 		{8526C618-B58D-49EA-BBD8-4787E3E09119}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8526C618-B58D-49EA-BBD8-4787E3E09119}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8526C618-B58D-49EA-BBD8-4787E3E09119}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F8524D58-3043-442C-AF15-463A6D856B4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F8524D58-3043-442C-AF15-463A6D856B4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F8524D58-3043-442C-AF15-463A6D856B4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F8524D58-3043-442C-AF15-463A6D856B4A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{855EAD6C-7CB2-4DE6-9496-F0DBB2C05C82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{855EAD6C-7CB2-4DE6-9496-F0DBB2C05C82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{855EAD6C-7CB2-4DE6-9496-F0DBB2C05C82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{855EAD6C-7CB2-4DE6-9496-F0DBB2C05C82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F01C26ED-9439-4368-A542-E1E85DF56376}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F01C26ED-9439-4368-A542-E1E85DF56376}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F01C26ED-9439-4368-A542-E1E85DF56376}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F01C26ED-9439-4368-A542-E1E85DF56376}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C18871BB-5DBB-41EC-A363-86964CD326D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C18871BB-5DBB-41EC-A363-86964CD326D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C18871BB-5DBB-41EC-A363-86964CD326D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C18871BB-5DBB-41EC-A363-86964CD326D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

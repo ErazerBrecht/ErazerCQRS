@@ -1,42 +1,42 @@
 ﻿using System;
-using Erazer.Domain.Events;
 using Erazer.Framework.Factories;
-using Marten;
+using EventStore.ClientAPI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Erazer.DAL.WriteModel
 {
-    public class EventStoreFactory : IFactory<IDocumentStore>
+    public class EventStoreFactory : IFactory<IEventStoreConnection>
     {
         private readonly IOptions<EventStoreSettings> _options;
-        private readonly ILogger<IDocumentStore> _logger;
+        private readonly ILogger<EventStoreFactory> _logger;
 
-        public EventStoreFactory(IOptions<EventStoreSettings> options, ILogger<IDocumentStore> logger)
+        public EventStoreFactory(IOptions<EventStoreSettings> options, ILogger<EventStoreFactory> logger)
         {
             _options = options;
             _logger = logger;
 
             if (string.IsNullOrWhiteSpace(options.Value.ConnectionString))
-                throw new ArgumentNullException(options.Value.ConnectionString, "Connection string is required when setting up a connection with a PostgresSQL server for using 'Marten'");
+                throw new ArgumentNullException(options.Value.ConnectionString, "Connection string is required when setting up a connection with a 'GetEventStore' server");
 
-            _logger.LogInformation($"Building a connection to a PostgreSQL server\n\t ConnectionString: {options.Value.ConnectionString}");
+            _logger.LogInformation($"Building a connection to a 'GetEventStore' server\n\t ConnectionString: {options.Value.ConnectionString}");
         }
 
-        public IDocumentStore Build()
+        public IEventStoreConnection Build()
         {
-            var documentStore = DocumentStore.For(_ =>
+            try
             {
-                _.Connection(_options.Value.ConnectionString);
+                var connection = EventStoreConnection.Create(_options.Value.ConnectionString);
+                connection.ConnectAsync().Wait();
 
-                _.Events.AddEventType(typeof(TicketCommentEvent));
-                _.Events.AddEventType(typeof(TicketPriorityEvent));
-            });
-
-            // TODO Check if connection was actually succeeded!
-            _logger.LogInformation($"Created a succesful connection with the PostgreSQL server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
-
-            return documentStore;
+                _logger.LogInformation($"Created a succesful connection with the 'GetEventStore' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
+                return connection;
+            }
+            catch (Exception)
+            {
+                _logger.LogCritical($"Could NOT create a succesful connection with the 'GetEventStore' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
+                throw;
+            }
         }
     }
 }

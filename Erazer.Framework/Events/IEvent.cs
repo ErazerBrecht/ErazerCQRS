@@ -5,7 +5,9 @@ namespace Erazer.Framework.Events
 {
     public interface IEvent : INotification
     {
-        Guid AggregateRootId { get; set; }
+        Guid AggregateRootId { get; set; }          // Setter is required by AutoMapper
+        int Version { get; set; }                   // Setter is required by AutoMapper
+
         Guid UserId { get; set; }
         DateTime Created { get; set; }
     }

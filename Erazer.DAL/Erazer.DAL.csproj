@@ -5,14 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Marten" Version="1.5.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.0" />
+    <PackageReference Include="EventStore.ClientAPI.NetCore" Version="4.0.0-alpha-1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.2" />
     <PackageReference Include="MongoDB.Driver" Version="2.4.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Erazer.Services\Erazer.Services.csproj" />
+    <ProjectReference Include="..\Erazer.Shared\Erazer.Shared.csproj" />
+    <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

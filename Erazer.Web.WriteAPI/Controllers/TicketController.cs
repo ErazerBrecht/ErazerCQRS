@@ -17,6 +17,20 @@ namespace Erazer.Web.WriteAPI.Controllers
             _mediator = mediator;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateTicket([FromBody] NewTicketViewModel model)
+        {
+            await _mediator.Send(new NewTicketCommand
+            {
+                Id = Guid.NewGuid(),
+                UserId = Guid.Parse("88888888-8888-8888-8888-888888888888"),
+                Description = model.Description,
+                Title = model.Title
+            });
+
+            return Ok();
+        }
+
         [HttpPost("comment")]
         public async Task<IActionResult> AddComment([FromBody] AddTicketCommentViewModel model)
         {

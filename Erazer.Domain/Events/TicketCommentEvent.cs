@@ -10,5 +10,6 @@ namespace Erazer.Domain.Events
         public Guid UserId { get; set; }
         public DateTime Created { get; set; }
         public Guid AggregateRootId { get; set; }
+        public int Version { get; set; }
     }
 }
