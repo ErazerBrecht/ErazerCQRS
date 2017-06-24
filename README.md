@@ -7,7 +7,7 @@ My learning steps into the world of CQRS and EventSourcing
   - Read side -> **MongoDb**
     - TODO Validation of 'Queries'
     - TODO Logging with aid of [Mediatr Behaviours](https://github.com/jbogard/MediatR/wiki/Behaviors)
-  - Write side -> Eventsourcing -> **Marten** (PostgreSQL)
+  - Write side -> Eventsourcing -> **GetEventStore** (PostgreSQL)
     - TODO Validation of 'Commands'
     - TODO Caching of Aggregate -> **REDIS**
   - Decoupling Read side & Write side
