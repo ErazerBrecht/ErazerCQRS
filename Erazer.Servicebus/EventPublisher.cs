@@ -19,7 +19,7 @@ namespace Erazer.Servicebus
         }
         public async Task Publish<T>(T @event) where T : class, IEvent
         {
-            var jsonEvent = JsonConvert.SerializeObject(@event, DefaultJsonSerializerSettings.DefaultSettings);
+            var jsonEvent = JsonConvert.SerializeObject(@event, JsonSettings.DefaultSettings);
             var message = new Message(Encoding.UTF8.GetBytes(jsonEvent));
             
             // Send the message to the queue
@@ -28,7 +28,7 @@ namespace Erazer.Servicebus
 
         public async Task Publish<T>(IEnumerable<T> events) where T : class, IEvent
         {
-            var messages = events.Select(@event => JsonConvert.SerializeObject(@event, DefaultJsonSerializerSettings.DefaultSettings))
+            var messages = events.Select(@event => JsonConvert.SerializeObject(@event, JsonSettings.DefaultSettings))
                     .Select(jsonEvent => new Message(Encoding.UTF8.GetBytes(jsonEvent)))
                     .ToList();
 

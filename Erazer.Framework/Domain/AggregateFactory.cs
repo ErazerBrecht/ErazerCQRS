@@ -1,11 +1,10 @@
 ﻿using System;
-using Erazer.Framework.Factories;
 
 namespace Erazer.Framework.Domain
 {
-    public class AggregateFactory<T>: IFactory<T> where T : AggregateRoot
+    public static class AggregateFactory
     {
-        public T Build()
+        public static T Build<T>() where T : AggregateRoot
         {
             return (T)Activator.CreateInstance(typeof(T), true);
         }

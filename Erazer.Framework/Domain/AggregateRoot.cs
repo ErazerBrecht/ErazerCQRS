@@ -8,7 +8,7 @@ namespace Erazer.Framework.Domain
     public abstract class AggregateRoot
     {
         public Guid Id { get; protected set; }
-        public int Version { get; private set; }
+        public int Version { get; protected set; }
 
         private readonly List<IEvent> _changes = new List<IEvent>();
         private readonly Dictionary<Type, Action<IEvent>> _eventHandlers = new Dictionary<Type, Action<IEvent>>();

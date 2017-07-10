@@ -8,9 +8,9 @@ namespace Erazer.Services.Commands.Handlers
 {
     public class NewTicketCommandHandler : IAsyncRequestHandler<NewTicketCommand>
     {
-        private readonly IAggregateRepository<Ticket> _repository;
+        private readonly IAggregateRepository _repository;
 
-        public NewTicketCommandHandler(IAggregateRepository<Ticket> repository)
+        public NewTicketCommandHandler(IAggregateRepository repository)
         {
             _repository = repository;
         }

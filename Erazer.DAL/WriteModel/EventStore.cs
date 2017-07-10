@@ -31,7 +31,9 @@ namespace Erazer.DAL.WriteModel
         {
             var startPosition = StreamPosition.Start;
             if (fromVersion > -1)
-                startPosition = fromVersion + StreamPosition.Start;
+                // +1 is used to filter out the current version
+                // Example Aggregate is on version 3, If I want all version starting from 3 I only need 4,5,6,... not 3!
+                startPosition += fromVersion + 1;
 
             // TODO FIX HARD LIMIT OF 200 
             var eventCollection = await _storeConnection.ReadStreamEventsForwardAsync(aggregateId.ToString(), startPosition, 200, false);

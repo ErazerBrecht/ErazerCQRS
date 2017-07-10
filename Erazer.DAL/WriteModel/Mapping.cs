@@ -13,10 +13,10 @@ namespace Erazer.DAL.WriteModel
         public Mapping()
         {
             CreateMap<IEvent, EventData>()
-                .ConstructUsing(src => new EventData(Guid.NewGuid(), src.GetType().AssemblyQualifiedName, true, new UTF8Encoding().GetBytes(JsonConvert.SerializeObject(src, DefaultJsonSerializerSettings.DefaultSettings)), null));
+                .ConstructUsing(src => new EventData(Guid.NewGuid(), src.GetType().Name, true, new UTF8Encoding().GetBytes(JsonConvert.SerializeObject(src, JsonSettings.DefaultSettings)), null));
 
             CreateMap<ResolvedEvent, IEvent>()
-                .ConstructUsing(src => JsonConvert.DeserializeObject<IEvent>(new UTF8Encoding().GetString(src.Event.Data), DefaultJsonSerializerSettings.DefaultSettings))
+                .ConstructUsing(src => JsonConvert.DeserializeObject<IEvent>(new UTF8Encoding().GetString(src.Event.Data), JsonSettings.DefaultSettings))
                 .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.Event.EventNumber))
                 .ForMember(dest => dest.AggregateRootId, opt => opt.MapFrom(src => src.Event.EventStreamId));
         }

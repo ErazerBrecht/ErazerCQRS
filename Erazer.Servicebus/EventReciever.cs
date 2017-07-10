@@ -41,7 +41,7 @@ namespace Erazer.Servicebus
 
         private async Task ProcessEvents(string messageBody, CancellationToken token)
         {
-            var @event = JsonConvert.DeserializeObject<IEvent>(messageBody, DefaultJsonSerializerSettings.DefaultSettings);
+            var @event = JsonConvert.DeserializeObject<IEvent>(messageBody, JsonSettings.DefaultSettings);
             await _mediator.Publish(@event, token);
         }
     }

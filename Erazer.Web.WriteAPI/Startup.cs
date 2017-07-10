@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using Erazer.DAL.Cache;
 using Erazer.DAL.WriteModel;
-using Erazer.Domain;
+using Erazer.Framework.Cache;
 using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
-using Erazer.Framework.Factories;
 using Erazer.Servicebus;
 using Erazer.Shared.Extensions.DependencyInjection;
 using EventStore.ClientAPI;
@@ -14,6 +14,7 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ServiceStack.Redis;
 
 namespace Erazer.Web.WriteAPI
 {
@@ -39,18 +40,23 @@ namespace Erazer.Web.WriteAPI
             services.AddSingleton<IConfiguration>(_configuration);
             services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
             services.Configure<AzureServiceBusSettings>(_configuration.GetSection("AzureServiceBusSettings"));
+            services.Configure<RedisSettings>(_configuration.GetSection("CacheSettings"));
 
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
+            services.AddSingletonFactory<IRedisClientsManager, RedisFactory>();
             services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
 
             services.AddAutoMapper();
             services.AddMediatR();
 
             // TODO Place in seperate file (Arne)
-            services.AddSingleton<IFactory<Ticket>, AggregateFactory<Ticket>>();
-            services.AddScoped<IAggregateRepository<Ticket>, AggregateRepository<Ticket>>();
             services.AddScoped<IEventStore, DAL.WriteModel.EventStore>();
+            // WITH CACHE
+            services.AddScoped<ICache, RedisCache>();
+            services.AddScoped<IAggregateRepository>(y => new CacheRepository(new AggregateRepository(y.GetService<IEventStore>()), y.GetService<IEventStore>(), y.GetService<ICache>()));
+            // WITHOUT CACHE
+            //services.AddScoped<IAggregateRepository, AggregateRepository>();
 
             // CQRS
             services.AddScoped<IEventPublisher, EventPublisher>();

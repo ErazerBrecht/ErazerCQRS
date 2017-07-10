@@ -8,18 +8,16 @@ using Erazer.Framework.Factories;
 
 namespace Erazer.Framework.Domain
 {
-    public class AggregateRepository<T> : IAggregateRepository<T> where T : AggregateRoot
+    public class AggregateRepository: IAggregateRepository
     {
         private readonly IEventStore _eventStore;
-        private readonly IFactory<T> _factory;
 
-        public AggregateRepository(IEventStore eventStore, IFactory<T> factory)
+        public AggregateRepository(IEventStore eventStore)
         {
             _eventStore = eventStore;
-            _factory = factory;
         }
 
-        public async Task<T> Get(Guid aggregateId)
+        public async Task<T> Get<T>(Guid aggregateId) where T : AggregateRoot
         {
             var events = await _eventStore.Get(aggregateId, -1);
             var eventList = events as IList<IEvent> ?? events.ToList();
@@ -29,12 +27,12 @@ namespace Erazer.Framework.Domain
                 throw new AggregateNotFoundException(typeof(T), aggregateId);
             }
 
-            var aggregate = _factory.Build();
+            var aggregate = AggregateFactory.Build<T>();
             aggregate.LoadFromHistory(eventList);
             return aggregate;
         }
 
-        public async Task Save(T aggregate)
+        public async Task Save<T>(T aggregate) where T : AggregateRoot
         {
             var changes = aggregate.FlushChanges();
             await _eventStore.Save(aggregate.Id, changes);

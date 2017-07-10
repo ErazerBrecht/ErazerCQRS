@@ -8,16 +8,16 @@ namespace Erazer.Services.Commands.Handlers
 {
     public class UpdateTicketPriorityCommandHandler : IAsyncRequestHandler<UpdateTicketPriorityCommand>
     {
-        private readonly IAggregateRepository<Ticket> _repository;
+        private readonly IAggregateRepository _repository;
 
-        public UpdateTicketPriorityCommandHandler(IAggregateRepository<Ticket> repository)
+        public UpdateTicketPriorityCommandHandler(IAggregateRepository repository)
         {
             _repository = repository;
         }
 
         public async Task Handle(UpdateTicketPriorityCommand message)
         {
-            var ticket = await _repository.Get(message.TicketId);
+            var ticket = await _repository.Get<Ticket>(message.TicketId);
             ticket.UpdatePriority(message.PriorityId, message.UserId);
             await _repository.Save(ticket);
         }

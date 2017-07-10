@@ -8,16 +8,16 @@ namespace Erazer.Services.Commands.Handlers
 {
     public class AddTicketCommentCommandHandler : IAsyncRequestHandler<AddTicketCommentCommand>
     {
-        private readonly IAggregateRepository<Ticket> _repository;
+        private readonly IAggregateRepository _repository;
 
-        public AddTicketCommentCommandHandler(IAggregateRepository<Ticket> repository)
+        public AddTicketCommentCommandHandler(IAggregateRepository repository)
         {
             _repository = repository;
         }
 
         public async Task Handle(AddTicketCommentCommand message)
         {
-            var ticket = await _repository.Get(message.TicketId);
+            var ticket = await _repository.Get<Ticket>(message.TicketId);
             ticket.AddComment(message.Comment, message.UserId);
             await _repository.Save(ticket);
         }

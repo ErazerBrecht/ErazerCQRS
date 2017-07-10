@@ -28,7 +28,8 @@ namespace Erazer.Domain
                 UserId = creatorUserId
             });
 
-            this.UpdatePriority(DefaultPriorityId, creatorUserId);
+            // Set default priority
+            UpdatePriority(DefaultPriorityId, creatorUserId);
         }
 
         private Ticket() 
@@ -40,6 +41,7 @@ namespace Erazer.Domain
         #endregion
 
         #region Events
+        // Events are 'mutations' that happened in the past!
         // This blocks of code actually handle the business logic and will mutate the state of this domain class.
         // They are executed when a command arrives or when the aggregate is loaded from previous events!
         private void Apply(TicketCreateEvent e)
@@ -59,7 +61,7 @@ namespace Erazer.Domain
 
         #region Domain methods
         /// <summary>
-        /// These methods will appy events t.o our domain This code should use a ubiquitous language.
+        /// These methods will appy events to our domain This code should use a ubiquitous language.
         /// This will make sure even non developers will be able to read the method signature easy!
         /// 
         /// They also handle domain validation
