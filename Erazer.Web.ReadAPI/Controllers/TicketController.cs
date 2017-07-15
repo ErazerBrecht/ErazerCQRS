@@ -16,11 +16,18 @@ namespace Erazer.Web.ReadAPI.Controllers
             _mediator = mediator;
         }
 
-        // TODO
+        /// <summary>
+        /// Retrieve all tickets
+        /// </summary>
+        /// <example>
+        /// GET api/ticket
+        /// </example>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            throw new NotImplementedException();
+            var tickets = await _mediator.Send(new TicketListQuery());
+            return Ok(tickets);
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Erazer.DAL.ReadModel.Base;
 using Erazer.Services.Queries.DTOs;
@@ -22,9 +22,10 @@ namespace Erazer.DAL.ReadModel.Repositories
             return await tickets.SingleOrDefaultAsync();
         }
 
-        public Task<TicketListDto> All()
+        public async Task<List<TicketListDto>> All()
         {
-            throw new NotImplementedException();
+            var projection = Builders<TicketDto>.Projection.Expression(t => new TicketListDto { Id = t.Id, Status = t.Status, Title = t.Title, Priority = t.Priority});
+            return await _collection.Find(t => true).Project<TicketListDto>(projection).ToListAsync();
         }
 
         public async Task Update(TicketDto ticket)
