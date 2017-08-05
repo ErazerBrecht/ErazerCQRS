@@ -10,6 +10,7 @@ namespace Erazer.Web.ReadAPI
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseUrls("http://localhost:5000")
                 .UseIISIntegration()
                 .UseStartup<Startup>()
                 .UseApplicationInsights()

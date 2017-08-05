@@ -20,28 +20,37 @@ namespace Erazer.Servicebus
             _mediator = mediator;
         }
 
-        // Running this method on startup takes long
-        // https://github.com/Azure/azure-service-bus-dotnet/issues/154
         public void RegisterEventReciever()
         {
-            _queueClient.RegisterMessageHandler(
-                async (message, token) =>
-                {
-                    // Get actual message content
-                    var messageBody = Encoding.UTF8.GetString(message.Body);
+            var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+            {
+                // Maximum number of Concurrent calls to the callback `ProcessMessagesAsync`, set to 1 for simplicity.
+                MaxConcurrentCalls = 1,
 
-                    // Process the message 
-                    await ProcessEvents(messageBody, token);
+                // Indicates whether MessagePump should automatically complete the messages after returning from User Callback.
+                // False value below indicates the Complete will be handled by the User Callback as seen in `ProcessMessagesAsync`.
+                AutoComplete = false
+            };
 
-                    // Complete the message so that it is not received again.
-                    // This can be done only if the queueClient is opened in ReceiveMode.PeekLock mode.
-                    await _queueClient.CompleteAsync(message.SystemProperties.LockToken);
-                });
+            // Register the function that will process messages
+            _queueClient.RegisterMessageHandler(ProcessEvents, messageHandlerOptions);
         }
 
-        private async Task ProcessEvents(string messageBody, CancellationToken token)
+        // Use this Handler to look at the exceptions received on the MessagePump
+        static Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
         {
+            throw exceptionReceivedEventArgs.Exception;
+        }
+
+        private async Task ProcessEvents(Message message, CancellationToken token)
+        {
+            var messageBody = Encoding.UTF8.GetString(message.Body);
             var @event = JsonConvert.DeserializeObject<IEvent>(messageBody, JsonSettings.DefaultSettings);
+
+            // Complete the message so that it is not received again.
+            // This can be done only if the queueClient is opened in ReceiveMode.PeekLock mode (which is default).
+            await _queueClient.CompleteAsync(message.SystemProperties.LockToken);
+
             await _mediator.Publish(@event, token);
         }
     }
