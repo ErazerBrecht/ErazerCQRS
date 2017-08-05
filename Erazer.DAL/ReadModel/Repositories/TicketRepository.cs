@@ -32,5 +32,10 @@ namespace Erazer.DAL.ReadModel.Repositories
         {
            await _collection.ReplaceOneAsync(t => t.Id == ticket.Id, ticket);
         }
+
+        public async Task Insert(TicketDto ticket)
+        {
+            await _collection.InsertOneAsync(ticket);
+        }
     }
 }

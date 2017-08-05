@@ -9,5 +9,6 @@ namespace Erazer.Services.Queries.Repositories
         Task<TicketDto> Find(string id);
         Task<List<TicketListDto>> All();
         Task Update(TicketDto ticket);
+        Task Insert(TicketDto ticket);
     }
 }

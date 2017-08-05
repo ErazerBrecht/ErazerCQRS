@@ -31,6 +31,7 @@ namespace Erazer.Framework.Domain
 
                 foreach (var @event in changes)
                 {
+                    @event.AggregateRootId = Id;
                     @event.Created = DateTime.UtcNow;
                 }
 

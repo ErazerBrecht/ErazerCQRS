@@ -28,11 +28,10 @@ namespace Erazer.Servicebus
 
         public async Task Publish<T>(IEnumerable<T> events) where T : class, IEvent
         {
-            var messages = events.Select(@event => JsonConvert.SerializeObject(@event, JsonSettings.DefaultSettings))
-                    .Select(jsonEvent => new Message(Encoding.UTF8.GetBytes(jsonEvent)))
-                    .ToList();
+            var messages = events.OrderBy(e => e.Version).Select(@event => JsonConvert.SerializeObject(@event, JsonSettings.DefaultSettings))
+                .Select(jsonEvent => new Message(Encoding.UTF8.GetBytes(jsonEvent)))
+                .ToList();
 
-            // Send the message to the queue
             await _queueClient.SendAsync(messages);
         }
 

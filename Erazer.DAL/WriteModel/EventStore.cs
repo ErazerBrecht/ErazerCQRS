@@ -20,6 +20,7 @@ namespace Erazer.DAL.WriteModel
             _mapper = mapper;
         }
 
+        // AggregageId is already available in events => TODO Remove parameter
         public async Task Save(Guid aggregateId, IEnumerable<IEvent> events)
         {
             var eventData = _mapper.Map<IEnumerable<EventData>>(events);
