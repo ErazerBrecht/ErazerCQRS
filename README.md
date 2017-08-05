@@ -9,7 +9,8 @@ My learning steps into the world of CQRS and EventSourcing
     - TODO Logging with aid of [Mediatr Behaviours](https://github.com/jbogard/MediatR/wiki/Behaviors)
   - Write side -> Eventsourcing -> [**GetEventStore**](https://geteventstore.com)
     - TODO Validation of 'Commands'
-    - TODO Caching of Aggregate -> **REDIS**
+    - Caching of Aggregate -> **REDIS**
+	- DDD
   - Decoupling Read side & Write side
     - Azure Servicebus
     - Consequence: Eventual Consistency 
