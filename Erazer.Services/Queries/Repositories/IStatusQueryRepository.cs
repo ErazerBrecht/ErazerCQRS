@@ -7,5 +7,6 @@ namespace Erazer.Services.Queries.Repositories
     public interface IStatusQueryRepository
     {
         Task<IList<StatusDto>> All();
+        Task<StatusDto> Find(string id);
     }
 }

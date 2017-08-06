@@ -10,10 +10,10 @@ namespace Erazer.Domain
         private string _title;
         private string _description;
         private string _priorityId;
-        private int _statusId;
+        private string _statusId;
 
         private const string DefaultPriorityId = PriorityConstants.Medium;
-        private const int DefaultStatusId = StatusConstants.Backlog;
+        private const string DefaultStatusId = StatusConstants.Backlog;
 
         #region Constructors
         // Need of a parameterless constructor to build Aggregate from events!
@@ -30,6 +30,9 @@ namespace Erazer.Domain
 
             // Set default priority
             UpdatePriority(DefaultPriorityId, creatorUserId);
+            
+            // Set default status
+            UpdateStatus(DefaultStatusId, creatorUserId);
         }
 
         private Ticket() 
@@ -37,6 +40,7 @@ namespace Erazer.Domain
             // Register EventHandlers
             Handles<TicketCreateEvent>(Apply);
             Handles<TicketPriorityEvent>(Apply);
+            Handles<TicketStatusEvent>(Apply);
         }
         #endregion
 
@@ -55,6 +59,11 @@ namespace Erazer.Domain
         private void Apply(TicketPriorityEvent e)
         {
             _priorityId = e.ToPriorityId;
+        }
+
+        private void Apply(TicketStatusEvent e)
+        {
+            _statusId = e.ToStatusId;
         }
 
         #endregion
@@ -86,6 +95,19 @@ namespace Erazer.Domain
             {
                 FromPriorityId = _priorityId,
                 ToPriorityId = newPriorityId,
+                UserId = userId
+            });
+        }
+
+        public void UpdateStatus(string newStatusId, Guid userId)
+        {
+            if (newStatusId == _statusId)
+                return;
+
+            ApplyChange(new TicketStatusEvent
+            {
+                FromStatusId = _statusId,
+                ToStatusId = newStatusId,
                 UserId = userId
             });
         }

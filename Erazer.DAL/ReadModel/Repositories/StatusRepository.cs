@@ -12,7 +12,6 @@ namespace Erazer.DAL.ReadModel.Repositories
     {
         private readonly IMongoCollection<StatusDto> _collection;
 
-
         public StatusRepository(IMongoDatabase database) : base(database)
         {
             _collection = database.GetCollection<StatusDto>("Statuses");
@@ -22,6 +21,12 @@ namespace Erazer.DAL.ReadModel.Repositories
         {
             var statuses = await _collection.FindAsync(_ => true);
             return await statuses.ToListAsync<StatusDto>();
+        }
+
+        public async Task<StatusDto> Find(string id)
+        {
+            var status = await _collection.FindAsync(s => s.Id == id);
+            return await status.SingleOrDefaultAsync();
         }
     }
 }
