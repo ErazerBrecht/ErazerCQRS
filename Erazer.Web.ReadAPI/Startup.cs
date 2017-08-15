@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Erazer.DAL.ReadModel.Base;
 using Erazer.DAL.ReadModel.Repositories;
 using Erazer.Servicebus;
@@ -59,6 +60,7 @@ namespace Erazer.Web.ReadAPI
             services.StartEventReciever();
 
             // Add MVC
+            services.AddCors();
             services.AddMvcCore().AddJsonFormatters();
         }
 
@@ -74,6 +76,13 @@ namespace Erazer.Web.ReadAPI
             }
 
             app.UseMongoDbClassMaps();
+
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:4200")            // Load this from ENV or Config file
+                       .WithMethods("GET")
+                       .SetPreflightMaxAge(TimeSpan.FromHours(1));
+            });
             app.UseMvc();
         }
     }
