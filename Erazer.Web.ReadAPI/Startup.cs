@@ -42,8 +42,8 @@ namespace Erazer.Web.ReadAPI
             services.Configure<AzureServiceBusSettings>(_configuration.GetSection("AzureServiceBusSettings"));
 
             // Add 'Infrasructure' Providers
-            services.AddScopedFactory<IMongoDatabase, MongoDbFactory>();
-            services.AddScopedFactory<IQueueClient, QueueClientFactory>();
+            services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
+            services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
 
             services.AddAutoMapper();
             services.AddMediatR();

@@ -1,7 +1,9 @@
 ﻿using Erazer.Framework.Factories;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Clusters;
 
 namespace Erazer.DAL.ReadModel.Base
 {
@@ -28,9 +30,17 @@ namespace Erazer.DAL.ReadModel.Base
             var client = new MongoClient(_options.Value.ConnectionString);
             var db = client.GetDatabase(_options.Value.Database);
 
-            // TODO Check if connection was actually succeeded!
-            _logger.LogInformation($"Created a succesful connection with the mongo db server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t Database: {_options.Value.Database}");
-
+            // Check if MongoDb connection is succesful created!
+            try
+            {
+                db.RunCommandAsync((Command<BsonDocument>) "{ping:1}").Wait();
+                _logger.LogInformation($"Created a succesful connection with the mongo db server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t Database: {_options.Value.Database}");
+            }
+            catch
+            {
+                throw new MongoClientException($"Could NOT create a succesful connection with 'MongoDb' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
+            }
+        
             return db;
         }
     }
