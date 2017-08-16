@@ -23,9 +23,9 @@ namespace Erazer.DAL.ReadModel.Repositories
             return await events.ToListAsync();
         }
 
-        public Task Add(TicketEventDto ticketEvent)
+        public async Task Add(TicketEventDto ticketEvent)
         {
-            return _collection.InsertOneAsync(ticketEvent);
+            return await _collection.InsertOneAsync(ticketEvent);
         }
     }
 }
