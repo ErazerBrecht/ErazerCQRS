@@ -20,7 +20,7 @@ namespace Erazer.DAL.ReadModel.Repositories
         public async Task<IList<StatusDto>> All()
         {
             var statuses = await _collection.FindAsync(_ => true);
-            return await statuses.ToListAsync<StatusDto>();
+            return await statuses.ToListAsync();
         }
 
         public async Task<StatusDto> Find(string id)

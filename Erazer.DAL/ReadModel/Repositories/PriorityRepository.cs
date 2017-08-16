@@ -20,7 +20,7 @@ namespace Erazer.DAL.ReadModel.Repositories
         public async Task<IList<PriorityDto>> All()
         {
             var priorities = await _collection.FindAsync(_ => true);
-            return await priorities.ToListAsync<PriorityDto>();
+            return await priorities.ToListAsync();
         }
 
         public async Task<PriorityDto> Find(string id)
