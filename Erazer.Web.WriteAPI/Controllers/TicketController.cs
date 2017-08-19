@@ -24,8 +24,9 @@ namespace Erazer.Web.WriteAPI.Controllers
             {
                 Id = Guid.NewGuid(),
                 UserId = Guid.Parse("88888888-8888-8888-8888-888888888888"),
+                Title = model.Title,
                 Description = model.Description,
-                Title = model.Title
+                PriorityId = model.PriorityId
             });
 
             return Ok();

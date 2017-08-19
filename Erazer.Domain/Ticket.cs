@@ -12,14 +12,13 @@ namespace Erazer.Domain
         private string _priorityId;
         private string _statusId;
 
-        private const string DefaultPriorityId = PriorityConstants.Medium;
         private const string DefaultStatusId = StatusConstants.Backlog;
 
         #region Constructors
         // Need of a parameterless constructor to build Aggregate from events!
 
         // Constructor used for creating a new ticket!
-        public Ticket(Guid id, string title, string description, Guid creatorUserId) : this()
+        public Ticket(Guid id, string title, string description, string priorityId, Guid creatorUserId) : this()
         {
             ApplyChange(new TicketCreateEvent(id)
             {
@@ -29,7 +28,7 @@ namespace Erazer.Domain
             });
 
             // Set default priority
-            UpdatePriority(DefaultPriorityId, creatorUserId);
+            UpdatePriority(priorityId, creatorUserId);
             
             // Set default status
             UpdateStatus(DefaultStatusId, creatorUserId);

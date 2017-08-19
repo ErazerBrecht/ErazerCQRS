@@ -10,5 +10,6 @@ namespace Erazer.Services.Commands.Requests
 
         public string Title { get; set; }
         public string Description { get; set; }
+        public string PriorityId { get; set; }
     }
 }
