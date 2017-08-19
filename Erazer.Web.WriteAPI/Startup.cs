@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Erazer.DAL.Cache;
 using Erazer.DAL.WriteModel;
 using Erazer.Framework.Cache;
@@ -62,6 +63,7 @@ namespace Erazer.Web.WriteAPI
             services.AddScoped<IEventPublisher, EventPublisher>();
 
             // Add MVC
+            services.AddCors();
             services.AddMvcCore().AddJsonFormatters();
         }
 
@@ -76,6 +78,13 @@ namespace Erazer.Web.WriteAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:4200")            // Load this from ENV or Config file
+                       .WithMethods("POST")
+                       .AllowAnyHeader()
+                       .SetPreflightMaxAge(TimeSpan.FromHours(1));
+            });
             app.UseMvc();
         }
     }
