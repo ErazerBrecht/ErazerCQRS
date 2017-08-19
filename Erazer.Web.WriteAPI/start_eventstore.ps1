@@ -1,0 +1,1 @@
+& "E:\EventStore\EventStore.ClusterNode.exe"
