@@ -9,6 +9,7 @@ namespace Erazer.Services.Queries.Mappings
         public TicketMappings()
         {
             CreateMap<TicketDto, TicketViewModel>();
+            CreateMap<TicketDto, TicketListViewModel>();
             CreateMap<TicketListDto, TicketListViewModel>();
 
             CreateMap<TicketEventDto, TicketEventViewModel>()

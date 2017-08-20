@@ -1,4 +1,4 @@
-﻿namespace Erazer.Services.Events.Mappings
+﻿namespace Erazer.Services.Events.Redux
 {
     public static class ReduxActionTypeConstants
     {

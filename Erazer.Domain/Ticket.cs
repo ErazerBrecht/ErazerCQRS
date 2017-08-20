@@ -24,14 +24,10 @@ namespace Erazer.Domain
             {
                 Title = title,
                 Description = description,
-                UserId = creatorUserId
+                UserId = creatorUserId,
+                PriorityId = priorityId,
+                StatusId = DefaultStatusId
             });
-
-            // Set default priority
-            UpdatePriority(priorityId, creatorUserId);
-            
-            // Set default status
-            UpdateStatus(DefaultStatusId, creatorUserId);
         }
 
         private Ticket() 
@@ -53,6 +49,8 @@ namespace Erazer.Domain
 
             _title = e.Title;
             _description = e.Description;
+            _priorityId = e.PriorityId;
+            _statusId = e.StatusId;
         }
 
         private void Apply(TicketPriorityEvent e)

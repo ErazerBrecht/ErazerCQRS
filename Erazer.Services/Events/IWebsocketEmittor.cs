@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Erazer.Services.Events.Mappings;
+using Erazer.Services.Events.Redux;
 
 namespace Erazer.Services.Events
 {

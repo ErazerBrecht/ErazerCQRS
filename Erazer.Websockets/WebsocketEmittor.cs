@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Erazer.Services.Events;
-using Erazer.Services.Events.Mappings;
+using Erazer.Services.Events.Redux;
 using Erazer.Web.Shared;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Options;
