@@ -4,6 +4,7 @@ using Erazer.DAL.ReadModel.Base;
 using Erazer.DAL.ReadModel.Repositories;
 using Erazer.Servicebus;
 using Erazer.Servicebus.Extensions;
+using Erazer.Services.Events;
 using Erazer.Services.Queries.Repositories;
 using Erazer.Shared.Extensions.DependencyInjection;
 using Erazer.Web.ReadAPI.Extensions;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using Erazer.Websockets;
 
 namespace Erazer.Web.ReadAPI
 {
@@ -40,10 +42,12 @@ namespace Erazer.Web.ReadAPI
             services.AddSingleton<IConfiguration>(_configuration);
             services.Configure<MongoDbSettings>(_configuration.GetSection("MongoDbSettings"));
             services.Configure<AzureServiceBusSettings>(_configuration.GetSection("AzureServiceBusSettings"));
+            services.Configure<WebsocketSettings>(_configuration.GetSection("WebsocketSettings"));
 
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
             services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
+            services.AddSingleton<IWebsocketEmittor, WebsocketEmittor>();
 
             services.AddAutoMapper();
             services.AddMediatR();

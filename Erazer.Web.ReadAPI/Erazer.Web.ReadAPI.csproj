@@ -26,6 +26,7 @@
     <ProjectReference Include="..\Erazer.Servicebus\Erazer.Servicebus.csproj" />
     <ProjectReference Include="..\Erazer.Services\Erazer.Services.csproj" />
     <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />
+    <ProjectReference Include="..\Erazer.Websockets\Erazer.Websockets.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AutoMapper.Extensions.Microsoft.DependencyInjection">

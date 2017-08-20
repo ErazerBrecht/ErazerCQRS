@@ -37,6 +37,18 @@ namespace Erazer.Web.Shared
                 return settings;
             }
         }
+
+        public static JsonSerializerSettings CamelCaseSerializer
+        {
+            get
+            {
+                var settings = DefaultSettings;
+                settings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+                settings.TypeNameHandling = TypeNameHandling.None;
+                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                return settings;
+            }
+        }
     }
 
     public class PrivateContractResolver : DefaultContractResolver

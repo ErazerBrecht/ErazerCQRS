@@ -11,7 +11,6 @@ server.listen(port, function () {
     console.log('Server listening at port %d', port);
 });
 app.post('/internal/broadcast', function (req, res) {
-    console.log(req);
     console.log(req.body);
     io.sockets.emit('UPDATE_REDUX', req.body);
     res.sendStatus(200);

@@ -2,7 +2,7 @@
 using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.ViewModels;
 
-namespace Erazer.Services.Mappings
+namespace Erazer.Services.Queries.Mappings
 {
     public class StatusMappings : Profile
     {
