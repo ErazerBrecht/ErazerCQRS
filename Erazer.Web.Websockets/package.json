@@ -1,0 +1,14 @@
+{
+  "name": "erazer.web.websockets",
+  "version": "0.0.0",
+  "description": "Erazer.Web.Websockets",
+  "main": "app.js",
+  "author": {
+    "name": "Brecht"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "socket.io": "^2.0.3"
+  }
+}
