@@ -16,9 +16,15 @@ My learning steps into the world of CQRS and EventSourcing
     - Consequence: Eventual Consistency 
 
 - TODO Angular (> 4)
+  - Currently in development on a seperate git repo.
+  	- Will become public soon.
   - Using Angular CLI
   - Using ngrx-store
   - Using websockets
+  	- Check issue [#7](/../../issues/7)
+
+- TODO Docker
+- TODO Authentication and Authorization
 
 ## Resources
 
