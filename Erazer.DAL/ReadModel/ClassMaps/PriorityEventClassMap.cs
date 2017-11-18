@@ -10,8 +10,8 @@ namespace Erazer.DAL.ReadModel.ClassMaps
         {
             cm.SetDiscriminator("priority");
 
-            cm.MapField("_fromPriority").SetElementName("fromPriority");
-            cm.MapField("_toPriority").SetElementName("toPriority");
+            cm.MapProperty(p => p.FromPriority).SetElementName("fromPriority");
+            cm.MapProperty(p => p.ToPriority).SetElementName("toPriority");
         }
     }
 }

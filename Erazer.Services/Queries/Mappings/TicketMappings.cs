@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Erazer.Services.Queries.DTOs;
+using Erazer.Services.Queries.DTOs.Events;
 using Erazer.Services.Queries.ViewModels;
+using Erazer.Services.Queries.ViewModels.Events;
 
 namespace Erazer.Services.Queries.Mappings
 {
@@ -12,10 +14,16 @@ namespace Erazer.Services.Queries.Mappings
             CreateMap<TicketDto, TicketListViewModel>();
             CreateMap<TicketListDto, TicketListViewModel>();
 
-            CreateMap<TicketEventDto, TicketEventViewModel>()
-                .ForMember(vm => vm.From, opt => opt.MapFrom(dto => dto.Event.From))
-                .ForMember(vm => vm.To, opt => opt.MapFrom(dto => dto.Event.To))
-                .ForMember(vm => vm.Type, opt => opt.MapFrom(dto => dto.Event.Type));
+            CreateMap<TicketEventDto, TicketEventViewModel>();
+            CreateMap<StatusEventDto, TicketStatusEventViewModel>()
+                .IncludeBase<TicketEventDto, TicketEventViewModel>();
+            CreateMap<PriorityEventDto, TicketPriorityEventViewModel>()
+                .IncludeBase<TicketEventDto, TicketEventViewModel>();
+            CreateMap<CommentEventDto, TicketCommentEventViewModel>()
+                .IncludeBase<TicketEventDto, TicketEventViewModel>();
+            CreateMap<StatusEventDto, TicketStatusEventViewModel>()
+                .IncludeBase<TicketEventDto, TicketEventViewModel>();
+
         }
     }
 }

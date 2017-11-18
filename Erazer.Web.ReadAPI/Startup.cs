@@ -18,6 +18,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Erazer.Websockets;
+using Erazer.Web.ReadAPI.Initializer;
+using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
+using Erazer.Web.Shared.Telemetary;
 
 namespace Erazer.Web.ReadAPI
 {
@@ -44,6 +48,9 @@ namespace Erazer.Web.ReadAPI
             services.Configure<AzureServiceBusSettings>(_configuration.GetSection("AzureServiceBusSettings"));
             services.Configure<WebsocketSettings>(_configuration.GetSection("WebsocketSettings"));
 
+            // Add Singleton TelemeterClient
+            services.AddSingletonFactory<TelemetryClient, TelemeteryFactory>();
+
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
             services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
@@ -58,7 +65,6 @@ namespace Erazer.Web.ReadAPI
             services.AddScoped<ITicketEventQueryRepository, TicketEventRepository>();
             services.AddScoped<IStatusQueryRepository, StatusRepository>();
             services.AddScoped<IPriorityQueryRepository, PriorityRepository>();
-
 
             // CQRS
             services.StartEventReciever();
@@ -88,6 +94,11 @@ namespace Erazer.Web.ReadAPI
                        .SetPreflightMaxAge(TimeSpan.FromHours(1));
             });
             app.UseMvc();
+
+            // Seeding of DB
+            Task.WaitAll(
+                StatusInitializer.Initialize(app.ApplicationServices.GetRequiredService<IStatusQueryRepository>()),
+                PriorityInitialzer.Initialize(app.ApplicationServices.GetRequiredService<IPriorityQueryRepository>()));
         }
     }
 }

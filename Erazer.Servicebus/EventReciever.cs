@@ -44,6 +44,7 @@ namespace Erazer.Servicebus
 
         private async Task ProcessEvents(Message message, CancellationToken token)
         {
+            // Deserialze event
             var messageBody = Encoding.UTF8.GetString(message.Body);
             var @event = JsonConvert.DeserializeObject<IEvent>(messageBody, JsonSettings.DefaultSettings);
 
@@ -51,7 +52,8 @@ namespace Erazer.Servicebus
             // This can be done only if the queueClient is opened in ReceiveMode.PeekLock mode (which is default).
             await _queueClient.CompleteAsync(message.SystemProperties.LockToken);
 
-            await _mediator.Publish(@event, token);
+            // Process event
+            await _mediator.Publish(@event, token);                     
         }
     }
 }

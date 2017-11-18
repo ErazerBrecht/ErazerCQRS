@@ -11,14 +11,6 @@
     <None Remove="wwwroot\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
-  </ItemGroup>
-  <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
@@ -27,14 +19,6 @@
     <ProjectReference Include="..\Erazer.Services\Erazer.Services.csproj" />
     <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />
     <ProjectReference Include="..\Erazer.Websockets\Erazer.Websockets.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="AutoMapper.Extensions.Microsoft.DependencyInjection">
-      <HintPath>..\..\..\..\.nuget\packages\automapper.extensions.microsoft.dependencyinjection\2.0.1\lib\netstandard1.6\AutoMapper.Extensions.Microsoft.DependencyInjection.dll</HintPath>
-    </Reference>
-    <Reference Include="MediatR.Extensions.Microsoft.DependencyInjection">
-      <HintPath>..\..\..\..\.nuget\packages\mediatr.extensions.microsoft.dependencyinjection\2.0.0\lib\netstandard1.6\MediatR.Extensions.Microsoft.DependencyInjection.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

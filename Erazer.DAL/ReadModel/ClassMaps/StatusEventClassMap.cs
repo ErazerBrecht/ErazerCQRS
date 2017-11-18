@@ -11,8 +11,8 @@ namespace Erazer.DAL.ReadModel.ClassMaps
         {
             cm.SetDiscriminator("status");
 
-            cm.MapField("_fromStatus").SetElementName("fromStatus");
-            cm.MapField("_toStatus").SetElementName("toStatus");
+            cm.MapProperty(p => p.FromStatus).SetElementName("fromStatus");
+            cm.MapProperty(p => p.ToStatus).SetElementName("toStatus");
         }
     }
 }

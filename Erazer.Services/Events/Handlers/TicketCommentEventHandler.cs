@@ -19,16 +19,13 @@ namespace Erazer.Services.Events.Handlers
 
         public Task Handle(TicketCommentEvent message)
         {
-            var ticketEvent = new TicketEventDto
+            var ticketEvent = new CommentEventDto
             {
                 Id = Guid.NewGuid().ToString(),
                 TicketId = message.AggregateRootId.ToString(),
                 Created = message.Created,
                 UserId = message.UserId.ToString(),
-                Event = new CommentEventDto
-                {
-                    Comment = message.Comment
-                }
+                Comment = message.Comment                
             };
 
             return _repository.Add(ticketEvent);

@@ -2,20 +2,15 @@
 
 namespace Erazer.Services.Queries.DTOs.Events
 {
-    public class StatusEventDto : BaseEventDto
+    public class StatusEventDto : TicketEventDto
     {
+        public StatusDto FromStatus { get; private set; }
+        public StatusDto ToStatus { get; private set; }
+
         public StatusEventDto(StatusDto from, StatusDto to)
         {
-            _fromStatus = from;
-            _toStatus = to;
+            FromStatus = from;
+            ToStatus = to;
         }
-
-        public override EventType Type => EventType.Status;
-        public override string From => _fromStatus.Name;
-        public override string To => _toStatus.Name;
-
-        private StatusDto _fromStatus;
-        private StatusDto _toStatus;
-
     }
 }

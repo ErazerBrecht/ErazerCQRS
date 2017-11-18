@@ -8,5 +8,8 @@ namespace Erazer.Services.Queries.Repositories
     {
         Task<IList<StatusDto>> All();
         Task<StatusDto> Find(string id);
+        Task<bool> Any();
+
+        Task Add(StatusDto status);
     }
 }

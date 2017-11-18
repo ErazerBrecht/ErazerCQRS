@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Erazer.DAL.ReadModel.Base;
 using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Repositories;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace Erazer.DAL.ReadModel.Repositories
@@ -19,7 +18,7 @@ namespace Erazer.DAL.ReadModel.Repositories
 
         public async Task<IList<StatusDto>> All()
         {
-            var statuses = await _collection.FindAsync(_ => true);
+            var statuses = await _collection.FindAllAsync();
             return await statuses.ToListAsync();
         }
 
@@ -27,6 +26,16 @@ namespace Erazer.DAL.ReadModel.Repositories
         {
             var status = await _collection.FindAsync(s => s.Id == id);
             return await status.SingleOrDefaultAsync();
+        }
+
+        public Task<bool> Any()
+        {
+            return _collection.AsQueryable().AnyAsync();
+        }
+
+        public Task Add(StatusDto status)
+        {
+            return _collection.InsertOneAsync(status);
         }
     }
 }

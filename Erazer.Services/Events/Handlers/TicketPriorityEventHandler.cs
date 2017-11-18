@@ -31,13 +31,13 @@ namespace Erazer.Services.Events.Handlers
             ticket.Priority = newPriority;
 
             // Add ticket event in ReadModel
-            var ticketEvent = new TicketEventDto
+            var ticketEvent = new PriorityEventDto(oldPriority, newPriority)
             {
                 Id = Guid.NewGuid().ToString(),
                 TicketId = message.AggregateRootId.ToString(),
                 Created = message.Created,
                 UserId = message.UserId.ToString(),
-                Event = new PriorityEventDto(oldPriority, newPriority)
+                
             };
 
             await _ticketRepository.Update(ticket);

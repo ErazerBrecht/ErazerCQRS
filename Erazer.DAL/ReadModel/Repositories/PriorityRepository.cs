@@ -28,5 +28,15 @@ namespace Erazer.DAL.ReadModel.Repositories
             var priorities = await _collection.FindAsync(p => p.Id == id);
             return await priorities.SingleOrDefaultAsync();
         }
+
+        public Task<bool> Any()
+        {
+            return _collection.AsQueryable().AnyAsync();
+        }
+
+        public Task Add(PriorityDto priority)
+        {
+            return _collection.InsertOneAsync(priority);
+        }
     }
 }

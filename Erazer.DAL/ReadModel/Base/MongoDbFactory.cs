@@ -1,9 +1,13 @@
 ﻿using Erazer.Framework.Factories;
+using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Clusters;
+using MongoDB.Driver.Core.Configuration;
+using MongoDB.Driver.Core.Events;
+using System;
 
 namespace Erazer.DAL.ReadModel.Base
 {
@@ -11,11 +15,13 @@ namespace Erazer.DAL.ReadModel.Base
     {
         private readonly IOptions<MongoDbSettings> _options;
         private readonly ILogger<IMongoDatabase> _logger;
+        private readonly TelemetryClient _telemetryClient;
 
-        public MongoDbFactory(IOptions<MongoDbSettings> options, ILogger<IMongoDatabase> logger)
+        public MongoDbFactory(IOptions<MongoDbSettings> options, ILogger<IMongoDatabase> logger, TelemetryClient telemeteryClient)
         {
             _options = options;
             _logger = logger;
+            _telemetryClient = telemeteryClient;
 
             if (string.IsNullOrWhiteSpace(options.Value.ConnectionString))
                 throw new MongoConfigurationException("Connection string is required when setting up a connection with a MongoDb server!");
@@ -27,7 +33,13 @@ namespace Erazer.DAL.ReadModel.Base
 
         public IMongoDatabase Build()
         {
-            var client = new MongoClient(_options.Value.ConnectionString);
+            var url = new Uri(_options.Value.ConnectionString);
+            var client = new MongoClient(new MongoClientSettings()
+            {
+                Server = new MongoServerAddress(url.Host, url.Port),
+                ClusterConfigurator = AddTelemeteryLogging()
+            });
+
             var db = client.GetDatabase(_options.Value.Database);
 
             // Check if MongoDb connection is succesful created!
@@ -42,6 +54,34 @@ namespace Erazer.DAL.ReadModel.Base
             }
         
             return db;
+        }
+
+        private Action<ClusterBuilder> AddTelemeteryLogging()
+        {
+            return cb =>
+            {
+                cb.Subscribe<CommandStartedEvent>(e =>
+                {
+                    if (ShouldCommandEventBeLogged(e.CommandName))
+                        _telemetryClient.TrackTrace("MongoDB Command started - " + e.Command.ToJson());
+                });
+                cb.Subscribe<CommandSucceededEvent>(e =>
+                {
+                    if (ShouldCommandEventBeLogged(e.CommandName))
+                        _telemetryClient.TrackDependency("MongoDB", "Command succeeded - " + e.CommandName, DateTime.Now, e.Duration, true);
+                });
+                cb.Subscribe<CommandFailedEvent>(e =>
+                {
+                    _telemetryClient.TrackDependency("MongoDB", $"Command failed - {e.CommandName} - {e.ToString()}", DateTime.Now.Subtract(e.Duration), e.Duration, false);
+                });
+            };
+        }
+
+        private bool ShouldCommandEventBeLogged(string commandName)
+        {
+            if (commandName != "isMaster" && commandName != "buildInfo" && commandName != "getLastError" && commandName != "ping")
+                return true;
+            return false;
         }
     }
 }

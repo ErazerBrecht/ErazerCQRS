@@ -1,5 +1,5 @@
 ﻿using Erazer.DAL.ReadModel.Base;
-using Erazer.Services.Queries.DTOs;
+using Erazer.Services.Queries.DTOs.Events;
 using MongoDB.Bson.Serialization;
 
 namespace Erazer.DAL.ReadModel.ClassMaps
@@ -12,7 +12,6 @@ namespace Erazer.DAL.ReadModel.ClassMaps
 
             cm.MapProperty(x => x.TicketId).SetElementName("ticketId");
             cm.MapProperty(x => x.Created).SetElementName("created");
-            cm.MapProperty(x => x.Event).SetElementName("event");
             cm.MapProperty(x => x.UserId).SetElementName("userId");
         }
     }

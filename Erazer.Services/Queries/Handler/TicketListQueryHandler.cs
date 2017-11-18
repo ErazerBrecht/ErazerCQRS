@@ -22,8 +22,8 @@ namespace Erazer.Services.Queries.Handler
         public async Task<List<TicketListViewModel>> Handle(TicketListQuery message)
         {
             // TODO Add pagination
-
             var tickets = await _repository.All();
+
             return _mapper.Map<List<TicketListViewModel>>(tickets);
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Erazer.Services.Queries.DTOs;
+using Erazer.Services.Queries.DTOs.Events;
 
 namespace Erazer.Services.Queries.Repositories
 {

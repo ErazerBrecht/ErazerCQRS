@@ -31,13 +31,12 @@ namespace Erazer.Services.Events.Handlers
             ticket.Status = newStatus;
 
             // Add ticket event in ReadModel
-            var ticketEvent = new TicketEventDto
+            var ticketEvent = new StatusEventDto(oldStatus, newStatus)
             {
                 Id = Guid.NewGuid().ToString(),
                 TicketId = message.AggregateRootId.ToString(),
                 Created = message.Created,
                 UserId = message.UserId.ToString(),
-                Event = new StatusEventDto(oldStatus, newStatus)
             };
 
             await _ticketRepository.Update(ticket);
