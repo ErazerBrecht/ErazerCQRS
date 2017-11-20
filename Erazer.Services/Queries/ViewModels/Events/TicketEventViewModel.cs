@@ -6,6 +6,7 @@ namespace Erazer.Services.Queries.ViewModels
     public abstract class TicketEventViewModel
     {
         public string Id { get; set; }
+        public string TicketId { get; set; }
         public DateTime Created { get; set; }
 
         // TODO Add concept of users (identity)

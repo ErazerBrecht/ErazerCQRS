@@ -16,7 +16,6 @@ namespace Erazer.Web.Shared
             MissingMemberHandling = MissingMemberHandling.Ignore,
             DateParseHandling = DateParseHandling.DateTimeOffset,
             DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
-            Converters = new List<JsonConverter> { new StringEnumConverter() },
             DateFormatHandling = DateFormatHandling.IsoDateFormat,
             DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
             FloatFormatHandling = FloatFormatHandling.DefaultValue,

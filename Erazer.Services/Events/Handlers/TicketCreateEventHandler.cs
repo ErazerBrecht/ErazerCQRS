@@ -40,8 +40,9 @@ namespace Erazer.Services.Events.Handlers
                 Status = status
             };
 
-            await _ticketRepository.Insert(ticket);
-            await _websocketEmittor.Emit(new ReduxAction(ReduxActionTypeConstants.AddTicket, _mapper.Map<TicketListViewModel>(ticket)));
+            await Task.WhenAll(
+                    _websocketEmittor.Emit(new ReduxAction(ReduxActionTypeConstants.AddTicket, _mapper.Map<TicketListViewModel>(ticket))),
+                    _ticketRepository.Insert(ticket));
         }
     }
 }
