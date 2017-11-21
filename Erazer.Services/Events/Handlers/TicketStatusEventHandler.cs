@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Erazer.Domain.Events;
-using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.DTOs.Events;
 using Erazer.Services.Queries.Repositories;
 using MediatR;
+using AutoMapper;
+using Erazer.Services.Events.Redux;
+using Erazer.Services.Queries.ViewModels.Events;
 
 namespace Erazer.Services.Events.Handlers
 {
     public class TicketStatusEventHandler : IAsyncNotificationHandler<TicketStatusEvent>
     {
+        private readonly IMapper _mapper;
+        private readonly IWebsocketEmittor _websocketEmittor;
         private readonly ITicketQueryRepository _ticketRepository;
         private readonly IStatusQueryRepository _statusRepository;
         private readonly ITicketEventQueryRepository _eventRepository;
 
-        public TicketStatusEventHandler(ITicketQueryRepository ticketRepository, IStatusQueryRepository statusRepository, ITicketEventQueryRepository eventRepository)
+        public TicketStatusEventHandler(IMapper mapper, IWebsocketEmittor websocketEmittor, ITicketQueryRepository ticketRepository, IStatusQueryRepository statusRepository, ITicketEventQueryRepository eventRepository)
         {
+            _mapper = mapper;
+            _websocketEmittor = websocketEmittor;
             _ticketRepository = ticketRepository;
             _statusRepository = statusRepository;
             _eventRepository = eventRepository;
@@ -39,9 +45,10 @@ namespace Erazer.Services.Events.Handlers
                 UserId = message.UserId.ToString(),
             };
 
-            await _ticketRepository.Update(ticket);
-            await _eventRepository.Add(ticketEvent);
-
+            await Task.WhenAll(
+                    _websocketEmittor.Emit(new ReduxAction(ReduxActionTypeConstants.UpdateTicketPriority, _mapper.Map<TicketStatusEventViewModel>(ticketEvent))),
+                    _ticketRepository.Update(ticket),
+                    _eventRepository.Add(ticketEvent));
         }
     }
 }

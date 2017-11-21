@@ -57,5 +57,18 @@ namespace Erazer.Web.WriteAPI.Controllers
 
             return Ok();
         }
+
+        [HttpPut("status")]
+        public async Task<IActionResult> UpdateStatus([FromBody] UpdateTicketStatusViewModel model)
+        {
+            await _mediator.Send(new UpdateTicketStatusCommand
+            {
+                StatusId = model.StatusId,
+                TicketId = model.TicketId,
+                UserId = Guid.Parse("88888888-8888-8888-8888-888888888888")
+            });
+
+            return Ok();
+        }
     }
 }
