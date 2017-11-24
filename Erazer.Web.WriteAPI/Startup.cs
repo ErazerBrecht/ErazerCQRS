@@ -81,7 +81,7 @@ namespace Erazer.Web.WriteAPI
             app.UseCors(builder =>
             {
                 builder.WithOrigins("http://localhost:4200")            // Load this from ENV or Config file
-                       .WithMethods("POST", "PUT")
+                       .WithMethods("POST", "PUT", "PATCH")
                        .AllowAnyHeader()
                        .SetPreflightMaxAge(TimeSpan.FromHours(1));
             });

@@ -46,7 +46,7 @@ namespace Erazer.Services.Events.Handlers
             };
 
             await Task.WhenAll(
-                    _websocketEmittor.Emit(new ReduxAction(ReduxActionTypeConstants.UpdateTicketPriority, _mapper.Map<TicketStatusEventViewModel>(ticketEvent))),
+                    _websocketEmittor.Emit(new ReduxAction(ReduxActionTypeConstants.UpdateTicketStatus, _mapper.Map<TicketStatusEventViewModel>(ticketEvent))),
                     _ticketRepository.Update(ticket),
                     _eventRepository.Add(ticketEvent));
         }

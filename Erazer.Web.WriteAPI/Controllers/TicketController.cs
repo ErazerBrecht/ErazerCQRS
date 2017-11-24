@@ -32,7 +32,7 @@ namespace Erazer.Web.WriteAPI.Controllers
             return Ok();
         }
 
-        [HttpPost("comment")]
+        [HttpPatch("comment")]
         public async Task<IActionResult> AddComment([FromBody] AddTicketCommentViewModel model)
         {
             await _mediator.Send(new AddTicketCommentCommand
@@ -45,7 +45,7 @@ namespace Erazer.Web.WriteAPI.Controllers
             return Ok();
         }
 
-        [HttpPut("priority")]
+        [HttpPatch("priority")]
         public async Task<IActionResult> UpdatePriority([FromBody] UpdateTicketPriorityViewModel model)
         {
             await _mediator.Send(new UpdateTicketPriorityCommand
@@ -58,7 +58,7 @@ namespace Erazer.Web.WriteAPI.Controllers
             return Ok();
         }
 
-        [HttpPut("status")]
+        [HttpPatch("status")]
         public async Task<IActionResult> UpdateStatus([FromBody] UpdateTicketStatusViewModel model)
         {
             await _mediator.Send(new UpdateTicketStatusCommand

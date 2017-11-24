@@ -2,6 +2,7 @@
 using Erazer.Domain.Constants;
 using Erazer.Domain.Events;
 using Erazer.Framework.Domain;
+using System.Collections.Generic;
 
 namespace Erazer.Domain
 {
@@ -11,6 +12,7 @@ namespace Erazer.Domain
         private string _description;
         private string _priorityId;
         private string _statusId;
+        private List<string> _comments = new List<string>();
 
         private const string DefaultStatusId = StatusConstants.Backlog;
 
@@ -76,6 +78,8 @@ namespace Erazer.Domain
 
         public void AddComment(string comment, Guid commenterId)
         {
+            _comments.Add(comment);
+
             ApplyChange(new TicketCommentEvent
             {
                 Comment = comment,

@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Erazer.Domain.Events;
-using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.DTOs.Events;
 using Erazer.Services.Queries.Repositories;
 using MediatR;
+using AutoMapper;
+using Erazer.Services.Events.Redux;
+using Erazer.Services.Queries.ViewModels.Events;
 
 namespace Erazer.Services.Events.Handlers
 {
     public class TicketCommentEventHandler : IAsyncNotificationHandler<TicketCommentEvent>
     {
+        private readonly IWebsocketEmittor _websocketEmittor;
+        private readonly IMapper _mapper;
         private readonly ITicketEventQueryRepository _repository;
 
-        public TicketCommentEventHandler(ITicketEventQueryRepository repository)
+        public TicketCommentEventHandler(IWebsocketEmittor websocketEmittor, IMapper mapper, ITicketEventQueryRepository repository)
         {
+            _websocketEmittor = websocketEmittor;
+            _mapper = mapper;
             _repository = repository;
         }
 
-        public Task Handle(TicketCommentEvent message)
+        public async Task Handle(TicketCommentEvent message)
         {
             var ticketEvent = new CommentEventDto
             {
@@ -28,7 +34,9 @@ namespace Erazer.Services.Events.Handlers
                 Comment = message.Comment                
             };
 
-            return _repository.Add(ticketEvent);
+            await Task.WhenAll(
+                _websocketEmittor.Emit(new ReduxAction(ReduxActionTypeConstants.AddTicketComment, _mapper.Map<TicketCommentEventViewModel>(ticketEvent))),
+                _repository.Add(ticketEvent));
         }
     }
 }
