@@ -21,7 +21,7 @@ using Erazer.Websockets;
 using Erazer.Web.ReadAPI.Initializer;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
-using Erazer.Web.Shared.Telemetary;
+using Erazer.Web.Shared.Telemetery;
 
 namespace Erazer.Web.ReadAPI
 {
