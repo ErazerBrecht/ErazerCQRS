@@ -18,8 +18,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Erazer.Websockets;
-using Erazer.Web.ReadAPI.Initializer;
-using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Erazer.Web.Shared.Telemetery;
 
@@ -93,12 +91,9 @@ namespace Erazer.Web.ReadAPI
                        .WithMethods("GET")
                        .SetPreflightMaxAge(TimeSpan.FromHours(1));
             });
-            app.UseMvc();
 
-            // Seeding of DB
-            Task.WaitAll(
-                StatusInitializer.Initialize(app.ApplicationServices.GetRequiredService<IStatusQueryRepository>()),
-                PriorityInitialzer.Initialize(app.ApplicationServices.GetRequiredService<IPriorityQueryRepository>()));
+            app.UseMvc();
+            app.Seed();
         }
     }
 }

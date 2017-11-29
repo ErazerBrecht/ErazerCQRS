@@ -3,13 +3,13 @@ using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Repositories;
 using System.Threading.Tasks;
 
-namespace Erazer.Web.ReadAPI.Initializer
+namespace Erazer.DAL.ReadModel.Seeding
 {
-    public static class StatusInitializer
+    public static class StatusSeeder
     {
-        public static async Task Initialize(IStatusQueryRepository repository)
+        public static async Task Seed(IStatusQueryRepository repository)
         {
-            if(!await repository.Any())
+            if (!await repository.Any())
             {
                 await repository.Add(new StatusDto() { Id= StatusConstants.Backlog, Name= "Backlog" });
                 await repository.Add(new StatusDto() { Id= StatusConstants.Open, Name= "Open" });

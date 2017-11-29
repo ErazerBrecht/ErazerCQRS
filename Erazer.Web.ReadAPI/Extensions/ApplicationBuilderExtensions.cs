@@ -4,6 +4,10 @@ using System.Reflection;
 using Erazer.DAL.ReadModel.Base;
 using Erazer.DAL.ReadModel.ClassMaps;
 using Microsoft.AspNetCore.Builder;
+using System.Threading.Tasks;
+using Erazer.DAL.ReadModel.Seeding;
+using Microsoft.Extensions.DependencyInjection;
+using Erazer.Services.Queries.Repositories;
 
 namespace Erazer.Web.ReadAPI.Extensions
 {
@@ -25,6 +29,14 @@ namespace Erazer.Web.ReadAPI.Extensions
             // Create new instance of every class that has the 'MongoDbClass' as base
             foreach (var classMap in classMaps)
                 Activator.CreateInstance(classMap);
+        }
+
+        public static void Seed(this IApplicationBuilder app)
+        {
+            Task.WaitAll(
+                StatusSeeder.Seed(app.ApplicationServices.GetRequiredService<IStatusQueryRepository>()),
+                PrioritySeeder.Seed(app.ApplicationServices.GetRequiredService<IPriorityQueryRepository>())
+            );
         }
     }
 }

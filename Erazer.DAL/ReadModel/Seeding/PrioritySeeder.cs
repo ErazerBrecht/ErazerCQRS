@@ -3,11 +3,11 @@ using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Repositories;
 using System.Threading.Tasks;
 
-namespace Erazer.Web.ReadAPI.Initializer
+namespace Erazer.DAL.ReadModel.Seeding
 {
-    public static class PriorityInitialzer
+    public static class PrioritySeeder
     {
-        public static async Task Initialize(IPriorityQueryRepository repository)
+        public static async Task Seed(IPriorityQueryRepository repository)
         {
             if (!await repository.Any())
             {

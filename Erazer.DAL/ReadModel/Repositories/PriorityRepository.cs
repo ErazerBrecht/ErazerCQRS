@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Erazer.DAL.ReadModel.Base;
 using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Repositories;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace Erazer.DAL.ReadModel.Repositories
