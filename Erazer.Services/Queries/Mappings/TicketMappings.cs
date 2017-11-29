@@ -23,7 +23,8 @@ namespace Erazer.Services.Queries.Mappings
                 .IncludeBase<TicketEventDto, TicketEventViewModel>();
             CreateMap<StatusEventDto, TicketStatusEventViewModel>()
                 .IncludeBase<TicketEventDto, TicketEventViewModel>();
-
+            CreateMap<CreatedEventDto, TicketCreatedEventViewModel>()
+                .IncludeBase<TicketEventDto, TicketEventViewModel>();
         }
     }
 }

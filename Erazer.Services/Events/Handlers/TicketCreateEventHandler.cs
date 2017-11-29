@@ -6,6 +6,10 @@ using Erazer.Services.Queries.DTOs;
 using Erazer.Services.Queries.Repositories;
 using Erazer.Services.Queries.ViewModels;
 using MediatR;
+using Erazer.Services.Queries.DTOs.Events;
+using System;
+using Erazer.Services.Queries.ViewModels.Events;
+using System.Collections.Generic;
 
 namespace Erazer.Services.Events.Handlers
 {
@@ -15,13 +19,15 @@ namespace Erazer.Services.Events.Handlers
         private readonly ITicketQueryRepository _ticketRepository;
         private readonly IPriorityQueryRepository _priorityRepository;
         private readonly IStatusQueryRepository _statusRepository;
+        private readonly ITicketEventQueryRepository _eventRepository;
         private readonly IWebsocketEmittor _websocketEmittor;
 
-        public TicketCreateEventHandler(ITicketQueryRepository ticketRepository, IMapper mapper, IWebsocketEmittor websocketEmittor, IPriorityQueryRepository priorityRepository, IStatusQueryRepository statusRepository)
+        public TicketCreateEventHandler(ITicketQueryRepository ticketRepository, ITicketEventQueryRepository eventRepository, IMapper mapper, IWebsocketEmittor websocketEmittor, IPriorityQueryRepository priorityRepository, IStatusQueryRepository statusRepository)
         {
             _ticketRepository = ticketRepository;
             _priorityRepository = priorityRepository;
             _statusRepository = statusRepository;
+            _eventRepository = eventRepository;
             _mapper = mapper;
             _websocketEmittor = websocketEmittor;
         }
@@ -39,10 +45,30 @@ namespace Erazer.Services.Events.Handlers
                 Priority = priority,
                 Status = status
             };
+            var @event = new CreatedEventDto
+            {
+                Id = Guid.NewGuid().ToString(),
+                TicketId = message.AggregateRootId.ToString(),
+                Created = message.Created,
+                UserId = message.UserId.ToString(),
+            };
 
-            await Task.WhenAll(
-                    _websocketEmittor.Emit(new ReduxAction(ReduxActionTypeConstants.AddTicket, _mapper.Map<TicketListViewModel>(ticket))),
-                    _ticketRepository.Insert(ticket));
+            await Task.WhenAll(AddInDb(ticket, @event), EmitToFrontEnd(ticket, @event));
+        }
+
+        private Task AddInDb(TicketDto ticketDto, TicketEventDto eventDto)
+        {
+            return Task.WhenAll(
+                _ticketRepository.Insert(ticketDto),
+                _eventRepository.Add(eventDto));
+        }
+
+        private Task EmitToFrontEnd(TicketDto ticketDto, TicketEventDto eventDto)
+        {
+            var vm = _mapper.Map<TicketViewModel>(ticketDto);
+            vm.Events = new List<TicketEventViewModel> { _mapper.Map<TicketCreatedEventViewModel>(eventDto) };
+
+            return _websocketEmittor.Emit(new ReduxAction(ReduxActionTypeConstants.AddTicket, vm));
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Erazer.Services.Queries.ViewModels.Events
+﻿using Erazer.Services.Queries.ViewModels.Events.Enums;
+
+namespace Erazer.Services.Queries.ViewModels.Events
 {
     public class TicketPriorityEventViewModel: TicketEventViewModel
     {
@@ -7,7 +9,7 @@
 
         public TicketPriorityEventViewModel()
         {
-            Type = Domain.Constants.Enums.EventType.Priority;
+            Type = EventType.Priority;
         }
     }
 }

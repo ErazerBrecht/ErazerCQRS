@@ -1,4 +1,6 @@
-﻿namespace Erazer.Services.Queries.ViewModels.Events
+﻿using Erazer.Services.Queries.ViewModels.Events.Enums;
+
+namespace Erazer.Services.Queries.ViewModels.Events
 {
     public class TicketCommentEventViewModel: TicketEventViewModel
     {
@@ -6,7 +8,7 @@
 
         public TicketCommentEventViewModel()
         {
-            Type = Domain.Constants.Enums.EventType.Comment;
+            Type = EventType.Comment;
         }
     }
 }

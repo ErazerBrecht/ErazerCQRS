@@ -42,8 +42,7 @@ namespace Erazer.Services.Events.Handlers
                 Id = Guid.NewGuid().ToString(),
                 TicketId = message.AggregateRootId.ToString(),
                 Created = message.Created,
-                UserId = message.UserId.ToString(),
-                
+                UserId = message.UserId.ToString(),                
             };
 
 

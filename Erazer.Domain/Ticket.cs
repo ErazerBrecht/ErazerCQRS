@@ -17,8 +17,6 @@ namespace Erazer.Domain
         private const string DefaultStatusId = StatusConstants.Backlog;
 
         #region Constructors
-        // Need of a parameterless constructor to build Aggregate from events!
-
         // Constructor used for creating a new ticket!
         public Ticket(Guid id, string title, string description, string priorityId, Guid creatorUserId) : this()
         {
@@ -32,6 +30,7 @@ namespace Erazer.Domain
             });
         }
 
+        // Need of a parameterless constructor to build Aggregate from events!
         private Ticket() 
         {
             // Register EventHandlers

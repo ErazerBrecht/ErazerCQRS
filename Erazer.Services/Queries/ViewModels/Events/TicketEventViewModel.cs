@@ -1,5 +1,5 @@
 ﻿using System;
-using Erazer.Domain.Constants.Enums;
+using Erazer.Services.Queries.ViewModels.Events.Enums;
 
 namespace Erazer.Services.Queries.ViewModels
 {

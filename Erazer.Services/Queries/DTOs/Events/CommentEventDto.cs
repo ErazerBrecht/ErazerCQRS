@@ -1,6 +1,4 @@
-﻿using Erazer.Domain.Constants.Enums;
-
-namespace Erazer.Services.Queries.DTOs.Events
+﻿namespace Erazer.Services.Queries.DTOs.Events
 {
     public class CommentEventDto : TicketEventDto
     {
