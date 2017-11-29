@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -21,11 +22,13 @@ namespace Erazer.DAL.WriteModel
         }
 
         // AggregageId is already available in events => TODO Remove parameter
-        public async Task Save(Guid aggregateId, IEnumerable<IEvent> events)
+        public Task Save(Guid aggregateId, IEnumerable<IEvent> events)
         {
-            var eventData = _mapper.Map<IEnumerable<EventData>>(events);
-            await _eventPublisher.Publish(events);
-            await _storeConnection.AppendToStreamAsync(aggregateId.ToString(), ExpectedVersion.Any, eventData);
+            var eventData = _mapper.Map<IEnumerable<EventData>>(events.OrderBy(e => e.Version));
+
+            return Task.WhenAll(
+                 _eventPublisher.Publish(eventData.Select(e => e.Data)),
+                 _storeConnection.AppendToStreamAsync(aggregateId.ToString(), ExpectedVersion.Any, eventData));
         }
 
         public async Task<IEnumerable<IEvent>> Get(Guid aggregateId, int fromVersion)

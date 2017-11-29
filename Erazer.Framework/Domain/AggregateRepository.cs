@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Erazer.Framework.Events;
 using Erazer.Framework.Exceptions;
-using Erazer.Framework.Factories;
 
 namespace Erazer.Framework.Domain
 {
@@ -32,10 +31,10 @@ namespace Erazer.Framework.Domain
             return aggregate;
         }
 
-        public async Task Save<T>(T aggregate) where T : AggregateRoot
+        public Task Save<T>(T aggregate) where T : AggregateRoot
         {
             var changes = aggregate.FlushChanges();
-            await _eventStore.Save(aggregate.Id, changes);
+            return _eventStore.Save(aggregate.Id, changes);
         }
     }
 }

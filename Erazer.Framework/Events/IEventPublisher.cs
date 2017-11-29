@@ -5,8 +5,8 @@ namespace Erazer.Framework.Events
 {
     public interface IEventPublisher
     {
-        Task Publish<T>(T @event) where T : class, IEvent;
-        Task Publish<T>(IEnumerable<T> events) where T : class, IEvent;
+        Task Publish(byte[] @event);
+        Task Publish(IEnumerable<byte[]> events);
         Task Close();
     }
 }

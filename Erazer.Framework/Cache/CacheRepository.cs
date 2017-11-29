@@ -30,7 +30,7 @@ namespace Erazer.Framework.Cache
                     var events = (await _eventStore.Get(aggregateId, aggregate.Version)).ToList();
 
                     // Check if there are any new events added between save in cache and now!
-                    // If this is the case remove aggreage from cache and retrieve it.
+                    // If this is the case remove aggregate from cache and retrieve it.
                     if (events.Any() && events.First().Version != aggregate.Version)
                     {
                         _cache.Remove(aggregateId);
@@ -55,7 +55,7 @@ namespace Erazer.Framework.Cache
 
         // TODO Make code multi user friendly
         // If two users at the same time save an aggregate...
-        public async Task Save<T>(T aggregate) where T : AggregateRoot
+        public Task Save<T>(T aggregate) where T : AggregateRoot
         {
             try
             {
@@ -64,7 +64,7 @@ namespace Erazer.Framework.Cache
                 {
                     _cache.Set(aggregate.Id, aggregate);
                 }
-                await _repository.Save(aggregate);
+                return _repository.Save(aggregate);
             }
             catch (Exception)
             {
