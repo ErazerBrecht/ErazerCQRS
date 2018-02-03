@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Services", "Erazer.Services\Erazer.Services.csproj", "{CB038200-F5DB-4E05-9E34-D39A26924585}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Domain", "Erazer.Domain\Erazer.Domain.csproj", "{4A44F864-E2DA-482C-BCD1-5833D5D903C2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.DAL", "Erazer.DAL\Erazer.DAL.csproj", "{224BC0F5-BF29-4F1A-88A0-955194F1C560}"
@@ -27,10 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CB038200-F5DB-4E05-9E34-D39A26924585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB038200-F5DB-4E05-9E34-D39A26924585}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CB038200-F5DB-4E05-9E34-D39A26924585}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB038200-F5DB-4E05-9E34-D39A26924585}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4A44F864-E2DA-482C-BCD1-5833D5D903C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4A44F864-E2DA-482C-BCD1-5833D5D903C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A44F864-E2DA-482C-BCD1-5833D5D903C2}.Release|Any CPU.ActiveCfg = Release|Any CPU

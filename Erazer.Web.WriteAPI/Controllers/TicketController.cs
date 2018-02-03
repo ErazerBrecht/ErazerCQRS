@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Erazer.Services.Commands.Requests;
-using Erazer.Web.WriteAPI.CommandViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Erazer.Web.WriteAPI.Commands.Requests;
+using Erazer.Web.WriteAPI.ViewModels;
 
 namespace Erazer.Web.WriteAPI.Controllers
 {

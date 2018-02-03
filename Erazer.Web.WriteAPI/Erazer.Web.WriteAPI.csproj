@@ -9,7 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Erazer.DAL\Erazer.DAL.csproj" />
     <ProjectReference Include="..\Erazer.Servicebus\Erazer.Servicebus.csproj" />
-    <ProjectReference Include="..\Erazer.Services\Erazer.Services.csproj" />
     <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />
   </ItemGroup>
 

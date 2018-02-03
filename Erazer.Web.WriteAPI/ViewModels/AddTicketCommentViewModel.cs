@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Erazer.Web.WriteAPI.CommandViewModels
+namespace Erazer.Web.WriteAPI.ViewModels
 {
     public class AddTicketCommentViewModel
     {
