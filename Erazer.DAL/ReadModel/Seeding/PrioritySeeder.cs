@@ -1,6 +1,6 @@
 ﻿using Erazer.Domain.Constants;
-using Erazer.Services.Queries.DTOs;
-using Erazer.Services.Queries.Repositories;
+using Erazer.Domain.Infrastructure.DTOs;
+using Erazer.Domain.Infrastructure.Repositories;
 using System.Threading.Tasks;
 
 namespace Erazer.DAL.ReadModel.Seeding

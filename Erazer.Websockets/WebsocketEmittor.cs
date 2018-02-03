@@ -1,13 +1,12 @@
 ﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Erazer.Services.Events;
-using Erazer.Services.Events.Redux;
 using Erazer.Web.Shared;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Options;
 using Microsoft.ApplicationInsights;
 using System;
+using Erazer.Framework.FrontEnd;
 
 namespace Erazer.Websockets
 {
@@ -25,7 +24,7 @@ namespace Erazer.Websockets
             _telemeteryClient = telemeteryClient;
         }
 
-        public async Task Emit(ReduxAction action)
+        public async Task Emit<T>(ReduxAction<T> action) where T : IViewModel
         {
             var jsonString = JsonConvert.SerializeObject(action, JsonSettings.CamelCaseSerializer);
             var now = DateTime.Now;

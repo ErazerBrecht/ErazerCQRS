@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Erazer.Services.Queries.Requests;
+﻿using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Erazer.Web.ReadAPI.Queries.Requests;
 
 namespace Erazer.Web.ReadAPI.Controllers
 {

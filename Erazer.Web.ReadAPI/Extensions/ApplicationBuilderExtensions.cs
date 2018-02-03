@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Erazer.DAL.ReadModel.Base;
-using Erazer.DAL.ReadModel.ClassMaps;
 using Microsoft.AspNetCore.Builder;
 using System.Threading.Tasks;
-using Erazer.DAL.ReadModel.Seeding;
 using Microsoft.Extensions.DependencyInjection;
-using Erazer.Services.Queries.Repositories;
+using Erazer.DAL.ReadModel.Base;
+using Erazer.DAL.ReadModel.ClassMaps;
+using Erazer.DAL.ReadModel.Seeding;
+using Erazer.Domain.Infrastructure.Repositories;
 
 namespace Erazer.Web.ReadAPI.Extensions
 {

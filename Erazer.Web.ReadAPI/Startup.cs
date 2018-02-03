@@ -1,13 +1,5 @@
 ﻿using System;
 using AutoMapper;
-using Erazer.DAL.ReadModel.Base;
-using Erazer.DAL.ReadModel.Repositories;
-using Erazer.Servicebus;
-using Erazer.Servicebus.Extensions;
-using Erazer.Services.Events;
-using Erazer.Services.Queries.Repositories;
-using Erazer.Shared.Extensions.DependencyInjection;
-using Erazer.Web.ReadAPI.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,10 +8,18 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
-using Erazer.Websockets;
 using Microsoft.ApplicationInsights;
+using MongoDB.Driver;
+using Erazer.Servicebus;
+using Erazer.Servicebus.Extensions;
+using Erazer.Shared.Extensions.DependencyInjection;
+using Erazer.Web.ReadAPI.Extensions;
 using Erazer.Web.Shared.Telemetery;
+using Erazer.DAL.ReadModel.Base;
+using Erazer.DAL.ReadModel.Repositories;
+using Erazer.Domain.Infrastructure.Repositories;
+using Erazer.Framework.FrontEnd;
+using Erazer.Web.Read.API.Websockets;
 
 namespace Erazer.Web.ReadAPI
 {

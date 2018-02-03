@@ -1,5 +1,5 @@
 ﻿using Erazer.DAL.ReadModel.Base;
-using Erazer.Services.Queries.DTOs;
+using Erazer.Domain.Infrastructure.DTOs;
 using MongoDB.Bson.Serialization;
 
 namespace Erazer.DAL.ReadModel.ClassMaps

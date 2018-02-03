@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Erazer.DAL.ReadModel.Base;
-using Erazer.Services.Queries.DTOs;
-using Erazer.Services.Queries.Repositories;
 using MongoDB.Driver;
+using Erazer.DAL.ReadModel.Base;
+using Erazer.Domain.Infrastructure.DTOs;
+using Erazer.Domain.Infrastructure.Repositories;
 
 namespace Erazer.DAL.ReadModel.Repositories
 {
