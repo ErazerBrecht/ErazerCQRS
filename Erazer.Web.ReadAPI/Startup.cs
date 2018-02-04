@@ -15,11 +15,14 @@ using Erazer.Servicebus.Extensions;
 using Erazer.Shared.Extensions.DependencyInjection;
 using Erazer.Web.ReadAPI.Extensions;
 using Erazer.Web.Shared.Telemetery;
-using Erazer.DAL.ReadModel.Base;
 using Erazer.DAL.ReadModel.Repositories;
 using Erazer.Domain.Infrastructure.Repositories;
 using Erazer.Framework.FrontEnd;
 using Erazer.Web.Read.API.Websockets;
+using Erazer.DAL.Infrastucture.MongoDb;
+using Erazer.Domain;
+using Erazer.DAL.Infrastucture.EventStore;
+using EventStore.ClientAPI;
 
 namespace Erazer.Web.ReadAPI
 {
@@ -43,16 +46,18 @@ namespace Erazer.Web.ReadAPI
         {
             services.AddSingleton<IConfiguration>(_configuration);
             services.Configure<MongoDbSettings>(_configuration.GetSection("MongoDbSettings"));
-            services.Configure<AzureServiceBusSettings>(_configuration.GetSection("AzureServiceBusSettings"));
+            // services.Configure<AzureServiceBusSettings>(_configuration.GetSection("AzureServiceBusSettings"));
             services.Configure<WebsocketSettings>(_configuration.GetSection("WebsocketSettings"));
+            services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
 
             // Add Singleton TelemeterClient
             services.AddSingletonFactory<TelemetryClient, TelemeteryFactory>();
 
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
-            services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
+            // services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
             services.AddSingleton<IWebsocketEmittor, WebsocketEmittor>();
+            services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
 
             services.AddAutoMapper();
             services.AddMediatR();
@@ -65,7 +70,8 @@ namespace Erazer.Web.ReadAPI
             services.AddScoped<IPriorityQueryRepository, PriorityRepository>();
 
             // CQRS
-            services.StartEventReciever();
+            //services.StartEventReciever();
+            services.StartSubscriber<Ticket>();
 
             // Add MVC
             services.AddCors();

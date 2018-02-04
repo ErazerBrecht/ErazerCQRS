@@ -1,1 +1,1 @@
-& "E:\EventStore\EventStore.ClusterNode.exe"
+& "D:\EventStore\EventStore.ClusterNode.exe" --run-projections=all

@@ -18,7 +18,7 @@ namespace Erazer.Framework.Domain
 
         public async Task<T> Get<T>(Guid aggregateId) where T : AggregateRoot
         {
-            var events = await _eventStore.Get(aggregateId, -1);
+            var events = await _eventStore.Get<T>(aggregateId, -1);
             var eventList = events as IList<IEvent> ?? events.ToList();
 
             if (!eventList.Any())
@@ -34,7 +34,7 @@ namespace Erazer.Framework.Domain
         public Task Save<T>(T aggregate) where T : AggregateRoot
         {
             var changes = aggregate.FlushChanges();
-            return _eventStore.Save(aggregate.Id, changes);
+            return _eventStore.Save<T>(aggregate.Id, changes);
         }
     }
 }

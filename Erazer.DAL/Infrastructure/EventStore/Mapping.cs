@@ -6,7 +6,7 @@ using EventStore.ClientAPI;
 using Newtonsoft.Json;
 using Erazer.Web.Shared;
 
-namespace Erazer.DAL.WriteModel
+namespace Erazer.DAL.Infrastucture.EventStore
 {
     public class Mapping : Profile
     {
@@ -17,8 +17,7 @@ namespace Erazer.DAL.WriteModel
 
             CreateMap<ResolvedEvent, IEvent>()
                 .ConstructUsing(src => JsonConvert.DeserializeObject<IEvent>(new UTF8Encoding().GetString(src.Event.Data), JsonSettings.DefaultSettings))
-                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.Event.EventNumber))
-                .ForMember(dest => dest.AggregateRootId, opt => opt.MapFrom(src => src.Event.EventStreamId));
+                .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.Event.EventNumber));
         }
     }
 }

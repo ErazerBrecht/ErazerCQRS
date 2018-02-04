@@ -4,12 +4,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Clusters;
 using MongoDB.Driver.Core.Configuration;
 using MongoDB.Driver.Core.Events;
 using System;
 
-namespace Erazer.DAL.ReadModel.Base
+namespace Erazer.DAL.Infrastucture.MongoDb
 {
     public class MongoDbFactory : IFactory<IMongoDatabase>
     {

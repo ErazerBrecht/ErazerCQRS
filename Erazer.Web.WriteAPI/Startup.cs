@@ -1,7 +1,6 @@
 ﻿using System;
 using AutoMapper;
 using Erazer.DAL.Cache;
-using Erazer.DAL.WriteModel;
 using Erazer.Framework.Cache;
 using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
@@ -11,11 +10,11 @@ using EventStore.ClientAPI;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ServiceStack.Redis;
+using Erazer.DAL.Infrastucture.EventStore;
 
 namespace Erazer.Web.WriteAPI
 {
@@ -46,7 +45,7 @@ namespace Erazer.Web.WriteAPI
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
             services.AddSingletonFactory<IRedisClientsManager, RedisFactory>();
-            services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
+            // services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
 
             services.AddAutoMapper();
             services.AddMediatR();
@@ -60,11 +59,11 @@ namespace Erazer.Web.WriteAPI
             //services.AddScoped<IAggregateRepository, AggregateRepository>();
 
             // CQRS
-            services.AddScoped<IEventPublisher, EventPublisher>();
+            // services.AddScoped<IEventPublisher, EventPublisher>();
 
             // Add MVC
             services.AddCors();
-            services.AddMvcCore().AddJsonFormatters();
+            services.AddMvcCore().AddJsonFormatters();           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
