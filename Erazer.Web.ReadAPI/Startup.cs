@@ -46,7 +46,6 @@ namespace Erazer.Web.ReadAPI
         {
             services.AddSingleton<IConfiguration>(_configuration);
             services.Configure<MongoDbSettings>(_configuration.GetSection("MongoDbSettings"));
-            // services.Configure<AzureServiceBusSettings>(_configuration.GetSection("AzureServiceBusSettings"));
             services.Configure<WebsocketSettings>(_configuration.GetSection("WebsocketSettings"));
             services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
 
@@ -55,14 +54,13 @@ namespace Erazer.Web.ReadAPI
 
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
-            // services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
             services.AddSingleton<IWebsocketEmittor, WebsocketEmittor>();
             services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
 
             services.AddAutoMapper();
             services.AddMediatR();
 
-            // TODO Place in seperate file (Arne)
+            // TODO Place in seperate file (Arne) > services.AddTicket();
             // Query repositories
             services.AddScoped<ITicketQueryRepository, TicketRepository>();
             services.AddScoped<ITicketEventQueryRepository, TicketEventRepository>();
@@ -70,7 +68,6 @@ namespace Erazer.Web.ReadAPI
             services.AddScoped<IPriorityQueryRepository, PriorityRepository>();
 
             // CQRS
-            //services.StartEventReciever();
             services.StartSubscriber<Ticket>();
 
             // Add MVC

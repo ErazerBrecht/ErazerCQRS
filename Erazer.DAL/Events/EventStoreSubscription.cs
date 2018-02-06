@@ -53,7 +53,11 @@ namespace Erazer.DAL.Events
 
         private Task EventAppeared(EventStorePersistentSubscriptionBase subscription, ResolvedEvent resolvedEvent)
         {
-            _telemetryClient.TrackEvent("New Event", new Dictionary<string, string> { { "Type", resolvedEvent.Event.EventType } });
+            _telemetryClient.TrackEvent("New event appeared from EventStore (read model)", new Dictionary<string, string> {
+                { "Type", resolvedEvent.Event.EventType },
+                { "EventNumber", resolvedEvent.Event.EventNumber.ToString() },
+                { "Created (Epoch)", resolvedEvent.Event.CreatedEpoch.ToString() }
+            });
 
             var @event = _mapper.Map<IEvent>(resolvedEvent);
             return _mediator.Publish(@event);

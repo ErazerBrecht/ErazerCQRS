@@ -26,10 +26,11 @@ namespace Erazer.DAL.Infrastucture.EventStore
         {
             try
             {
+                // TODO Use different settings on different env's
                 var settings = ConnectionSettings.Create()
-                                    .SetHeartbeatInterval(TimeSpan.FromSeconds(5))
+                                    .SetHeartbeatTimeout(TimeSpan.FromSeconds(5))
                                     .UseConsoleLogger();
-
+                                    
                 var connection = EventStoreConnection.Create(_options.Value.ConnectionString, settings);
                 connection.ConnectAsync().Wait();
 

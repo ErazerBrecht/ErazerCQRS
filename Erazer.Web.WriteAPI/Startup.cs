@@ -63,7 +63,7 @@ namespace Erazer.Web.WriteAPI
 
             // Add MVC
             services.AddCors();
-            services.AddMvcCore().AddJsonFormatters();           
+            services.AddMvcCore().AddJsonFormatters();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
