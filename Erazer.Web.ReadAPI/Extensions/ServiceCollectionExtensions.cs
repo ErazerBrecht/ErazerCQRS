@@ -1,5 +1,5 @@
-﻿using Erazer.DAL.Events;
-using Erazer.Framework.Domain;
+﻿using Erazer.Framework.Domain;
+using Erazer.Infrastructure.EventStore.PersistedSubscription;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Erazer.Web.ReadAPI.Extensions

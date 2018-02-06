@@ -1,10 +1,8 @@
 ﻿using System;
 using AutoMapper;
-using Erazer.DAL.Cache;
 using Erazer.Framework.Cache;
 using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
-using Erazer.Servicebus;
 using Erazer.Shared.Extensions.DependencyInjection;
 using EventStore.ClientAPI;
 using MediatR;
@@ -14,7 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ServiceStack.Redis;
-using Erazer.DAL.Infrastucture.EventStore;
+using Erazer.Infrastructure.EventStore;
+using Erazer.Infrastructure.ServiceBus;
+using Erazer.Infrastructure.Redis;
 
 namespace Erazer.Web.WriteAPI
 {
@@ -51,7 +51,7 @@ namespace Erazer.Web.WriteAPI
             services.AddMediatR();
 
             // TODO Place in seperate file (Arne)
-            services.AddScoped<IEventStore, DAL.WriteModel.EventStore>();
+            services.AddScoped<IEventStore, Infrastructure.EventStore.EventStore> ();
             // WITH CACHE
             services.AddScoped<ICache, RedisCache>();
             services.AddScoped<IAggregateRepository>(y => new CacheRepository(new AggregateRepository(y.GetService<IEventStore>()), y.GetService<IEventStore>(), y.GetService<ICache>()));

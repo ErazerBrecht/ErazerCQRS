@@ -5,11 +5,9 @@ VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Domain", "Erazer.Domain\Erazer.Domain.csproj", "{4A44F864-E2DA-482C-BCD1-5833D5D903C2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.DAL", "Erazer.DAL\Erazer.DAL.csproj", "{224BC0F5-BF29-4F1A-88A0-955194F1C560}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Infrastructure", "Erazer.Infrastructure\Erazer.Infrastructure.csproj", "{224BC0F5-BF29-4F1A-88A0-955194F1C560}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Framework", "Erazer.Framework\Erazer.Framework.csproj", "{48FF42D1-2EED-4334-8030-CC1326FFE65B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Servicebus", "Erazer.Servicebus\Erazer.Servicebus.csproj", "{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.ReadAPI", "Erazer.Web.ReadAPI\Erazer.Web.ReadAPI.csproj", "{8526C618-B58D-49EA-BBD8-4787E3E09119}"
 EndProject
@@ -37,10 +35,6 @@ Global
 		{48FF42D1-2EED-4334-8030-CC1326FFE65B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48FF42D1-2EED-4334-8030-CC1326FFE65B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48FF42D1-2EED-4334-8030-CC1326FFE65B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8FC04B5E-6309-4F35-9EC8-DA1F41E2DB0E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8526C618-B58D-49EA-BBD8-4787E3E09119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8526C618-B58D-49EA-BBD8-4787E3E09119}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8526C618-B58D-49EA-BBD8-4787E3E09119}.Release|Any CPU.ActiveCfg = Release|Any CPU

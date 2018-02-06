@@ -4,10 +4,10 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Erazer.DAL.ReadModel.Base;
-using Erazer.DAL.ReadModel.ClassMaps;
-using Erazer.DAL.ReadModel.Seeding;
 using Erazer.Domain.Infrastructure.Repositories;
+using Erazer.Infrastructure.MongoDb.ClassMaps;
+using Erazer.Infrastructure.MongoDb.Base;
+using Erazer.Infrastructure.MongoDb.Seeding;
 
 namespace Erazer.Web.ReadAPI.Extensions
 {
