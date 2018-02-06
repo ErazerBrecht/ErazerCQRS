@@ -5,34 +5,34 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Erazer.Framework.Events;
 using EventStore.ClientAPI;
+using Erazer.Framework.Domain;
 
 namespace Erazer.DAL.WriteModel
 {
     public class EventStore : IEventStore
     {
         private readonly IEventStoreConnection _storeConnection;
-        private readonly IEventPublisher _eventPublisher;
         private readonly IMapper _mapper;
 
-        public EventStore(IEventStoreConnection storeConnection, IEventPublisher eventPublisher, IMapper mapper)
+        public EventStore(IEventStoreConnection storeConnection, IMapper mapper)
         {
             _storeConnection = storeConnection;
-            _eventPublisher = eventPublisher;
             _mapper = mapper;
         }
 
         // AggregageId is already available in events => TODO Remove parameter
-        public Task Save(Guid aggregateId, IEnumerable<IEvent> events)
+        public Task Save<T>(Guid aggregateId, IEnumerable<IEvent> events) where T : AggregateRoot
         {
+            var streamName = GetStreamName<T>(aggregateId);
             var eventData = _mapper.Map<IEnumerable<EventData>>(events.OrderBy(e => e.Version));
 
-            return Task.WhenAll(
-                 _eventPublisher.Publish(eventData.Select(e => e.Data)),
-                 _storeConnection.AppendToStreamAsync(aggregateId.ToString(), ExpectedVersion.Any, eventData));
+            return _storeConnection.AppendToStreamAsync(streamName, ExpectedVersion.Any, eventData);
         }
 
-        public async Task<IEnumerable<IEvent>> Get(Guid aggregateId, int fromVersion)
+        public async Task<IEnumerable<IEvent>> Get<T>(Guid aggregateId, int fromVersion) where T : AggregateRoot
         {
+            var streamName = GetStreamName<T>(aggregateId);
+
             var startPosition = StreamPosition.Start;
             if (fromVersion > -1)
                 // +1 is used to filter out the current version
@@ -40,8 +40,13 @@ namespace Erazer.DAL.WriteModel
                 startPosition += fromVersion + 1;
 
             // TODO FIX HARD LIMIT OF 200 
-            var eventCollection = await _storeConnection.ReadStreamEventsForwardAsync(aggregateId.ToString(), startPosition, 200, false);
+            var eventCollection = await _storeConnection.ReadStreamEventsForwardAsync(streamName, startPosition, 200, false);
             return _mapper.Map<IEnumerable<IEvent>>(eventCollection.Events);
+        }
+
+        private static string GetStreamName<T>(Guid aggregateId) where T : AggregateRoot
+        {
+            return $"{typeof(T).Name}-{aggregateId}";
         }
     }
 }

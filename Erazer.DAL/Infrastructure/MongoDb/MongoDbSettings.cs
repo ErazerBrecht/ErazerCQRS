@@ -1,4 +1,4 @@
-﻿namespace Erazer.DAL.ReadModel.Base
+﻿namespace Erazer.DAL.Infrastucture.MongoDb
 {
     public class MongoDbSettings
     {

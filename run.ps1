@@ -24,6 +24,8 @@ cd Erazer.Web.ReadAPI
 dotnet run 
 }
 
+Start-Sleep -s 5
+
 start powershell { 
 cd Erazer.Web.WriteAPI
 dotnet run 

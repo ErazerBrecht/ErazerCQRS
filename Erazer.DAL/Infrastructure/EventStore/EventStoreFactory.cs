@@ -4,7 +4,7 @@ using EventStore.ClientAPI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Erazer.DAL.WriteModel
+namespace Erazer.DAL.Infrastucture.EventStore
 {
     public class EventStoreFactory : IFactory<IEventStoreConnection>
     {
@@ -26,7 +26,12 @@ namespace Erazer.DAL.WriteModel
         {
             try
             {
-                var connection = EventStoreConnection.Create(_options.Value.ConnectionString);
+                // TODO Use different settings on different env's
+                var settings = ConnectionSettings.Create()
+                                    .SetHeartbeatTimeout(TimeSpan.FromSeconds(5))
+                                    .UseConsoleLogger();
+                                    
+                var connection = EventStoreConnection.Create(_options.Value.ConnectionString, settings);
                 connection.ConnectAsync().Wait();
 
                 _logger.LogInformation($"Created a succesful connection with the 'GetEventStore' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");

@@ -1,4 +1,4 @@
-﻿namespace Erazer.DAL.WriteModel
+﻿namespace Erazer.DAL.Infrastucture.EventStore
 {
     public class EventStoreSettings
     {
