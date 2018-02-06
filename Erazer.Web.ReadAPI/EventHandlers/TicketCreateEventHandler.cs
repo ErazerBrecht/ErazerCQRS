@@ -7,9 +7,9 @@ using Erazer.Domain.Events;
 using Erazer.Web.ReadAPI.ViewModels;
 using Erazer.Web.ReadAPI.ViewModels.Events;
 using Erazer.Framework.FrontEnd;
-using Erazer.Domain.Infrastructure.DTOs;
-using Erazer.Domain.Infrastructure.DTOs.Events;
-using Erazer.Domain.Infrastructure.Repositories;
+using Erazer.Domain.Data.DTOs;
+using Erazer.Domain.Data.DTOs.Events;
+using Erazer.Domain.Data.Repositories;
 using Erazer.Web.ReadAPI.EventHandlers.Redux;
 
 namespace Erazer.Web.ReadAPI.EventHandlers

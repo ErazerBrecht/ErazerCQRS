@@ -4,7 +4,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Erazer.Domain.Infrastructure.Repositories;
+using Erazer.Domain.Data.Repositories;
 using Erazer.Infrastructure.MongoDb.ClassMaps;
 using Erazer.Infrastructure.MongoDb.Base;
 using Erazer.Infrastructure.MongoDb.Seeding;

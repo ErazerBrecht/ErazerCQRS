@@ -12,7 +12,7 @@ using MongoDB.Driver;
 using Erazer.Shared.Extensions.DependencyInjection;
 using Erazer.Web.ReadAPI.Extensions;
 using Erazer.Web.Shared.Telemetery;
-using Erazer.Domain.Infrastructure.Repositories;
+using Erazer.Domain.Data.Repositories;
 using Erazer.Framework.FrontEnd;
 using Erazer.Domain;
 using Erazer.Infrastructure.MongoDb;

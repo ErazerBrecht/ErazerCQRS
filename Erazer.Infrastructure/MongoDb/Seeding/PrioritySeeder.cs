@@ -1,6 +1,6 @@
 ﻿using Erazer.Domain.Constants;
-using Erazer.Domain.Infrastructure.DTOs;
-using Erazer.Domain.Infrastructure.Repositories;
+using Erazer.Domain.Data.DTOs;
+using Erazer.Domain.Data.Repositories;
 using System.Threading.Tasks;
 
 namespace Erazer.Infrastructure.MongoDb.Seeding

@@ -1,4 +1,4 @@
-﻿namespace Erazer.Domain.Infrastructure.DTOs
+﻿namespace Erazer.Domain.Data.DTOs
 {
     public class StatusDto
     {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Erazer.Domain.Infrastructure.DTOs;
-using Erazer.Domain.Infrastructure.DTOs.Events;
+using Erazer.Domain.Data.DTOs;
+using Erazer.Domain.Data.DTOs.Events;
 using Erazer.Web.ReadAPI.ViewModels;
 using Erazer.Web.ReadAPI.ViewModels.Events;
 

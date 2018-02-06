@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Erazer.Domain.Infrastructure.DTOs.Events
+namespace Erazer.Domain.Data.DTOs.Events
 {
     public abstract class TicketEventDto
     {

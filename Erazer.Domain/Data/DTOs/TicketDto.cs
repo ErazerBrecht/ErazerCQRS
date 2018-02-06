@@ -1,9 +1,10 @@
-﻿namespace Erazer.Domain.Infrastructure.DTOs
+﻿namespace Erazer.Domain.Data.DTOs
 {
-    public class TicketListDto
+    public class TicketDto
     {
         public string Id { get; set; }
         public string Title { get; set; }
+        public string Description { get; set; }
 
         public PriorityDto Priority { get; set; }
         public StatusDto Status { get; set; }

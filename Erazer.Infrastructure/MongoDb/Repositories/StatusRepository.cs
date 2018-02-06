@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using Erazer.Infrastructure.MongoDb.Base;
-using Erazer.Domain.Infrastructure.DTOs;
-using Erazer.Domain.Infrastructure.Repositories;
+using Erazer.Domain.Data.DTOs;
+using Erazer.Domain.Data.Repositories;
 
 namespace Erazer.Infrastructure.MongoDb.Repositories
 {

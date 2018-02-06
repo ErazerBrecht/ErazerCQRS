@@ -1,5 +1,5 @@
 ﻿using Erazer.Infrastructure.MongoDb.Base;
-using Erazer.Domain.Infrastructure.DTOs;
+using Erazer.Domain.Data.DTOs;
 using MongoDB.Bson.Serialization;
 
 namespace Erazer.Infrastructure.MongoDb.ClassMaps

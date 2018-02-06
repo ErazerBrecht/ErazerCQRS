@@ -1,8 +1,8 @@
-﻿using Erazer.Domain.Infrastructure.DTOs;
+﻿using Erazer.Domain.Data.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Erazer.Domain.Infrastructure.Repositories
+namespace Erazer.Domain.Data.Repositories
 {
     public interface ITicketQueryRepository 
     {

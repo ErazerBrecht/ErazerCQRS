@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using System.Collections.Generic;
-using Erazer.Domain.Infrastructure.Repositories;
+using Erazer.Domain.Data.Repositories;
 using Erazer.Web.ReadAPI.ViewModels;
 using Erazer.Web.ReadAPI.Queries.Requests;
 using Erazer.Web.ReadAPI.ViewModels.Events;
