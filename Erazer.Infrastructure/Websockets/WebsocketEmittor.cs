@@ -1,12 +1,12 @@
 ﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Erazer.Web.Shared;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Options;
 using Microsoft.ApplicationInsights;
 using System;
 using Erazer.Framework.FrontEnd;
+using Erazer.Shared;
 
 namespace Erazer.Infrastructure.Websockets
 {

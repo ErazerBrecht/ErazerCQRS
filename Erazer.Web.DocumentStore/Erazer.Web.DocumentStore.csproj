@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Erazer.Infrastructure\Erazer.Infrastructure.csproj" />
+    <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

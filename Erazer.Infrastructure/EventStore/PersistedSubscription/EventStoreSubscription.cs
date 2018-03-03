@@ -29,6 +29,17 @@ namespace Erazer.Infrastructure.EventStore.PersistedSubscription
             _telemetryClient = telemeteryClient;
         }
 
+
+        private static void CreateSubscription(IEventStoreConnection conn)
+        {
+            PersistentSubscriptionSettings settings = PersistentSubscriptionSettings.Create()
+                .DoNotResolveLinkTos()
+                .StartFromCurrent();
+
+   
+        }
+
+
         public void Connect()
         {
             var streamName = $"$ce-{typeof(T).Name}";

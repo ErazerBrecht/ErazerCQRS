@@ -15,6 +15,8 @@ using ServiceStack.Redis;
 using Erazer.Infrastructure.EventStore;
 using Erazer.Infrastructure.ServiceBus;
 using Erazer.Infrastructure.Redis;
+using Microsoft.Azure.ServiceBus;
+using Erazer.Web.WriteAPI.Services;
 
 namespace Erazer.Web.WriteAPI
 {
@@ -45,7 +47,7 @@ namespace Erazer.Web.WriteAPI
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
             services.AddSingletonFactory<IRedisClientsManager, RedisFactory>();
-            // services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
+            services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
 
             services.AddAutoMapper();
             services.AddMediatR();
@@ -58,8 +60,10 @@ namespace Erazer.Web.WriteAPI
             // WITHOUT CACHE
             //services.AddScoped<IAggregateRepository, AggregateRepository>();
 
+            services.AddScoped<IFileUploader, FileUploader>();
+
             // CQRS
-            // services.AddScoped<IEventPublisher, EventPublisher>();
+            services.AddScoped<IEventPublisher, EventPublisher>();
 
             // Add MVC
             services.AddCors();

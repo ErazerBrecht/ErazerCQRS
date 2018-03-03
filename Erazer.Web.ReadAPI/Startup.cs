@@ -10,8 +10,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.ApplicationInsights;
 using MongoDB.Driver;
 using Erazer.Shared.Extensions.DependencyInjection;
-using Erazer.Web.ReadAPI.Extensions;
-using Erazer.Web.Shared.Telemetery;
 using Erazer.Domain.Data.Repositories;
 using Erazer.Framework.FrontEnd;
 using Erazer.Domain;
@@ -20,28 +18,24 @@ using Erazer.Infrastructure.EventStore;
 using Erazer.Infrastructure.MongoDb.Repositories;
 using Erazer.Infrastructure.Websockets;
 using EventStore.ClientAPI;
+using Erazer.Infrastructure.Logging;
+using Erazer.Web.Shared.Extensions;
 
 namespace Erazer.Web.ReadAPI
 {
     public class Startup
     {
-        private readonly IConfigurationRoot _configuration;
+        private IConfiguration _configuration { get; }
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            _configuration = builder.Build();
+            _configuration = configuration;
         }
-
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IConfiguration>(_configuration);
+            services.AddSingleton(_configuration);
             services.Configure<MongoDbSettings>(_configuration.GetSection("MongoDbSettings"));
             services.Configure<WebsocketSettings>(_configuration.GetSection("WebsocketSettings"));
             services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));

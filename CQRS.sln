@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.Shared", "Erazer
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Erazer.Web.Websockets", "Erazer.Web.Websockets\Erazer.Web.Websockets.njsproj", "{C30F5FE0-A785-4BA6-8296-849C1B9C995C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Web.DocumentStore", "Erazer.Web.DocumentStore\Erazer.Web.DocumentStore.csproj", "{EFDD2243-C0EE-4B22-906F-092F0348930C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Shared", "Erazer.Shared\Erazer.Shared.csproj", "{8C00EC48-336E-4799-88AA-2FE56FA2193E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{C30F5FE0-A785-4BA6-8296-849C1B9C995C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C30F5FE0-A785-4BA6-8296-849C1B9C995C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C30F5FE0-A785-4BA6-8296-849C1B9C995C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFDD2243-C0EE-4B22-906F-092F0348930C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFDD2243-C0EE-4B22-906F-092F0348930C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFDD2243-C0EE-4B22-906F-092F0348930C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFDD2243-C0EE-4B22-906F-092F0348930C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C00EC48-336E-4799-88AA-2FE56FA2193E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C00EC48-336E-4799-88AA-2FE56FA2193E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C00EC48-336E-4799-88AA-2FE56FA2193E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C00EC48-336E-4799-88AA-2FE56FA2193E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

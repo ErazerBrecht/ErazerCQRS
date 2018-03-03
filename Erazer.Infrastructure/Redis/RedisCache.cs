@@ -1,9 +1,9 @@
 ﻿using System;
 using Erazer.Framework.Cache;
 using Erazer.Framework.Domain;
-using Erazer.Web.Shared;
 using Newtonsoft.Json;
 using ServiceStack.Redis;
+using Erazer.Shared;
 
 namespace Erazer.Infrastructure.Redis
 {

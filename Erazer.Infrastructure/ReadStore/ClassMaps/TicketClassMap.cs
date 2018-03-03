@@ -21,6 +21,9 @@ namespace Erazer.Infrastructure.MongoDb.ClassMaps
 
             cm.MapProperty(x => x.Title)
                 .SetElementName("title");
+
+            cm.MapProperty(x => x.Files)
+                .SetElementName("files");
         }
     }
 }

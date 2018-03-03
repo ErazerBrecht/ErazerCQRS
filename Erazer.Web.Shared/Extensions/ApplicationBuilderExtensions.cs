@@ -9,7 +9,7 @@ using Erazer.Infrastructure.MongoDb.ClassMaps;
 using Erazer.Infrastructure.MongoDb.Base;
 using Erazer.Infrastructure.MongoDb.Seeding;
 
-namespace Erazer.Web.ReadAPI.Extensions
+namespace Erazer.Web.Shared.Extensions
 {
     public static class ApplicationBuilderExtensions
     {

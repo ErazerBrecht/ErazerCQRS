@@ -11,6 +11,8 @@ using Erazer.Domain.Data.DTOs;
 using Erazer.Domain.Data.DTOs.Events;
 using Erazer.Domain.Data.Repositories;
 using Erazer.Web.ReadAPI.EventHandlers.Redux;
+using System.Linq;
+using Erazer.Domain.Files.Data.DTOs;
 
 namespace Erazer.Web.ReadAPI.EventHandlers
 {
@@ -35,7 +37,7 @@ namespace Erazer.Web.ReadAPI.EventHandlers
 
         public async Task Handle(TicketCreateEvent message)
         {
-            var priority =  _priorityRepository.Find(message.PriorityId);
+            var priority = _priorityRepository.Find(message.PriorityId);
             var status = _statusRepository.Find(message.StatusId);
 
             await Task.WhenAll(priority, status);
@@ -46,8 +48,16 @@ namespace Erazer.Web.ReadAPI.EventHandlers
                 Description = message.Description,
                 Title = message.Title,
                 Priority = priority.Result,
-                Status = status.Result
+                Status = status.Result,
+                Files = message.Files?.Select(f => new FileDto
+                {
+                    Id = f.Id.ToString(),
+                    Name = f.Name,
+                    Type = f.Type,
+                    Size = f.Size
+                }).ToList()
             };
+
             var @event = new CreatedEventDto
             {
                 Id = Guid.NewGuid().ToString(),

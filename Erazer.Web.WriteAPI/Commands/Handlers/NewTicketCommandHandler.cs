@@ -17,7 +17,7 @@ namespace Erazer.Web.WriteAPI.Commands.Handlers
 
         public async Task Handle(NewTicketCommand message)
         {
-            var ticket = new Ticket(message.Id, message.Title, message.Description, message.PriorityId, message.UserId);
+            var ticket = new Ticket(message.Id, message.Title, message.Description, message.PriorityId, message.UserId, message.Files);
             await _repository.Save(ticket);
         }
     }

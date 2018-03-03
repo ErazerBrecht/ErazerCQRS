@@ -4,7 +4,7 @@ using AutoMapper;
 using Erazer.Framework.Events;
 using EventStore.ClientAPI;
 using Newtonsoft.Json;
-using Erazer.Web.Shared;
+using Erazer.Shared;
 
 namespace Erazer.Infrastructure.EventStore
 {

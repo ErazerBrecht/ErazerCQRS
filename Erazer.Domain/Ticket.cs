@@ -3,6 +3,7 @@ using Erazer.Domain.Constants;
 using Erazer.Domain.Events;
 using Erazer.Framework.Domain;
 using System.Collections.Generic;
+using Erazer.Domain.Files;
 
 namespace Erazer.Domain
 {
@@ -13,12 +14,13 @@ namespace Erazer.Domain
         private string _priorityId;
         private string _statusId;
         private List<string> _comments = new List<string>();
+        private List<File> _files = new List<File>();
 
         private const string DefaultStatusId = StatusConstants.Backlog;
 
         #region Constructors
         // Constructor used for creating a new ticket!
-        public Ticket(Guid id, string title, string description, string priorityId, Guid creatorUserId) : this()
+        public Ticket(Guid id, string title, string description, string priorityId, Guid creatorUserId, List<File> files) : this()
         {
             ApplyChange(new TicketCreateEvent(id)
             {
@@ -26,7 +28,8 @@ namespace Erazer.Domain
                 Description = description,
                 UserId = creatorUserId,
                 PriorityId = priorityId,
-                StatusId = DefaultStatusId
+                StatusId = DefaultStatusId,
+                Files = files
             });
         }
 
@@ -52,6 +55,7 @@ namespace Erazer.Domain
             _description = e.Description;
             _priorityId = e.PriorityId;
             _statusId = e.StatusId;
+            _files = e.Files;
         }
 
         private void Apply(TicketPriorityEvent e)

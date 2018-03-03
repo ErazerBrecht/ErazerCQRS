@@ -1,7 +1,7 @@
 ﻿using Erazer.Framework.Factories;
 using Microsoft.ApplicationInsights;
 
-namespace Erazer.Web.Shared.Telemetery
+namespace Erazer.Infrastructure.Logging
 {
     public class TelemeteryFactory : IFactory<TelemetryClient>
     {

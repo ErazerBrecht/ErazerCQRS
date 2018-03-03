@@ -28,7 +28,7 @@ namespace Erazer.Infrastructure.EventStore
             {
                 // TODO Use different settings on different env's
                 var settings = ConnectionSettings.Create()
-                                    .SetHeartbeatTimeout(TimeSpan.FromSeconds(5))
+                                    .SetHeartbeatTimeout(TimeSpan.FromSeconds(30))
                                     .UseConsoleLogger();
                                     
                 var connection = EventStoreConnection.Create(_options.Value.ConnectionString, settings);

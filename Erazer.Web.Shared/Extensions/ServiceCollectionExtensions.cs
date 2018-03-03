@@ -1,8 +1,11 @@
 ﻿using Erazer.Framework.Domain;
+using Erazer.Framework.Events;
 using Erazer.Infrastructure.EventStore.PersistedSubscription;
+using Erazer.Infrastructure.ServiceBus;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Erazer.Web.ReadAPI.Extensions
+namespace Erazer.Web.Shared.Extensions
 {
     public static class ServiceCollectionExtensions
     {
@@ -15,6 +18,17 @@ namespace Erazer.Web.ReadAPI.Extensions
             var service = sp.GetService<ISubscription<T>>();
 
             service.Connect();
+        }
+
+        public static void StartReciever(this IServiceCollection collection)
+        {
+            collection.AddSingleton<IEventReciever, EventReciever>();
+
+            // Build the intermediate service provider
+            var sp = collection.BuildServiceProvider();
+            var service = sp.GetService<IEventReciever>();
+
+            service.RegisterEventReciever();
         }
     }
 }

@@ -19,15 +19,25 @@ cd Erazer.Web.Websockets
 node server.js 
 }
 
+Start-Sleep -s 5
+
+
 start powershell { 
 cd Erazer.Web.ReadAPI
 dotnet run 
 }
 
-Start-Sleep -s 5
+Start-Sleep -s 10
 
 start powershell { 
 cd Erazer.Web.WriteAPI
 dotnet run 
 }
 
+
+Start-Sleep -s 10
+
+start powershell { 
+cd Erazer.Web.DocumentStore
+dotnet run 
+}

@@ -7,6 +7,7 @@ namespace Erazer.Web.ReadAPI.ViewModels
     {
         public string Description { get; set; }
         public IList<TicketEventViewModel> Events { get; set; }
+        public IList<FileViewModel> Files { get; set; }
     }
 }
  

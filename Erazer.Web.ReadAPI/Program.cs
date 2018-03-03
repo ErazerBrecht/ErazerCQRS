@@ -1,5 +1,5 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore;
 
 namespace Erazer.Web.ReadAPI
 {
@@ -7,16 +7,14 @@ namespace Erazer.Web.ReadAPI
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseUrls("http://localhost:5000")
-                .UseIISIntegration()
+            BuildWebHost(args).Run();
+        }
+
+        public static IWebHost BuildWebHost(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
+                .UseUrls("http://localhost:5000")
                 .Build();
-
-            host.Run();
-        }
     }
 }

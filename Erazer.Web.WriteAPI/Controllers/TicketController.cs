@@ -4,6 +4,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Erazer.Web.WriteAPI.Commands.Requests;
 using Erazer.Web.WriteAPI.ViewModels;
+using Erazer.Web.WriteAPI.Services;
+using System.Linq;
 
 namespace Erazer.Web.WriteAPI.Controllers
 {
@@ -11,22 +13,29 @@ namespace Erazer.Web.WriteAPI.Controllers
     public class TicketController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IFileUploader _fileUploader;
 
-        public TicketController(IMediator mediator)
+        public TicketController(IMediator mediator, IFileUploader fileUploader)
         {
             _mediator = mediator;
+            _fileUploader = fileUploader;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTicket([FromBody] NewTicketViewModel model)
+        public async Task<IActionResult> CreateTicket(NewTicketViewModel model)
         {
+            var userId = Guid.Parse("88888888-8888-8888-8888-888888888888");
+
+            var files = await _fileUploader.UploadFiles(userId, model.Files.ToArray());
+
             await _mediator.Send(new NewTicketCommand
             {
                 Id = Guid.NewGuid(),
-                UserId = Guid.Parse("88888888-8888-8888-8888-888888888888"),
+                UserId = userId,
                 Title = model.Title,
                 Description = model.Description,
-                PriorityId = model.PriorityId
+                PriorityId = model.PriorityId,
+                Files = files.ToList()
             });
 
             return Ok();

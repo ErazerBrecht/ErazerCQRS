@@ -2,10 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Erazer.Framework.Events;
-using Erazer.Web.Shared;
 using MediatR;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
+using Erazer.Shared;
+using System;
 
 namespace Erazer.Infrastructure.ServiceBus
 {
@@ -46,14 +47,22 @@ namespace Erazer.Infrastructure.ServiceBus
         {
             // Deserialze event
             var messageBody = Encoding.UTF8.GetString(message.Body);
-            var @event = JsonConvert.DeserializeObject<IEvent>(messageBody, JsonSettings.DefaultSettings);
-
-            // Complete the message so that it is not received again.
-            // This can be done only if the queueClient is opened in ReceiveMode.PeekLock mode (which is default).
-            await _queueClient.CompleteAsync(message.SystemProperties.LockToken);
+            var @event = JsonConvert.DeserializeObject<INotification>(messageBody, JsonSettings.DefaultSettings);
 
             // Process event
-            await _mediator.Publish(@event, token);                     
+            try
+            {
+                await _mediator.Publish(@event, token);
+
+                // Complete the message so that it is not received again.
+                // This can be done only if the queueClient is opened in ReceiveMode.PeekLock mode (which is default).
+                await _queueClient.CompleteAsync(message.SystemProperties.LockToken);
+            }
+            catch(Exception e)
+            {
+                // TODO LOG 
+                throw;
+            }
         }
     }
 }
