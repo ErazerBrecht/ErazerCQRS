@@ -6,6 +6,8 @@ using Erazer.Web.WriteAPI.Commands.Requests;
 using Erazer.Web.WriteAPI.ViewModels;
 using Erazer.Web.WriteAPI.Services;
 using System.Linq;
+using System.Collections.Generic;
+using Erazer.Domain.Files;
 
 namespace Erazer.Web.WriteAPI.Controllers
 {
@@ -24,13 +26,16 @@ namespace Erazer.Web.WriteAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTicket(NewTicketViewModel model)
         {
+            var id = Guid.NewGuid();
             var userId = Guid.Parse("88888888-8888-8888-8888-888888888888");
 
-            var files = await _fileUploader.UploadFiles(userId, model.Files.ToArray());
+            var files = model.Files == null || model.Files.Any()
+                ? new List<File>()
+                : await _fileUploader.UploadFiles(userId, model.Files.ToArray());
 
             await _mediator.Send(new NewTicketCommand
             {
-                Id = Guid.NewGuid(),
+                Id = id,
                 UserId = userId,
                 Title = model.Title,
                 Description = model.Description,
@@ -38,7 +43,7 @@ namespace Erazer.Web.WriteAPI.Controllers
                 Files = files.ToList()
             });
 
-            return Ok();
+            return Ok(id);
         }
 
         [HttpPatch("comment")]
