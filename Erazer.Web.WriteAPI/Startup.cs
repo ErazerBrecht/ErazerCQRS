@@ -17,6 +17,7 @@ using Erazer.Infrastructure.ServiceBus;
 using Erazer.Infrastructure.Redis;
 using Microsoft.Azure.ServiceBus;
 using Erazer.Web.WriteAPI.Services;
+using EasyNetQ;
 
 namespace Erazer.Web.WriteAPI
 {
@@ -47,7 +48,11 @@ namespace Erazer.Web.WriteAPI
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
             services.AddSingletonFactory<IRedisClientsManager, RedisFactory>();
-            services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
+
+            // Azure servicebus
+            // services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
+            // RabbitMQ servicebus
+            services.AddSingletonFactory<IBus, BusFactory>();
 
             services.AddAutoMapper();
             services.AddMediatR();

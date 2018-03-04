@@ -87,7 +87,6 @@ namespace Erazer.Web.ReadAPI
             });
 
             app.UseMvc();
-            app.Seed();
         }
     }
 }

@@ -30,13 +30,5 @@ namespace Erazer.Web.Shared.Extensions
             foreach (var classMap in classMaps)
                 Activator.CreateInstance(classMap);
         }
-
-        public static void Seed(this IApplicationBuilder app)
-        {
-            Task.WaitAll(
-                StatusSeeder.Seed(app.ApplicationServices.GetRequiredService<IStatusQueryRepository>()),
-                PrioritySeeder.Seed(app.ApplicationServices.GetRequiredService<IPriorityQueryRepository>())
-            );
-        }
     }
 }

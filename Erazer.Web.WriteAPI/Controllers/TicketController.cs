@@ -29,7 +29,7 @@ namespace Erazer.Web.WriteAPI.Controllers
             var id = Guid.NewGuid();
             var userId = Guid.Parse("88888888-8888-8888-8888-888888888888");
 
-            var files = model.Files == null || model.Files.Any()
+            var files = model.Files == null || !model.Files.Any()
                 ? new List<File>()
                 : await _fileUploader.UploadFiles(userId, model.Files.ToArray());
 

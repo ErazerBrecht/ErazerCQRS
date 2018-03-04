@@ -7,6 +7,5 @@ namespace Erazer.Framework.Events
     {
         Task Publish(byte[] @event);
         Task Publish(IEnumerable<byte[]> events);
-        Task Close();
     }
 }

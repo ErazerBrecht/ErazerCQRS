@@ -2,34 +2,34 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Erazer.Framework.Events;
-using Microsoft.Azure.ServiceBus;
+using EasyNetQ;
+using System;
 
 namespace Erazer.Infrastructure.ServiceBus
 {
-    public class EventPublisher : IEventPublisher
+    public class EventPublisher : IEventPublisher, IDisposable
     {
-        private readonly IQueueClient _queueClient;
+        private readonly IBus _bus;
 
-        public EventPublisher(IQueueClient queueClient)
+        public EventPublisher(IBus bus)
         {
-            _queueClient = queueClient;
+            _bus = bus;
         }
 
         public Task Publish(byte[] @event)
         {
-            var message = new Message(@event);          
-            return _queueClient.SendAsync(message);
+            return _bus.PublishAsync(@event);
         }
 
         public Task Publish(IEnumerable<byte[]> events)
         {
-            var messages = events.Select(jsonEvent => new Message(jsonEvent)).ToList();
-            return _queueClient.SendAsync(messages);
+            var tasks = events.Select(e => _bus.PublishAsync(e));
+            return Task.WhenAll(tasks);
         }
 
-        public Task Close()
+        public void Dispose()
         {
-            return _queueClient.CloseAsync();
+            _bus.Dispose();
         }
     }
 }
