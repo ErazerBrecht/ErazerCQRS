@@ -69,11 +69,8 @@ namespace Erazer.Web.ReadAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServer server)
         {
-            loggerFactory.AddConsole(_configuration.GetSection("Logging"));
-
             if (env.IsDevelopment())
             {
-                loggerFactory.AddDebug();
                 app.UseDeveloperExceptionPage();
             }
 

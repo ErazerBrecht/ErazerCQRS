@@ -45,13 +45,15 @@ namespace Erazer.Infrastructure.MongoDb
             try
             {
                 db.RunCommandAsync((Command<BsonDocument>) "{ping:1}").Wait();
-                _logger.LogInformation($"Created a succesful connection with the mongo db server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t Database: {_options.Value.Database}");
+                _logger.LogInformation($"Created a succesful connection with the 'MongoDb' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t Database: {_options.Value.Database}");
             }
             catch
             {
-                throw new MongoClientException($"Could NOT create a succesful connection with 'MongoDb' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
+                var ex = new MongoClientException($"Could NOT create a succesful connection with 'MongoDb' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
+                _logger.LogCritical(ex, $"Could NOT create a succesful connection with the 'MongoDb' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t Database: {_options.Value.Database}");
+                throw ex;
             }
-        
+
             return db;
         }
 
