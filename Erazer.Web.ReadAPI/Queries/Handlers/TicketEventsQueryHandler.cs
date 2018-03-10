@@ -8,7 +8,7 @@ using Erazer.Web.ReadAPI.Queries.Requests;
 
 namespace Erazer.Web.ReadAPI.Queries.Handler
 {
-    public class TicketEventsQueryHandler : IAsyncRequestHandler<TicketEventsQuery, List<TicketEventViewModel>>
+    public class TicketEventsQueryHandler : AsyncRequestHandler<TicketEventsQuery, List<TicketEventViewModel>>
     {
         private readonly ITicketEventQueryRepository _repository;
         private readonly IMapper _mapper;
@@ -19,7 +19,7 @@ namespace Erazer.Web.ReadAPI.Queries.Handler
             _mapper = mapper;
         }
 
-        public async Task<List<TicketEventViewModel>> Handle(TicketEventsQuery message)
+        protected override async Task<List<TicketEventViewModel>> HandleCore(TicketEventsQuery message)
         {
             var ticketEvents =  await _repository.Find(message.TicketId);
             return _mapper.Map<List<TicketEventViewModel>>(ticketEvents);

@@ -16,7 +16,7 @@ using Erazer.Domain.Files.Data.DTOs;
 
 namespace Erazer.Web.ReadAPI.EventHandlers
 {
-    public class TicketCreateEventHandler : IAsyncNotificationHandler<TicketCreateEvent>
+    public class TicketCreateEventHandler : AsyncNotificationHandler<TicketCreateEvent>
     {
         private readonly IMapper _mapper;
         private readonly ITicketQueryRepository _ticketRepository;
@@ -35,7 +35,7 @@ namespace Erazer.Web.ReadAPI.EventHandlers
             _websocketEmittor = websocketEmittor ?? throw new ArgumentNullException(nameof(websocketEmittor));
         }
 
-        public async Task Handle(TicketCreateEvent message)
+        protected override async Task HandleCore(TicketCreateEvent message)
         {
             var priority = _priorityRepository.Find(message.PriorityId);
             var status = _statusRepository.Find(message.StatusId);

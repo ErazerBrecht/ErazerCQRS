@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Erazer.Web.WriteAPI.Commands.Handlers
 {
-    public class UploadFileHandler : IAsyncNotificationHandler<FileUpload>
+    public class UploadFileHandler : AsyncNotificationHandler<FileUpload>
     {
         private readonly IFileRepository _fileRepository;
 
@@ -14,7 +14,7 @@ namespace Erazer.Web.WriteAPI.Commands.Handlers
             _fileRepository = fileRepository;
         }
 
-        public Task Handle(FileUpload message)
+        protected override Task HandleCore(FileUpload message)
         {
             return _fileRepository.Save(message);
         }

@@ -8,7 +8,7 @@ using Erazer.Web.ReadAPI.Queries.Requests;
 
 namespace Erazer.Web.ReadAPI.Queries.Handler
 {
-    public class StatusAllQueryHandler : IAsyncRequestHandler<StatusAllQuery, List<StatusViewModel>>
+    public class StatusAllQueryHandler : AsyncRequestHandler<StatusAllQuery, List<StatusViewModel>>
     {
         private readonly IStatusQueryRepository _repository;
         private readonly IMapper _mapper;
@@ -19,7 +19,7 @@ namespace Erazer.Web.ReadAPI.Queries.Handler
             _mapper = mapper;
         }
 
-        public async Task<List<StatusViewModel>> Handle(StatusAllQuery message)
+        protected override async Task<List<StatusViewModel>> HandleCore(StatusAllQuery message)
         {
             var statuses =  await _repository.All();
             return _mapper.Map<List<StatusViewModel>>(statuses);

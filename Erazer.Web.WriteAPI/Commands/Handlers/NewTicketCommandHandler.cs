@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Erazer.Web.WriteAPI.Commands.Handlers
 {
-    public class NewTicketCommandHandler : IAsyncRequestHandler<NewTicketCommand>
+    public class NewTicketCommandHandler : AsyncRequestHandler<NewTicketCommand>
     {
         private readonly IAggregateRepository _repository;
 
@@ -15,7 +15,7 @@ namespace Erazer.Web.WriteAPI.Commands.Handlers
             _repository = repository;
         }
 
-        public async Task Handle(NewTicketCommand message)
+        protected override async Task HandleCore(NewTicketCommand message)
         {
             var ticket = new Ticket(message.Id, message.Title, message.Description, message.PriorityId, message.UserId, message.Files);
             await _repository.Save(ticket);

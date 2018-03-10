@@ -10,7 +10,7 @@ using Erazer.Web.ReadAPI.ViewModels.Events;
 
 namespace Erazer.Web.ReadAPI.Queries.Handler
 {
-    public class TicketQueryHandler : IAsyncRequestHandler<TicketQuery, TicketViewModel>
+    public class TicketQueryHandler : AsyncRequestHandler<TicketQuery, TicketViewModel>
     {
         private readonly ITicketQueryRepository _repository;
         private readonly ITicketEventQueryRepository _eventRepository;
@@ -23,7 +23,7 @@ namespace Erazer.Web.ReadAPI.Queries.Handler
             _mapper = mapper;
         }
 
-        public async Task<TicketViewModel> Handle(TicketQuery message)
+        protected override async Task<TicketViewModel> HandleCore(TicketQuery message)
         {
             if (!Guid.TryParse(message?.Id, out Guid id))
             {

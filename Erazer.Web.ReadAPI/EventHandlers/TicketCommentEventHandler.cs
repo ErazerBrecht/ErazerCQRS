@@ -11,7 +11,7 @@ using Erazer.Web.ReadAPI.EventHandlers.Redux;
 
 namespace Erazer.Web.ReadAPI.EventHandlers
 {
-    public class TicketCommentEventHandler : IAsyncNotificationHandler<TicketCommentEvent>
+    public class TicketCommentEventHandler : AsyncNotificationHandler<TicketCommentEvent>
     {
         private readonly IWebsocketEmittor _websocketEmittor;
         private readonly IMapper _mapper;
@@ -24,7 +24,7 @@ namespace Erazer.Web.ReadAPI.EventHandlers
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public Task Handle(TicketCommentEvent message)
+        protected override Task HandleCore(TicketCommentEvent message)
         {
             var ticketEvent = new CommentEventDto
             {

@@ -11,7 +11,7 @@ using Erazer.Web.ReadAPI.EventHandlers.Redux;
 
 namespace Erazer.Web.ReadAPI.EventHandlers
 {
-    public class TicketPriorityEventHandler : IAsyncNotificationHandler<TicketPriorityEvent>
+    public class TicketPriorityEventHandler : AsyncNotificationHandler<TicketPriorityEvent>
     {
         private readonly IMapper _mapper;
         private readonly ITicketQueryRepository _ticketRepository;
@@ -28,7 +28,7 @@ namespace Erazer.Web.ReadAPI.EventHandlers
             _websocketEmittor = websocketEmittor ?? throw new ArgumentNullException(nameof(websocketEmittor));
         }
 
-        public async Task Handle(TicketPriorityEvent message)
+        protected override async Task HandleCore(TicketPriorityEvent message)
         {
             var ticketTask = _ticketRepository.Find(message.AggregateRootId.ToString());
             var oldPriorityTask = _priorityRepository.Find(message.FromPriorityId);

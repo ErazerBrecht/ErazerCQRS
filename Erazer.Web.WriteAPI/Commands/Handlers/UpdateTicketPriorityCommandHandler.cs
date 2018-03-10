@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Erazer.Web.WriteAPI.Commands.Handlers
 {
-    public class UpdateTicketPriorityCommandHandler : IAsyncRequestHandler<UpdateTicketPriorityCommand>
+    public class UpdateTicketPriorityCommandHandler : AsyncRequestHandler<UpdateTicketPriorityCommand>
     {
         private readonly IAggregateRepository _repository;
 
@@ -15,7 +15,7 @@ namespace Erazer.Web.WriteAPI.Commands.Handlers
             _repository = repository;
         }
 
-        public async Task Handle(UpdateTicketPriorityCommand message)
+        protected override async Task HandleCore(UpdateTicketPriorityCommand message)
         {
             var ticket = await _repository.Get<Ticket>(message.TicketId);
             ticket.UpdatePriority(message.PriorityId, message.UserId);

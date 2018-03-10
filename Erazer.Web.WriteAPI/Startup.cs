@@ -15,7 +15,6 @@ using ServiceStack.Redis;
 using Erazer.Infrastructure.EventStore;
 using Erazer.Infrastructure.ServiceBus;
 using Erazer.Infrastructure.Redis;
-using Microsoft.Azure.ServiceBus;
 using Erazer.Web.WriteAPI.Services;
 using EasyNetQ;
 

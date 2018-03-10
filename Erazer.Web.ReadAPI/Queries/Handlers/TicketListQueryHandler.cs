@@ -8,7 +8,7 @@ using Erazer.Web.ReadAPI.Queries.Requests;
 
 namespace Erazer.Web.ReadAPI.Queries.Handler
 {
-    public class TicketListQueryHandler : IAsyncRequestHandler<TicketListQuery, List<TicketListViewModel>>
+    public class TicketListQueryHandler : AsyncRequestHandler<TicketListQuery, List<TicketListViewModel>>
     {
         private readonly ITicketQueryRepository _repository;
         private readonly IMapper _mapper;
@@ -19,7 +19,7 @@ namespace Erazer.Web.ReadAPI.Queries.Handler
             _mapper = mapper;
         }
 
-        public async Task<List<TicketListViewModel>> Handle(TicketListQuery message)
+        protected override async Task<List<TicketListViewModel>> HandleCore(TicketListQuery message)
         {
             // TODO Add pagination
             var tickets = await _repository.All();

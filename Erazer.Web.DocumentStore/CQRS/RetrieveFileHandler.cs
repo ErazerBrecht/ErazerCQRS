@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Erazer.Web.DocumentStore.CQRS
 {
-    public class RetrieveFileHandler : IAsyncRequestHandler<FileRequest, FileUpload>
+    public class RetrieveFileHandler : AsyncRequestHandler<FileRequest, FileUpload>
     {
         private readonly IFileRepository _fileRepository;
 
@@ -14,7 +14,7 @@ namespace Erazer.Web.DocumentStore.CQRS
             _fileRepository = fileRepository;
         }
 
-        public Task<FileUpload> Handle(FileRequest request)
+        protected override Task<FileUpload> HandleCore(FileRequest request)
         {
             return _fileRepository.Find(request.Id);
         }
