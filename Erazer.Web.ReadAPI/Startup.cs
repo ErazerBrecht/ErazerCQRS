@@ -20,6 +20,7 @@ using Erazer.Infrastructure.Websockets;
 using EventStore.ClientAPI;
 using Erazer.Infrastructure.Logging;
 using Erazer.Web.Shared.Extensions;
+using Erazer.Web.ReadAPI.Extensions;
 
 namespace Erazer.Web.ReadAPI
 {
@@ -48,6 +49,7 @@ namespace Erazer.Web.ReadAPI
             services.AddSingleton<IWebsocketEmittor, WebsocketEmittor>();
             services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
 
+            services.AddMongoDbClassMaps();
             services.AddAutoMapper();
             services.AddMediatR();
 
@@ -73,8 +75,6 @@ namespace Erazer.Web.ReadAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseMongoDbClassMaps();
 
             app.UseCors(builder =>
             {
