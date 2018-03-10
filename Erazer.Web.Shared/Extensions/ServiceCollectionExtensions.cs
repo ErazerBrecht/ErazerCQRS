@@ -2,7 +2,6 @@
 using Erazer.Framework.Events;
 using Erazer.Infrastructure.EventStore.PersistedSubscription;
 using Erazer.Infrastructure.ServiceBus;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Erazer.Web.Shared.Extensions

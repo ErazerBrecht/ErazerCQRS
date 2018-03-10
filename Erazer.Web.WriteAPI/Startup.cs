@@ -42,16 +42,12 @@ namespace Erazer.Web.WriteAPI
             // Add 'Configration'
             services.AddSingleton<IConfiguration>(_configuration);
             services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
-            services.Configure<AzureServiceBusSettings>(_configuration.GetSection("AzureServiceBusSettings"));
+            services.Configure<ServiceBusSettings>(_configuration.GetSection("ServiceBusSettings"));
             services.Configure<RedisSettings>(_configuration.GetSection("CacheSettings"));
 
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
             services.AddSingletonFactory<IRedisClientsManager, RedisFactory>();
-
-            // Azure servicebus
-            // services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
-            // RabbitMQ servicebus
             services.AddSingletonFactory<IBus, BusFactory>();
 
             services.AddAutoMapper();

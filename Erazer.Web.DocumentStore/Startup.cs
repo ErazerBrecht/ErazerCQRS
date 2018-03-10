@@ -34,13 +34,9 @@ namespace Erazer.Web.DocumentStore
         {
             services.AddSingleton(_configuration);
             services.Configure<MongoDbSettings>(_configuration.GetSection("MongoDbSettings"));
-            services.Configure<AzureServiceBusSettings>(_configuration.GetSection("AzureServiceBusSettings"));
+            services.Configure<ServiceBusSettings>(_configuration.GetSection("ServiceBusSettings"));
 
             services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
-            
-            // Azure servicebus
-            // services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
-            // RabbitMQ servicebus
             services.AddSingletonFactory<IBus, BusFactory>();
 
             services.AddAutoMapper();

@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Erazer.Shared;
 using System;
 using EasyNetQ;
+using Microsoft.Extensions.Logging;
 
 namespace Erazer.Infrastructure.ServiceBus
 {
@@ -13,11 +14,13 @@ namespace Erazer.Infrastructure.ServiceBus
     {
         private readonly IBus _bus;
         private readonly IMediator _mediator;
+        private readonly ILogger<EventReciever> _logger;
 
-        public EventReciever(IBus bus, IMediator mediator)
+        public EventReciever(IBus bus, IMediator mediator, ILogger<EventReciever> logger)
         {
             _bus = bus;
             _mediator = mediator;
+            _logger = logger;
         }
 
         public void RegisterEventReciever()
@@ -38,7 +41,7 @@ namespace Erazer.Infrastructure.ServiceBus
             }
             catch (Exception e)
             {
-                // TODO LOG 
+                _logger.LogError(e, $"Exception when executing event {@event.ToString()}");
                 throw;
             }
         }
