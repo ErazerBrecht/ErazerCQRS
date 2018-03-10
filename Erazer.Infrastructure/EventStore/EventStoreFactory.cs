@@ -30,16 +30,18 @@ namespace Erazer.Infrastructure.EventStore
                 var settings = ConnectionSettings.Create()
                                     .SetHeartbeatTimeout(TimeSpan.FromSeconds(30))
                                     .UseConsoleLogger();
-                                    
+
                 var connection = EventStoreConnection.Create(_options.Value.ConnectionString, settings);
+
                 connection.ConnectAsync().Wait();
+                connection.GetStreamMetadataAsync("$users").Wait();
 
                 _logger.LogInformation($"Created a succesful connection with the 'GetEventStore' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
                 return connection;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                _logger.LogCritical($"Could NOT create a succesful connection with the 'GetEventStore' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
+                _logger.LogCritical(ex, $"Could NOT create a succesful connection with the 'GetEventStore' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
                 throw;
             }
         }

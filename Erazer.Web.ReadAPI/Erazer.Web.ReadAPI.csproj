@@ -16,8 +16,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
 
 </Project>

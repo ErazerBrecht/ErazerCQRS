@@ -16,6 +16,7 @@ using Erazer.Infrastructure.MongoDb;
 using MongoDB.Driver;
 using Erazer.Infrastructure.DocumentStore;
 using Erazer.Infrastructure.DocumentStore.Repositories;
+using EasyNetQ;
 
 namespace Erazer.Web.DocumentStore
 {
@@ -33,10 +34,10 @@ namespace Erazer.Web.DocumentStore
         {
             services.AddSingleton(_configuration);
             services.Configure<MongoDbSettings>(_configuration.GetSection("MongoDbSettings"));
-            services.Configure<AzureServiceBusSettings>(_configuration.GetSection("AzureServiceBusSettings"));
+            services.Configure<ServiceBusSettings>(_configuration.GetSection("ServiceBusSettings"));
 
-            services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();          
-            services.AddSingletonFactory<IQueueClient, QueueClientFactory>();
+            services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
+            services.AddSingletonFactory<IBus, BusFactory>();
 
             services.AddAutoMapper();
             services.AddMediatR();
