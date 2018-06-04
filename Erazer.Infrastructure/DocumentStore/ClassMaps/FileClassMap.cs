@@ -1,4 +1,5 @@
 ﻿using Erazer.Domain.Files;
+using Erazer.Domain.Files.Upload;
 using Erazer.Infrastructure.MongoDb.Base;
 using MongoDB.Bson.Serialization;
 

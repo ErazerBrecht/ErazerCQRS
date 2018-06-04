@@ -1,24 +1,8 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:5001",
-      "sslPort": 50001
-    }
-  },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
     "Erazer.Web.WriteAPI": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "health",
+      "launchBrowser": false,
       "environmentVariables": {
         "ASPNETCORE_HTTPS_PORT": "50001",
         "ASPNETCORE_ENVIRONMENT": "Development"

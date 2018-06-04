@@ -7,13 +7,13 @@ using Microsoft.Extensions.Logging;
 using MediatR;
 using AutoMapper;
 using Erazer.Infrastructure.ServiceBus;
-using Erazer.Shared.Extensions.DependencyInjection;
 using Erazer.Web.Shared.Extensions;
 using Erazer.Infrastructure.MongoDb;
 using MongoDB.Driver;
 using Erazer.Infrastructure.DocumentStore;
 using Erazer.Infrastructure.DocumentStore.Repositories;
 using EasyNetQ;
+using Erazer.Web.Shared.Extensions.DependencyInjection;
 
 namespace Erazer.Web.DocumentStore
 {

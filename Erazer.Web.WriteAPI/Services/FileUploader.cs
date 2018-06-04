@@ -13,6 +13,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Erazer.Domain.Files.Upload;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Transforms;
 using TicketFile = Erazer.Domain.Files.File;
 
 namespace Erazer.Web.WriteAPI.Services
@@ -69,30 +72,29 @@ namespace Erazer.Web.WriteAPI.Services
                 IImageEncoder encoder;
 
                 #region Content Checking + Compression
-                if (file.ContentType == "image/jpeg")
+                switch (file.ContentType)
                 {
-                    encoder = new JpegEncoder { IgnoreMetadata = true, Quality = 60 };
-                }
-                else if (file.ContentType == "image/png")
-                {
-                    encoder = new PngEncoder() { IgnoreMetadata = true, CompressionLevel = 5 };
-                }
-                else
-                {
-                    throw new NotSupportedException($"File with content type {file.ContentType} is not supported!");
+                    case "image/jpeg":
+                        encoder = new JpegEncoder { IgnoreMetadata = true, Quality = 60 };
+                        break;
+                    case "image/png":
+                        encoder = new PngEncoder { CompressionLevel = 5 };
+                        break;
+                    default:
+                        throw new NotSupportedException($"File with content type {file.ContentType} is not supported!");
                 }
                 #endregion
 
                 #region Resizing
                 if (image.Width > image.Height && image.Width > 1920)
                 {
-                    var width = 1920;
+                    const int width = 1920;
                     var height = (int)(image.Height / (image.Width / 1920.0));
                     image.Mutate(i => i.Resize(width, height));
                 }
                 else if (image.Height > 1080)
                 {
-                    var height = 1080;
+                    const int height = 1080;
                     var width = (int)(image.Width / (image.Height / 1080.0));
                     image.Mutate(i => i.Resize(width, height));
                 }

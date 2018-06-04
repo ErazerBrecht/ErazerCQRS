@@ -3,6 +3,7 @@ using System;
 using MongoDB.Driver;
 using System.Threading.Tasks;
 using Erazer.Domain.Files;
+using Erazer.Domain.Files.Upload;
 
 namespace Erazer.Infrastructure.DocumentStore.Repositories
 {

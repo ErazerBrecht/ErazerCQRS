@@ -1,8 +1,9 @@
-﻿using Erazer.Domain.Files;
+﻿using System;
+using Erazer.Domain.Files;
+using Erazer.Domain.Files.Upload;
 using MediatR;
-using System;
 
-namespace Erazer.Web.DocumentStore.CQRS
+namespace Erazer.Web.DocumentStore.Query
 {
     public class FileRequest: IRequest<FileUpload>
     {

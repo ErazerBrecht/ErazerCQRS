@@ -2,7 +2,7 @@
 using Erazer.Domain.Files.Data.DTOs;
 using Erazer.Web.ReadAPI.ViewModels;
 
-namespace Erazer.Services.Queries.Mappings
+namespace Erazer.Web.ReadAPI.Mappings
 {
     public class FileMappings : Profile
     {

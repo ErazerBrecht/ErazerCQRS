@@ -1,7 +1,7 @@
-﻿using Erazer.Framework.Files;
-using System;
+﻿using System;
+using Erazer.Framework.Files;
 
-namespace Erazer.Domain.Files
+namespace Erazer.Domain.Files.Upload
 {
     // TODO This isn't actaully a domain class
     // TODO Move this class

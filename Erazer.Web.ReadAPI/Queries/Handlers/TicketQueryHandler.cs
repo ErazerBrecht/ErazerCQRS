@@ -1,14 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using MediatR;
-using System.Collections.Generic;
 using Erazer.Domain.Data.Repositories;
 using Erazer.Web.ReadAPI.ViewModels;
-using Erazer.Web.ReadAPI.Queries.Requests;
 using Erazer.Web.ReadAPI.ViewModels.Events;
+using MediatR;
 
-namespace Erazer.Web.ReadAPI.Queries.Handler
+namespace Erazer.Web.ReadAPI.Queries.Handlers
 {
     public class TicketQueryHandler : AsyncRequestHandler<TicketQuery, TicketViewModel>
     {
@@ -25,7 +24,7 @@ namespace Erazer.Web.ReadAPI.Queries.Handler
 
         protected override async Task<TicketViewModel> HandleCore(TicketQuery message)
         {
-            if (!Guid.TryParse(message?.Id, out Guid id))
+            if (!Guid.TryParse(message?.Id, out var id))
             {
                 throw new ArgumentException($"Not a valid ticket id: {message?.Id}", nameof(message));
             }
@@ -36,10 +35,10 @@ namespace Erazer.Web.ReadAPI.Queries.Handler
 
             await Task.WhenAll(ticket, events);
 
-            var ticketVM = _mapper.Map<TicketViewModel>(ticket.Result);
-            ticketVM.Events = _mapper.Map<List<TicketEventViewModel>>(events.Result);
+            var ticketViewModel = _mapper.Map<TicketViewModel>(ticket.Result);
+            ticketViewModel.Events = _mapper.Map<List<TicketEventViewModel>>(events.Result);
 
-            return ticketVM;
+            return ticketViewModel;
         }
     }
 }

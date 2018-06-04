@@ -1,7 +1,12 @@
 ﻿using System.Threading.Tasks;
+using Erazer.Framework.FrontEnd;
+using Erazer.Infrastructure.Websockets;
+using Erazer.Web.ReadAPI.EventHandlers.Redux;
+using Erazer.Web.ReadAPI.Queries;
+using Erazer.Web.ReadAPI.ViewModels.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Erazer.Web.ReadAPI.Queries.Requests;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Erazer.Web.ReadAPI.Controllers
 {
@@ -9,10 +14,12 @@ namespace Erazer.Web.ReadAPI.Controllers
     public class TicketController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IWebsocketEmittor _websocketEmittor;
 
-        public TicketController(IMediator mediator)
+        public TicketController(IMediator mediator, IWebsocketEmittor websocketEmittor)
         {
             _mediator = mediator;
+            _websocketEmittor = websocketEmittor;
         }
 
         /// <summary>
@@ -40,6 +47,8 @@ namespace Erazer.Web.ReadAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
+            //await _websocketEmittor.Emit(new ReduxUpdateStatusAction(new TicketStatusEventViewModel()));
+
             var ticket = await _mediator.Send(new TicketQuery { Id = id });
             return Ok(ticket);
         }

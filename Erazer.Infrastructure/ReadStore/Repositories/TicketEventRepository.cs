@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Erazer.Infrastructure.MongoDb.Base;
-using MongoDB.Driver;
 using Erazer.Domain.Data.DTOs.Events;
 using Erazer.Domain.Data.Repositories;
+using Erazer.Infrastructure.MongoDb.Base;
+using MongoDB.Driver;
 
-namespace Erazer.Infrastructure.MongoDb.Repositories
+namespace Erazer.Infrastructure.ReadStore.Repositories
 {
     public class TicketEventRepository : MongoDbBaseRepository, ITicketEventQueryRepository
     {

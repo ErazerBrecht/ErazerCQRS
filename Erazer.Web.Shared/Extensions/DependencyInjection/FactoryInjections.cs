@@ -1,8 +1,8 @@
 ﻿using System;
-using Microsoft.Extensions.DependencyInjection;
 using Erazer.Framework.Factories;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Erazer.Shared.Extensions.DependencyInjection
+namespace Erazer.Web.Shared.Extensions.DependencyInjection
 {
     public static class FactoryInjections
     {

@@ -1,9 +1,10 @@
-﻿using Erazer.Domain.Files;
+﻿using System.Threading.Tasks;
+using Erazer.Domain.Files;
+using Erazer.Domain.Files.Upload;
 using Erazer.Infrastructure.DocumentStore;
 using MediatR;
-using System.Threading.Tasks;
 
-namespace Erazer.Web.DocumentStore.CQRS
+namespace Erazer.Web.DocumentStore.Query.Handlers
 {
     public class RetrieveFileHandler : AsyncRequestHandler<FileRequest, FileUpload>
     {

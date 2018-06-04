@@ -7,6 +7,10 @@ using Microsoft.ApplicationInsights;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Erazer.Framework.FrontEnd;
+using Erazer.Infrastructure.Websockets;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Erazer.Infrastructure.EventStore.PersistedSubscription
 {
@@ -18,15 +22,17 @@ namespace Erazer.Infrastructure.EventStore.PersistedSubscription
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         private readonly TelemetryClient _telemetryClient;
+        private readonly IServiceScopeFactory _scopeFactory;
 
         private EventStorePersistentSubscriptionBase EventStorePersistentSubscriptionBase { get; set; }
 
-        public EventStoreSubscription(IEventStoreConnection eventStoreConnection, IMapper mapper, IMediator mediator, TelemetryClient telemeteryClient)
+        public EventStoreSubscription(IEventStoreConnection eventStoreConnection, IMapper mapper, IMediator mediator, TelemetryClient telemeteryClient, IServiceScopeFactory scopeFactory)
         {
             _eventStoreConnection = eventStoreConnection;
             _mapper = mapper;
             _mediator = mediator;
             _telemetryClient = telemeteryClient;
+            _scopeFactory = scopeFactory;
         }
 
 
@@ -35,8 +41,6 @@ namespace Erazer.Infrastructure.EventStore.PersistedSubscription
             PersistentSubscriptionSettings settings = PersistentSubscriptionSettings.Create()
                 .DoNotResolveLinkTos()
                 .StartFromCurrent();
-
-   
         }
 
 
@@ -62,7 +66,7 @@ namespace Erazer.Infrastructure.EventStore.PersistedSubscription
             Connect();
         }
 
-        private Task EventAppeared(EventStorePersistentSubscriptionBase subscription, ResolvedEvent resolvedEvent)
+        private async Task EventAppeared(EventStorePersistentSubscriptionBase subscription, ResolvedEvent resolvedEvent)
         {
             _telemetryClient.TrackEvent("New event appeared from EventStore (read model)", new Dictionary<string, string> {
                 { "Type", resolvedEvent.Event.EventType },
@@ -70,8 +74,16 @@ namespace Erazer.Infrastructure.EventStore.PersistedSubscription
                 { "Created (Epoch)", resolvedEvent.Event.CreatedEpoch.ToString() }
             });
 
-            var @event = _mapper.Map<IEvent>(resolvedEvent);
-            return _mediator.Publish(@event);
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var mediator = scope.ServiceProvider.GetService<IMediator>();
+                var @event = _mapper.Map<IEvent>(resolvedEvent);
+
+                var hub = scope.ServiceProvider.GetService<IHubContext<ReduxEventHub, IReduxHub>>();
+                await hub.Clients.All.SendAction("YOLO");
+
+                await mediator.Publish(@event);
+            }
         }
 
         public void Dispose()

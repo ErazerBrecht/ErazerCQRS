@@ -1,9 +1,10 @@
-﻿using Erazer.Domain.Files;
+﻿using System.Threading.Tasks;
+using Erazer.Domain.Files;
+using Erazer.Domain.Files.Upload;
 using Erazer.Infrastructure.DocumentStore;
 using MediatR;
-using System.Threading.Tasks;
 
-namespace Erazer.Web.WriteAPI.Commands.Handlers
+namespace Erazer.Web.DocumentStore.Command.Handlers
 {
     public class UploadFileHandler : AsyncNotificationHandler<FileUpload>
     {

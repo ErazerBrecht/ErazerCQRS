@@ -2,12 +2,12 @@
 using Erazer.Framework.Events;
 using Erazer.Infrastructure.EventStore.PersistedSubscription;
 using Erazer.Infrastructure.MongoDb.Base;
-using Erazer.Infrastructure.MongoDb.ClassMaps;
 using Erazer.Infrastructure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Reflection;
+using Erazer.Infrastructure.ReadStore.ClassMaps;
 
 namespace Erazer.Web.Shared.Extensions
 {

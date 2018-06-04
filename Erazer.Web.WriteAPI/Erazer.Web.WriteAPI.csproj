@@ -7,7 +7,7 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0002" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0004" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />

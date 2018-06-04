@@ -1,8 +1,8 @@
-﻿using Erazer.Web.DocumentStore.CQRS;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Erazer.Web.DocumentStore.Query;
 
 namespace Erazer.Web.DocumentStore.Controllers
 {

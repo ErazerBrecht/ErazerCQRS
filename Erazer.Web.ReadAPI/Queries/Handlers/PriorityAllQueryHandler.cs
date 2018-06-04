@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using MediatR;
 using Erazer.Domain.Data.Repositories;
 using Erazer.Web.ReadAPI.ViewModels;
-using Erazer.Web.ReadAPI.Queries.Requests;
+using MediatR;
 
-namespace Erazer.Web.ReadAPI.Queries.Handler
+namespace Erazer.Web.ReadAPI.Queries.Handlers
 {
     public class PriorityAllQueryHandler : AsyncRequestHandler<PriorityAllQuery, List<PriorityViewModel>>
     {

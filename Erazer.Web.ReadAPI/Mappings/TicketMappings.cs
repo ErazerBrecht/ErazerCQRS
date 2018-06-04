@@ -4,7 +4,7 @@ using Erazer.Domain.Data.DTOs.Events;
 using Erazer.Web.ReadAPI.ViewModels;
 using Erazer.Web.ReadAPI.ViewModels.Events;
 
-namespace Erazer.Services.Queries.Mappings
+namespace Erazer.Web.ReadAPI.Mappings
 {
     public class TicketMappings : Profile
     {

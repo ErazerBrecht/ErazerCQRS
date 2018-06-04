@@ -3,7 +3,6 @@ using AutoMapper;
 using Erazer.Framework.Cache;
 using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
-using Erazer.Shared.Extensions.DependencyInjection;
 using EventStore.ClientAPI;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -17,6 +16,7 @@ using Erazer.Infrastructure.ServiceBus;
 using Erazer.Infrastructure.Redis;
 using Erazer.Web.WriteAPI.Services;
 using EasyNetQ;
+using Erazer.Web.Shared.Extensions.DependencyInjection;
 
 namespace Erazer.Web.WriteAPI
 {
