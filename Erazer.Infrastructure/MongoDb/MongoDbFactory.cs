@@ -78,11 +78,9 @@ namespace Erazer.Infrastructure.MongoDb
             };
         }
 
-        private bool ShouldCommandEventBeLogged(string commandName)
+        private static bool ShouldCommandEventBeLogged(string commandName)
         {
-            if (commandName != "isMaster" && commandName != "buildInfo" && commandName != "getLastError" && commandName != "ping")
-                return true;
-            return false;
+            return commandName != "isMaster" && commandName != "buildInfo" && commandName != "getLastError" && commandName != "ping";
         }
     }
 }

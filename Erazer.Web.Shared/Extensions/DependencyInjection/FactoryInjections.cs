@@ -34,6 +34,7 @@ namespace Erazer.Web.Shared.Extensions.DependencyInjection
                 var factory = factoryProvider(provider);
                 return factory.Build();
             };
+
             var descriptor = new ServiceDescriptor(typeof(T), factoryFunc, lifetime);
             collection.Add(descriptor);
             return collection;

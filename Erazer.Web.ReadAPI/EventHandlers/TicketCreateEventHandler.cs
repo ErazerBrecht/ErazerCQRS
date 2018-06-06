@@ -51,7 +51,7 @@ namespace Erazer.Web.ReadAPI.EventHandlers
                 Status = status.Result,
                 Files = message.Files?.Select(f => new FileDto
                 {
-                    Id = f.Id.ToString(),
+                    Id = f.Id,
                     Name = f.Name,
                     Type = f.Type,
                     Size = f.Size

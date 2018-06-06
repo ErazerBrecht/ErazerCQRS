@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Erazer.Framework.Events
 {
-    public interface IEventPublisher
+    public interface IEventPublisher<T> where T : class, IEvent
     {
-        Task Publish(byte[] @event);
-        Task Publish(IEnumerable<byte[]> events);
+        Task Publish(T @event);
+        Task Publish(IEnumerable<T> events);
     }
 }

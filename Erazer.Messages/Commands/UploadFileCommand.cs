@@ -1,11 +1,10 @@
 ﻿using System;
-using Erazer.Framework.Files;
+using Erazer.Framework.Commands;
+using MediatR;
 
-namespace Erazer.Domain.Files.Upload
+namespace Erazer.Messages.Commands
 {
-    // TODO This isn't actaully a domain class
-    // TODO Move this class
-    public class FileUpload : IFileUpload
+    public class UploadFileCommand: ICommand
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

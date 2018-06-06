@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Erazer.Infrastructure\Erazer.Infrastructure.csproj" />
+    <ProjectReference Include="..\Erazer.Messages\Erazer.Messages.csproj" />
     <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />
   </ItemGroup>
 

@@ -1,10 +1,10 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Erazer.Web.DocumentStore.Query;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Erazer.Web.DocumentStore.Controllers
+namespace Erazer.Web.DocumentStore
 {
     [Route("api/[controller]")]
     public class FileController : ControllerBase

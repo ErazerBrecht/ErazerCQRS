@@ -7,10 +7,6 @@ using Microsoft.ApplicationInsights;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Erazer.Framework.FrontEnd;
-using Erazer.Infrastructure.Websockets;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.SignalR;
 
 namespace Erazer.Infrastructure.EventStore.PersistedSubscription
 {
@@ -22,17 +18,15 @@ namespace Erazer.Infrastructure.EventStore.PersistedSubscription
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         private readonly TelemetryClient _telemetryClient;
-        private readonly IServiceScopeFactory _scopeFactory;
 
         private EventStorePersistentSubscriptionBase EventStorePersistentSubscriptionBase { get; set; }
 
-        public EventStoreSubscription(IEventStoreConnection eventStoreConnection, IMapper mapper, IMediator mediator, TelemetryClient telemeteryClient, IServiceScopeFactory scopeFactory)
+        public EventStoreSubscription(IEventStoreConnection eventStoreConnection, IMapper mapper, IMediator mediator, TelemetryClient telemeteryClient)
         {
             _eventStoreConnection = eventStoreConnection;
             _mapper = mapper;
             _mediator = mediator;
             _telemetryClient = telemeteryClient;
-            _scopeFactory = scopeFactory;
         }
 
 
@@ -58,7 +52,7 @@ namespace Erazer.Infrastructure.EventStore.PersistedSubscription
 
         private void SubscriptionDropped(EventStorePersistentSubscriptionBase subscription, SubscriptionDropReason reason, Exception ex)
         {
-            _telemetryClient.TrackEvent("SubscriptionDropped", new Dictionary<string, string> {{ "Reason", reason.ToString() }});
+            _telemetryClient.TrackEvent("SubscriptionDropped", new Dictionary<string, string> { { "Reason", reason.ToString() } });
 
             if (ex != null)
                 _telemetryClient.TrackException(ex);
@@ -66,7 +60,7 @@ namespace Erazer.Infrastructure.EventStore.PersistedSubscription
             Connect();
         }
 
-        private async Task EventAppeared(EventStorePersistentSubscriptionBase subscription, ResolvedEvent resolvedEvent)
+        private Task EventAppeared(EventStorePersistentSubscriptionBase subscription, ResolvedEvent resolvedEvent)
         {
             _telemetryClient.TrackEvent("New event appeared from EventStore (read model)", new Dictionary<string, string> {
                 { "Type", resolvedEvent.Event.EventType },
@@ -74,17 +68,10 @@ namespace Erazer.Infrastructure.EventStore.PersistedSubscription
                 { "Created (Epoch)", resolvedEvent.Event.CreatedEpoch.ToString() }
             });
 
-            using (var scope = _scopeFactory.CreateScope())
-            {
-                var mediator = scope.ServiceProvider.GetService<IMediator>();
-                var @event = _mapper.Map<IEvent>(resolvedEvent);
-
-                var hub = scope.ServiceProvider.GetService<IHubContext<ReduxEventHub, IReduxHub>>();
-                await hub.Clients.All.SendAction("YOLO");
-
-                await mediator.Publish(@event);
-            }
+            var @event = _mapper.Map<IEvent>(resolvedEvent);
+            return _mediator.Publish(@event);
         }
+
 
         public void Dispose()
         {

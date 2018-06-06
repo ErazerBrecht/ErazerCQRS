@@ -12,11 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ServiceStack.Redis;
 using Erazer.Infrastructure.EventStore;
-using Erazer.Infrastructure.ServiceBus;
 using Erazer.Infrastructure.Redis;
 using Erazer.Web.WriteAPI.Services;
-using EasyNetQ;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
+using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
+
 
 namespace Erazer.Web.WriteAPI
 {
@@ -36,13 +36,12 @@ namespace Erazer.Web.WriteAPI
             // Add 'Configration'
             services.AddSingleton<IConfiguration>(_configuration);
             services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
-            services.Configure<ServiceBusSettings>(_configuration.GetSection("ServiceBusSettings"));
             services.Configure<RedisSettings>(_configuration.GetSection("CacheSettings"));
 
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
             services.AddSingletonFactory<IRedisClientsManager, RedisFactory>();
-            services.AddSingletonFactory<IBus, BusFactory>();
+            services.AddMassTransit(_configuration.GetSection("ServiceBusSettings"));
 
             services.AddAutoMapper();
             services.AddMediatR();
@@ -55,10 +54,7 @@ namespace Erazer.Web.WriteAPI
             // WITHOUT CACHE
             //services.AddScoped<IAggregateRepository, AggregateRepository>();
 
-            services.AddScoped<IFileUploader, FileUploader>();
-
-            // CQRS
-            services.AddScoped<IEventPublisher, EventPublisher>();
+            services.AddScoped<IFileUploader, FileUploader>();        
 
             // Add MVC
             services.AddCors();

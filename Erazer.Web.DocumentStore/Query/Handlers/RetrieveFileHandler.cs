@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
-using Erazer.Domain.Files;
-using Erazer.Domain.Files.Upload;
+using Erazer.Domain.Files.Data.DTOs;
 using Erazer.Infrastructure.DocumentStore;
 using MediatR;
 
 namespace Erazer.Web.DocumentStore.Query.Handlers
 {
-    public class RetrieveFileHandler : AsyncRequestHandler<FileRequest, FileUpload>
+    public class RetrieveFileHandler : AsyncRequestHandler<FileRequest, FileContentDto>
     {
         private readonly IFileRepository _fileRepository;
 
@@ -15,7 +14,7 @@ namespace Erazer.Web.DocumentStore.Query.Handlers
             _fileRepository = fileRepository;
         }
 
-        protected override Task<FileUpload> HandleCore(FileRequest request)
+        protected override Task<FileContentDto> HandleCore(FileRequest request)
         {
             return _fileRepository.Find(request.Id);
         }

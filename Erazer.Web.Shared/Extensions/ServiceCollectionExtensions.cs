@@ -8,11 +8,15 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Erazer.Infrastructure.ReadStore.ClassMaps;
+using Erazer.Web.Shared.Extensions.DependencyInjection;
+using MassTransit;
+using Microsoft.Extensions.Configuration;
 
 namespace Erazer.Web.Shared.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        // TODO Convert this to WebHost
         public static void StartSubscriber<T>(this IServiceCollection collection) where T: AggregateRoot
         {
             collection.AddSingleton(typeof(ISubscription<>), typeof(EventStoreSubscription<>));
@@ -23,18 +27,6 @@ namespace Erazer.Web.Shared.Extensions
 
             service.Connect();
         }
-
-        public static void StartReciever(this IServiceCollection collection)
-        {
-            collection.AddSingleton<IEventReciever, EventReciever>();
-
-            // Build the intermediate service provider
-            var sp = collection.BuildServiceProvider();
-            var service = sp.GetService<IEventReciever>();
-
-            service.RegisterEventReciever();
-        }
-
         public static void AddMongoDbClassMaps(this IServiceCollection services)
         {
             // This will only work if every class map is in the same assembly!

@@ -2,34 +2,28 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Erazer.Framework.Events;
-using EasyNetQ;
-using System;
+using MassTransit;
 
 namespace Erazer.Infrastructure.ServiceBus
 {
-    public class EventPublisher : IEventPublisher, IDisposable
+    public class EventPublisher<T>: IEventPublisher<T> where T : class, IEvent
     {
-        private readonly IBus _bus;
+        private readonly IBusControl _bus;
 
-        public EventPublisher(IBus bus)
+        public EventPublisher(IBusControl bus)
         {
             _bus = bus;
         }
 
-        public Task Publish(byte[] @event)
+        public Task Publish(T @event)
         {
-            return _bus.PublishAsync(@event);
+            return _bus.Publish(@event);
         }
 
-        public Task Publish(IEnumerable<byte[]> events)
+        public Task Publish(IEnumerable<T> events)
         {
-            var tasks = events.Select(e => _bus.PublishAsync(e));
+            var tasks = events.Select(e => _bus.Publish(e));
             return Task.WhenAll(tasks);
-        }
-
-        public void Dispose()
-        {
-            _bus.Dispose();
         }
     }
 }

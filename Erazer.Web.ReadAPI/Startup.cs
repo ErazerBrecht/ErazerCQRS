@@ -25,7 +25,7 @@ namespace Erazer.Web.ReadAPI
 {
     public class Startup
     {
-        private IConfiguration _configuration { get; }
+        private readonly IConfiguration _configuration;
 
         public Startup(IConfiguration configuration)
         {
@@ -64,8 +64,8 @@ namespace Erazer.Web.ReadAPI
             services.AddCors();
             services.AddMvcCore().AddJsonFormatters();
 
-            // CQRS --> TODO WEBHOST
-            services.StartSubscriber<Ticket>();
+            // CQRS
+            services.StartSubscriber<Ticket>(); //--> TODO WEBHOST
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

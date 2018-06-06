@@ -1,5 +1,4 @@
-﻿using Erazer.Domain.Files;
-using Erazer.Framework.Events;
+﻿using Erazer.Framework.Events;
 using Erazer.Shared;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -13,7 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Erazer.Domain.Files.Upload;
+using Erazer.Framework.Commands;
+using Erazer.Messages.Commands;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Transforms;
 using TicketFile = Erazer.Domain.Files.File;
@@ -22,25 +22,22 @@ namespace Erazer.Web.WriteAPI.Services
 {
     public class FileUploader : IFileUploader
     {
-        private readonly IEventPublisher _publisher;
+        private readonly ICommandPublisher<UploadFileCommand> _publisher;
 
-        public FileUploader(IEventPublisher publisher)
+        public FileUploader(ICommandPublisher<UploadFileCommand> publisher)
         {
             _publisher = publisher;
         }
 
         public async Task<IEnumerable<TicketFile>> UploadFiles(Guid userId, params IFormFile[] formFiles)
         {
-            var files = GenerateFileUploads(userId, formFiles).ToList();
-            var tasks = files.Select(c => JsonConvert.SerializeObject(c, JsonSettings.DefaultSettings))
-                                .Select(json => Encoding.UTF8.GetBytes(json))
-                                .Select(data => _publisher.Publish(data));
+            var files = GenerateFileUploadCommands(userId, formFiles).ToList();
+            await _publisher.Publish(files);
 
-            await Task.WhenAll(tasks);
             return files.Select(f => new TicketFile(f.Id, f.Name, f.Type, f.Data.Length, f.Created, f.UserId));
         }
 
-        private static IEnumerable<FileUpload> GenerateFileUploads(Guid userId, params IFormFile[] files)
+        private static IEnumerable<UploadFileCommand> GenerateFileUploadCommands(Guid userId, params IFormFile[] files)
         {
             foreach (var file in files)
             {
@@ -50,7 +47,7 @@ namespace Erazer.Web.WriteAPI.Services
                 // TODO Support PDF
                 var data = CompressImage(file);
 
-                yield return new FileUpload
+                yield return new UploadFileCommand
                 {
                     Id = Guid.NewGuid(),
                     Created = DateTime.UtcNow,
