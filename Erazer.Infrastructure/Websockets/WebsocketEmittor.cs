@@ -1,26 +1,21 @@
-﻿using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Microsoft.Extensions.Options;
 using Microsoft.ApplicationInsights;
 using System;
 using Erazer.Framework.FrontEnd;
 using Erazer.Shared;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Erazer.Infrastructure.Websockets
 {
     public class WebsocketEmittor : IWebsocketEmittor
     {
-        // TODO DI HttpClient!?
-        // Use Singleton => https://softwareengineering.stackexchange.com/questions/330364/correct-way-of-using-httpclient
-        private static readonly HttpClient HttpClient = new HttpClient();
-        private readonly IOptions<WebsocketSettings> _settings;
+        private readonly IHubContext<ReduxEventHub> _hubContext;
         private readonly TelemetryClient _telemeteryClient;
 
-        public WebsocketEmittor(IOptions<WebsocketSettings> settings, TelemetryClient telemeteryClient)
+        public WebsocketEmittor(IHubContext<ReduxEventHub> hubContext, TelemetryClient telemeteryClient)
         {
-            _settings = settings;
+            _hubContext = hubContext;
             _telemeteryClient = telemeteryClient;
         }
 
@@ -31,12 +26,12 @@ namespace Erazer.Infrastructure.Websockets
 
             try
             {
-                await HttpClient.PostAsync(_settings.Value.ConnectionString, new StringContent(jsonString, Encoding.UTF8, "application/json"));
-                _telemeteryClient.TrackDependency("Websocket NodeJS API", $"ReduxEmit - {action.Type}", now, DateTime.Now - now, true);
+                await _hubContext.Clients.All.SendAsync("SendAction", jsonString);
+                _telemeteryClient.TrackDependency("SignalR", "Websocket 'push-all'", $"ReduxEmit - {action.Type}", now, DateTime.Now - now, true);
             }
             catch
             {
-                _telemeteryClient.TrackDependency("Websocket NodeJS API", $"ReduxEmit - {action.Type}", now, DateTime.Now - now, false);
+                _telemeteryClient.TrackDependency("SignalR", "Websocket 'push-all'", $"ReduxEmit - {action.Type}", now, DateTime.Now - now, false);
                 throw;
             }
         }

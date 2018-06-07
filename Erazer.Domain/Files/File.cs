@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Erazer.Domain.Files
 {
@@ -41,12 +39,7 @@ namespace Erazer.Domain.Files
 
         public bool Equals(File item)
         {
-            if (item == null)
-            {
-                return false;
-            }
-
-            return Id == item.Id;
+            return item != null && Id == item.Id;
         }
     }
 }

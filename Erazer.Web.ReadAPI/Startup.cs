@@ -9,23 +9,24 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.ApplicationInsights;
 using MongoDB.Driver;
-using Erazer.Shared.Extensions.DependencyInjection;
 using Erazer.Domain.Data.Repositories;
 using Erazer.Framework.FrontEnd;
 using Erazer.Domain;
 using Erazer.Infrastructure.MongoDb;
 using Erazer.Infrastructure.EventStore;
-using Erazer.Infrastructure.MongoDb.Repositories;
 using Erazer.Infrastructure.Websockets;
 using EventStore.ClientAPI;
 using Erazer.Infrastructure.Logging;
+using Erazer.Infrastructure.ReadStore.Repositories;
 using Erazer.Web.Shared.Extensions;
+using Erazer.Web.Shared.Extensions.DependencyInjection;
+using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
 
 namespace Erazer.Web.ReadAPI
 {
     public class Startup
     {
-        private IConfiguration _configuration { get; }
+        private readonly IConfiguration _configuration;
 
         public Startup(IConfiguration configuration)
         {
@@ -45,11 +46,13 @@ namespace Erazer.Web.ReadAPI
 
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
-            services.AddSingleton<IWebsocketEmittor, WebsocketEmittor>();
             services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
+            services.AddScoped<IWebsocketEmittor, WebsocketEmittor>();
 
+            services.AddMongoDbClassMaps();
             services.AddAutoMapper();
             services.AddMediatR();
+            services.AddSignalR();
 
             // TODO Place in seperate file (Arne) > services.AddTicket();
             // Query repositories
@@ -58,12 +61,13 @@ namespace Erazer.Web.ReadAPI
             services.AddScoped<IStatusQueryRepository, StatusRepository>();
             services.AddScoped<IPriorityQueryRepository, PriorityRepository>();
 
-            // CQRS
-            services.StartSubscriber<Ticket>();
-
             // Add MVC
             services.AddCors();
             services.AddMvcCore().AddJsonFormatters();
+
+            // CQRS
+            services.AddMassTransit(_configuration.GetSection("ServiceBusSettings"));
+            services.AddSubscriber<Ticket>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,15 +78,16 @@ namespace Erazer.Web.ReadAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMongoDbClassMaps();
-
             app.UseCors(builder =>
             {
                 builder.WithOrigins("http://localhost:4200")            // Load this from ENV or Config file
-                       .WithMethods("GET")
+                       .AllowAnyHeader()                                // TODO Temp added for SignalR
+                       .AllowCredentials()                              // Added for SignalR
+                       .WithMethods("GET", "OPTIONS", "POST")           // OPTIONS & POST are for SignalR 
                        .SetPreflightMaxAge(TimeSpan.FromHours(1));
             });
 
+            app.UseWebsocketEmittor();
             app.UseMvc();
         }
     }

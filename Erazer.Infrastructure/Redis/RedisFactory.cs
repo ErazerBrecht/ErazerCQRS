@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Erazer.Framework.Factories;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -27,6 +28,12 @@ namespace Erazer.Infrastructure.Redis
             try
             {
                 var pool = new RedisManagerPool(_options.Value.ConnectionString);
+
+                using (var redis = pool.GetClient())
+                {
+                    if (!redis.Ping())
+                        throw new Exception("Could not ping the redis server");
+                }
 
                 _logger.LogInformation($"Created a succesful connection with the 'Redis' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
                 return pool;

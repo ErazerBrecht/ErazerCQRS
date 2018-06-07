@@ -1,12 +1,12 @@
-﻿using Erazer.Domain.Files;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Erazer.Domain.Files.Data.DTOs;
 
 namespace Erazer.Infrastructure.DocumentStore
 {
     public interface IFileRepository
     {
-        Task<FileUpload> Find(Guid id);
-        Task Save(FileUpload file);
+        Task<FileContentDto> Find(Guid id);
+        Task Save(FileContentDto file);
     }
 }

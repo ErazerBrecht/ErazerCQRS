@@ -1,9 +1,9 @@
 ﻿using System;
-using MediatR;
+using Erazer.Framework.Commands;
 
 namespace Erazer.Web.WriteAPI.Commands.Requests
 {
-    public class UpdateTicketStatusCommand : IRequest
+    public class UpdateTicketStatusCommand : ICommand
     {
         public Guid TicketId { get; set; }
         public Guid UserId { get; set; }

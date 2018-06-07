@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using MediatR;
 using Erazer.Domain.Data.Repositories;
 using Erazer.Web.ReadAPI.ViewModels;
-using Erazer.Web.ReadAPI.Queries.Requests;
+using MediatR;
 
-namespace Erazer.Web.ReadAPI.Queries.Handler
+namespace Erazer.Web.ReadAPI.Queries.Handlers
 {
-    public class TicketListQueryHandler : IAsyncRequestHandler<TicketListQuery, List<TicketListViewModel>>
+    public class TicketListQueryHandler : AsyncRequestHandler<TicketListQuery, List<TicketListViewModel>>
     {
         private readonly ITicketQueryRepository _repository;
         private readonly IMapper _mapper;
@@ -19,7 +18,7 @@ namespace Erazer.Web.ReadAPI.Queries.Handler
             _mapper = mapper;
         }
 
-        public async Task<List<TicketListViewModel>> Handle(TicketListQuery message)
+        protected override async Task<List<TicketListViewModel>> HandleCore(TicketListQuery message)
         {
             // TODO Add pagination
             var tickets = await _repository.All();

@@ -1,8 +1,8 @@
-﻿using Erazer.Infrastructure.MongoDb.Base;
-using Erazer.Domain.Data.DTOs;
+﻿using Erazer.Domain.Data.DTOs;
+using Erazer.Infrastructure.MongoDb.Base;
 using MongoDB.Bson.Serialization;
 
-namespace Erazer.Infrastructure.MongoDb.ClassMaps
+namespace Erazer.Infrastructure.ReadStore.ClassMaps
 {
     public class TicketClassMap : MongoDbClassMap<TicketDto>
     {

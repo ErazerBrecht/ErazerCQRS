@@ -1,1 +1,0 @@
-& "D:\EventStore\EventStore.ClusterNode.exe" --run-projections=all --ext-tcp-heartbeat-timeout=30000

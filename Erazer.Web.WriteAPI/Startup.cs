@@ -3,7 +3,6 @@ using AutoMapper;
 using Erazer.Framework.Cache;
 using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
-using Erazer.Shared.Extensions.DependencyInjection;
 using EventStore.ClientAPI;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -13,26 +12,21 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ServiceStack.Redis;
 using Erazer.Infrastructure.EventStore;
-using Erazer.Infrastructure.ServiceBus;
 using Erazer.Infrastructure.Redis;
-using Microsoft.Azure.ServiceBus;
 using Erazer.Web.WriteAPI.Services;
-using EasyNetQ;
+using Erazer.Web.Shared.Extensions.DependencyInjection;
+using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
+
 
 namespace Erazer.Web.WriteAPI
 {
     public class Startup
     {
-        private readonly IConfigurationRoot _configuration;
+        private readonly IConfiguration _configuration;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            _configuration = builder.Build();
+            _configuration = configuration;
         }
 
 
@@ -42,13 +36,12 @@ namespace Erazer.Web.WriteAPI
             // Add 'Configration'
             services.AddSingleton<IConfiguration>(_configuration);
             services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
-            services.Configure<ServiceBusSettings>(_configuration.GetSection("ServiceBusSettings"));
             services.Configure<RedisSettings>(_configuration.GetSection("CacheSettings"));
 
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
             services.AddSingletonFactory<IRedisClientsManager, RedisFactory>();
-            services.AddSingletonFactory<IBus, BusFactory>();
+            services.AddMassTransit(_configuration.GetSection("ServiceBusSettings"));
 
             services.AddAutoMapper();
             services.AddMediatR();
@@ -61,10 +54,7 @@ namespace Erazer.Web.WriteAPI
             // WITHOUT CACHE
             //services.AddScoped<IAggregateRepository, AggregateRepository>();
 
-            services.AddScoped<IFileUploader, FileUploader>();
-
-            // CQRS
-            services.AddScoped<IEventPublisher, EventPublisher>();
+            services.AddScoped<IFileUploader, FileUploader>();        
 
             // Add MVC
             services.AddCors();
@@ -74,11 +64,8 @@ namespace Erazer.Web.WriteAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(_configuration.GetSection("Logging"));
-
             if (env.IsDevelopment())
             {
-                loggerFactory.AddDebug();
                 app.UseDeveloperExceptionPage();
             }
 

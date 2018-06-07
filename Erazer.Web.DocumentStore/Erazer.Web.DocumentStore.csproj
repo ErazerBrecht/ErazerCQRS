@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Erazer.Infrastructure\Erazer.Infrastructure.csproj" />
+    <ProjectReference Include="..\Erazer.Messages\Erazer.Messages.csproj" />
     <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />
   </ItemGroup>
 

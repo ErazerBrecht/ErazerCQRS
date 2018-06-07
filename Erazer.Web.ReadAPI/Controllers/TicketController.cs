@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
+using Erazer.Framework.FrontEnd;
+using Erazer.Web.ReadAPI.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Erazer.Web.ReadAPI.Queries.Requests;
 
 namespace Erazer.Web.ReadAPI.Controllers
 {
@@ -9,10 +10,12 @@ namespace Erazer.Web.ReadAPI.Controllers
     public class TicketController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IWebsocketEmittor _websocketEmittor;
 
-        public TicketController(IMediator mediator)
+        public TicketController(IMediator mediator, IWebsocketEmittor websocketEmittor)
         {
             _mediator = mediator;
+            _websocketEmittor = websocketEmittor;
         }
 
         /// <summary>

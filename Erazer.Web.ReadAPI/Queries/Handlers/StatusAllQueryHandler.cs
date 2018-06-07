@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using MediatR;
 using Erazer.Domain.Data.Repositories;
 using Erazer.Web.ReadAPI.ViewModels;
-using Erazer.Web.ReadAPI.Queries.Requests;
+using MediatR;
 
-namespace Erazer.Web.ReadAPI.Queries.Handler
+namespace Erazer.Web.ReadAPI.Queries.Handlers
 {
-    public class StatusAllQueryHandler : IAsyncRequestHandler<StatusAllQuery, List<StatusViewModel>>
+    public class StatusAllQueryHandler : AsyncRequestHandler<StatusAllQuery, List<StatusViewModel>>
     {
         private readonly IStatusQueryRepository _repository;
         private readonly IMapper _mapper;
@@ -19,7 +18,7 @@ namespace Erazer.Web.ReadAPI.Queries.Handler
             _mapper = mapper;
         }
 
-        public async Task<List<StatusViewModel>> Handle(StatusAllQuery message)
+        protected override async Task<List<StatusViewModel>> HandleCore(StatusAllQuery message)
         {
             var statuses =  await _repository.All();
             return _mapper.Map<List<StatusViewModel>>(statuses);

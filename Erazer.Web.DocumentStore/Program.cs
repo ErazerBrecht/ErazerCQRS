@@ -7,14 +7,13 @@ namespace Erazer.Web.DocumentStore
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
-                .UseUrls("http://localhost:5002")
-                .Build();
+                .UseUrls("http://localhost:5002");
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using MongoDB.Driver;
-using Erazer.Infrastructure.MongoDb.Base;
 using Erazer.Domain.Data.DTOs;
 using Erazer.Domain.Data.Repositories;
+using Erazer.Infrastructure.MongoDb.Base;
+using MongoDB.Driver;
 
-
-namespace Erazer.Infrastructure.MongoDb.Repositories
+namespace Erazer.Infrastructure.ReadStore.Repositories
 {
     public class PriorityRepository : MongoDbBaseRepository, IPriorityQueryRepository
     {

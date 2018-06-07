@@ -1,8 +1,8 @@
 ﻿using Erazer.Domain.Data.Repositories;
-using Erazer.Infrastructure.MongoDb.Seeding;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using Erazer.Infrastructure.ReadStore.Seeding;
 
 namespace Erazer.Web.ReadAPI.Extensions
 {

@@ -1,47 +1,38 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-using Erazer.Framework.Events;
+﻿using System.Threading.Tasks;
 using MediatR;
-using Newtonsoft.Json;
-using Erazer.Shared;
 using System;
-using EasyNetQ;
+using MassTransit;
 using Microsoft.Extensions.Logging;
+using Erazer.Messages.IntegrationEvents;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Erazer.Infrastructure.ServiceBus
 {
-    public class EventReciever : IEventReciever
+    public class EventReciever<T> : IConsumer<T> where T : class, IIntegrationEvent
     {
-        private readonly IBus _bus;
-        private readonly IMediator _mediator;
-        private readonly ILogger<EventReciever> _logger;
+        private readonly IServiceProvider _provider;
+        private readonly ILogger<EventReciever<T>> _logger;
 
-        public EventReciever(IBus bus, IMediator mediator, ILogger<EventReciever> logger)
+        public EventReciever(ILogger<EventReciever<T>> logger, IServiceProvider provider)
         {
-            _bus = bus;
-            _mediator = mediator;
             _logger = logger;
+            _provider = provider;
         }
 
-        public void RegisterEventReciever()
+        public async Task Consume(ConsumeContext<T> context)
         {
-            _bus.SubscribeAsync<byte[]>("test", ProcessEvents);
-        }
-
-        private async Task ProcessEvents(byte[] message)
-        {
-            // Deserialze event
-            var messageBody = Encoding.UTF8.GetString(message);
-            var @event = JsonConvert.DeserializeObject<INotification>(messageBody, JsonSettings.DefaultSettings);
-
             // Process event
             try
             {
-                await _mediator.Publish(@event);
+                using (var scope = _provider.CreateScope())
+                {
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    await mediator.Publish(context.Message);
+                }
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Exception when executing event {@event.ToString()}");
+                _logger.LogError(e, $"Exception when executing event {context.Message}");
                 throw;
             }
         }

@@ -1,11 +1,11 @@
 ﻿using System;
-using MediatR;
 using Erazer.Domain.Files;
 using System.Collections.Generic;
+using Erazer.Framework.Commands;
 
 namespace Erazer.Web.WriteAPI.Commands.Requests
 {
-    public class NewTicketCommand : IRequest
+    public class NewTicketCommand : ICommand
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
