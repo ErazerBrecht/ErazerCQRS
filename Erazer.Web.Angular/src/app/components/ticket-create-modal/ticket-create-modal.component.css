@@ -1,0 +1,13 @@
+.like {
+    font-size: 200px;
+    color: #3a5266;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-primary .fa-spin{
+    width: 105px;
+}

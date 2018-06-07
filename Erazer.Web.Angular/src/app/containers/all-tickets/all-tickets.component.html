@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="portlet portlet-boxed">
+      <div class="portlet-header">
+        <h4 class="portlet-title">
+          All Tickets
+        </h4>
+      </div>
+      <div class="portlet-body">
+        <p class="text-muted">
+          <ticket-list [tickets]="tickets$ | async"></ticket-list>
+        </p>
+      </div>
+    </div>
+
+    <h1>Debug</h1>
+    <div *ngFor="let ticket of tickets$ | async ">
+      <pre>{{ticket | json}}</pre>
+    </div>
+  </div>
+</div>

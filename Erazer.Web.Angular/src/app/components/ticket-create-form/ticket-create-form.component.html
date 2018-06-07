@@ -1,0 +1,33 @@
+<form [formGroup]="ticketCreateForm" class="form col-sm-12" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <form-group-textbox class="col-md-6" [label]="'Created by:'" [control]="ticketCreateForm.controls['creator']"></form-group-textbox>
+    <form-group-textbox class="col-md-6" [label]="'Date:'" [control]="ticketCreateForm.controls['date']"></form-group-textbox>
+  </div>
+  <div class="row">
+    <form-group-textbox class="col-md-12" [label]="'Title:'" [control]="ticketCreateForm.controls['title']" [placeholder]="'Enter the title'"></form-group-textbox>
+  </div>
+
+  <div class="row">
+    <form-group-select [options]="typeOptions" [placeholder]="'Please select a type'" [label]="'Type:'" [control]="ticketCreateForm.controls['type']"
+      class="col-md-12"></form-group-select>
+  </div>
+
+  <div class="row">
+    <form-group-markdown-editor [label]="'Description:'" [control]="ticketCreateForm.controls['description']" class="col-md-12"></form-group-markdown-editor>
+  </div>
+
+  <div class="row">
+    <priority-selector [label]="'Priority:'" [control]="ticketCreateForm.controls['priority']" class="col-md-12"></priority-selector>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-md-12">
+      <input #file type="file" accept=".jpg,.jpeg,.png" multiple (change)="onfileChange(file.files)" />
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="!ticketCreateForm.valid" class="col-xs-12 btn btn-primary btn-lg">
+    Save
+    <i class="fa fa-save"></i>
+  </button>
+</form>

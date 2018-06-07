@@ -1,0 +1,19 @@
+<div class="feed-item">
+  <div class="feed-icon">
+    <ng-content select=".icon"></ng-content>
+  </div>
+
+  <div class="feed-subject">
+    <ng-content select=".subject"></ng-content>
+  </div>
+
+  <div class="feed-content">
+    <ng-content select=".content"></ng-content>
+  </div>
+
+  <div class="feed-actions">
+    <span class="pull-right">
+      <i class="fa fa-clock-o"></i> {{event.created | date}}
+    </span>
+  </div>
+</div>

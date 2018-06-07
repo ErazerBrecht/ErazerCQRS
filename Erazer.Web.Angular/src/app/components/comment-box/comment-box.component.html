@@ -1,0 +1,17 @@
+<div class="commentBox">
+  <div class="portlet portlet-boxed">
+    <div class="portlet-header">
+      <h4 class="portlet-title">
+        Add comment
+      </h4>
+    </div>
+    <div class="portlet-body">
+      <div class="row">
+        <form class="col-md-12">
+          <form-group-markdown-editor [control]="commentControl"></form-group-markdown-editor>
+          <button (click)="addComment()" [disabled]="!commentControl.valid" class="btn btn-default">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

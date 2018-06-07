@@ -1,0 +1,28 @@
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>Assignee (TODO)</th>
+        <th>Created (TODO)</th>
+        <th>Last Updated (TODO)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ticket of tickets; let i = index;">
+        <td>{{i + 1}}</td>
+        <td title="{{ticket.id}}"><a [routerLink]="['detail', ticket.id]">{{ticket.id | limitTo : 8}}</a></td>
+        <td>{{ticket.title}}</td>
+        <td>{{ticket.priority.name}}</td>
+        <td>{{ticket.status.name}}</td>
+        <td><i>NULL</i></td>
+        <td><i>NULL</i></td>
+        <td><i>NULL</i></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

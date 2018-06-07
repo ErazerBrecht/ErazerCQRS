@@ -1,0 +1,24 @@
+<div class="form-group">
+  <label>{{label}}</label>
+
+  <form-group-radio [control]="control" [value]="priorityValues.lowest.id">
+    <b>{{priorityValues.lowest.title}}:</b> {{priorityValues.lowest.description}}
+  </form-group-radio>
+
+  <form-group-radio [control]="control" [value]="priorityValues.low.id">
+    <b>{{priorityValues.low.title}}:</b> {{priorityValues.low.description}}
+  </form-group-radio>
+
+  <form-group-radio [control]="control" [value]="priorityValues.medium.id">
+    <b>{{priorityValues.medium.title}}:</b> {{priorityValues.medium.description}}
+  </form-group-radio>
+
+  <form-group-radio [control]="control" [value]="priorityValues.high.id">
+    <b>{{priorityValues.high.title}}:</b> {{priorityValues.high.description}}
+  </form-group-radio>
+
+  <form-group-radio [control]="control" [value]="priorityValues.highest.id">
+    <b>{{priorityValues.highest.title}}:</b> {{priorityValues.highest.description}}
+  </form-group-radio>
+
+</div>

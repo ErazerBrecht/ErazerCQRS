@@ -1,0 +1,8 @@
+<ticket-event [event]="event">
+    <div class="icon">
+      <i [ngClass]="icon"></i>
+    </div>
+    <div class="subject">
+      <div>{{event.userName}} changed the priority from {{event.fromPriority.name}} to {{event.toPriority.name}}</div>
+    </div>
+  </ticket-event>

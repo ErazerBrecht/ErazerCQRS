@@ -1,0 +1,20 @@
+<div class="portlet portlet-boxed">
+  <div class="portlet-header">
+    <h4 class="portlet-title" title="Title">
+      {{this.ticket.title}}
+    </h4>
+  </div>
+  <div class="portlet-body">
+    <div class="row">
+      <form-group-select [options]="statusOptions" [label]="'Status:'" [control]="statusControl" class="col-md-3"></form-group-select>
+      <form-group-select [options]="priorityOptions" [label]="'Priority:'" [control]="priorityControl" class="col-md-3"></form-group-select>
+      <form-group-select [options]="typeOptions" [placeholder]="'TODO Implement this feature'" [label]="'Type:'" [control]="typeControl" class="col-md-6"></form-group-select>
+    </div>
+    <div class="row">
+      <form class="col-md-12">
+        <form-group-markdown-editor [label]="'Description:'" [control]="descriptionControl" [previewMode]="true"></form-group-markdown-editor>
+        <button type="submit" class="btn btn-default">Save</button>
+      </form>
+    </div>
+  </div>
+</div>

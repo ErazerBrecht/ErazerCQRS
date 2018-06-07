@@ -1,0 +1,15 @@
+:host{
+    margin-top: auto;
+}
+
+.portlet{
+    margin: 0px;
+}
+
+.portlet-body{
+    border-bottom: 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    padding-right: 30px;
+    padding-left: 30px;
+}

@@ -1,0 +1,64 @@
+:host {
+  display: flex;
+  position: relative;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 250px;
+    background-color: #ffffff;
+    padding: 0px 20px;
+    left: 0px;
+    transition: all 0.75s;
+    box-shadow:  0 1px 6px rgba(0, 0, 0, 0.15);
+}
+
+.content h4 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.is-collapsed {
+    left: -250px;  
+    margin-right: -250px; 
+}
+
+.sidebar {
+    margin: 0;
+    padding: 0px;
+    white-space: nowrap
+}
+
+li {
+    padding-top: 6px;
+    color: #666666;
+    font-size: 13px;
+    line-height: 1.15;
+    text-decoration: none;
+    border-right: 1px solid transparent;
+    list-style-type: none;
+}
+
+.header {
+    padding-top: 6px;
+    color: #999999;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: #ffffff;
+}
+
+.header:not(:first-child) {
+    margin-top: 40px;
+}
+
+.btn-collapse {
+    position: absolute;
+    left: 250px;
+    z-index: 5;
+    border-radius: 0px;
+    border: 0px;   
+    outline:none !important;
+}
+

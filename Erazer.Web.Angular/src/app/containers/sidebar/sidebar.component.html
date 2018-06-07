@@ -1,0 +1,20 @@
+<div class="content" [class.is-collapsed]="isCollapsed$|async">
+  <button (click)="toggle()" class="btn btn-collapse btn-primary">
+    <i class="fa" [class.fa-chevron-right]="isCollapsed$|async"  [class.fa-chevron-left]="(isCollapsed$|async) === false"></i>
+  </button>
+
+  <div> <!-- TODO Replace with Template binding -->
+    <h4>Sidebar</h4>
+    <ul class="sidebar">
+      <li class="header">Ticket Summary</li>
+      <li>Open: 2</li>
+      <li>Still need to rate: 5</li>
+      <li>Pending public dislosure: 3</li>
+
+      <li class="header">Starred</li>
+      <li>Ticket #1</li>
+      <li>Ticket #2</li>
+      <li>Ticket #3</li>
+    </ul>
+  </div>
+</div>

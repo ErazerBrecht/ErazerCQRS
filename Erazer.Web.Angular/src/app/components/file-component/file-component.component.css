@@ -1,0 +1,17 @@
+.file-name,
+.file-size {
+    padding: 0px 5px;
+    color: white;
+}
+
+.file-name{
+    padding-top: 5px;
+}
+
+.file-size {
+   font-size: 12px;
+}
+
+.thumbnail-view-hover-lg i {
+    border: none;
+}

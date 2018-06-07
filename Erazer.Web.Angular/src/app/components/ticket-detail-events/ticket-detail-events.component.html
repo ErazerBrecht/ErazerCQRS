@@ -1,0 +1,6 @@
+<div *ngFor="let event of ticket.events" [ngSwitch]="event.type">
+    <ticket-status-event *ngSwitchCase="1" [event]="event"></ticket-status-event>
+    <ticket-priority-event *ngSwitchCase="2" [event]="event"></ticket-priority-event>
+    <ticket-comment-event *ngSwitchCase="3" [event]="event"></ticket-comment-event>
+    <ticket-created-event *ngSwitchCase="4" [event]="event"></ticket-created-event>
+  </div>

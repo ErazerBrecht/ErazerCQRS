@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="portlet portlet-boxed">
+      <div class="portlet-header">
+        <h4 class="portlet-title">
+          Create new ticket
+        </h4>
+      </div>
+      <div class="portlet-body">
+        <ticket-create-form (onSave)="onSave($event)"></ticket-create-form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ticket-create-modal #modal [loaded]="loaded$ | async" (redirect)="onRedirectToTicket()"></ticket-create-modal>
