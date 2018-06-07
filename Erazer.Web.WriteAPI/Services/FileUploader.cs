@@ -1,7 +1,5 @@
 ﻿using Erazer.Framework.Events;
-using Erazer.Shared;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;

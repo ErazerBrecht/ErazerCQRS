@@ -19,22 +19,6 @@ namespace Erazer.Infrastructure.Websockets
             _telemeteryClient = telemeteryClient;
         }
 
-        public async Task TestEmit()
-        {
-            var now = DateTime.Now;
-
-            try
-            {
-                await _hubContext.Clients.All.SendAsync("SendAction", "Lol");
-                _telemeteryClient.TrackDependency("SignalR", "Websocket 'push-all'", $"TestEmit", now, DateTime.Now - now, true);
-            }
-            catch
-            {
-                _telemeteryClient.TrackDependency("SignalR", "Websocket 'push-all'", $"TestEmit", now, DateTime.Now - now, false);
-                throw;
-            }
-        }
-
         public async Task Emit<T>(ReduxAction<T> action) where T : IViewModel
         {
             var jsonString = JsonConvert.SerializeObject(action, JsonSettings.CamelCaseSerializer);
