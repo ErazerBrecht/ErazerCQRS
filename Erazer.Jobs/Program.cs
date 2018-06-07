@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 using System.Threading.Tasks;
 using Erazer.Messages.IntegrationEvents.Events;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
@@ -15,7 +14,12 @@ namespace Erazer.Jobs
     {
         private static IConfigurationRoot _configuration;
 
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
+        {
+            MainAsync(args).GetAwaiter().GetResult();
+        }
+
+        public static async Task MainAsync(string[] args)
         {
             var hostBuilder = new HostBuilder()
                 .ConfigureHostConfiguration(config =>

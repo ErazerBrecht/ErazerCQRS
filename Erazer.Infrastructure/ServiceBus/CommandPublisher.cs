@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +16,7 @@ namespace Erazer.Infrastructure.ServiceBus
         public CommandPublisher(IBusControl bus, IOptions<ServiceBusSettings> options)
         {
             _bus = bus;
-            _sendUri = new Uri($"{options.Value.ConnectionString}" + "ErazerCommandQueue");
+            _sendUri = new Uri($"{options.Value.ConnectionString}ErazerCommandQueue-{typeof(T).Name}");
         }
 
         public async Task Publish(T command)
