@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.DocumentStore", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Shared", "Erazer.Shared\Erazer.Shared.csproj", "{8C00EC48-336E-4799-88AA-2FE56FA2193E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Messages", "Erazer.Messages\Erazer.Messages.csproj", "{92EED0F5-ADB4-4BE6-B9DE-13817BE3D202}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Messages", "Erazer.Messages\Erazer.Messages.csproj", "{92EED0F5-ADB4-4BE6-B9DE-13817BE3D202}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -12,11 +12,11 @@ namespace Erazer.Infrastructure.EventStore
     {
         public Mapping()
         {
-            CreateMap<IEvent, EventData>()
+            CreateMap<IDomainEvent, EventData>()
                 .ConstructUsing(src => new EventData(Guid.NewGuid(), src.GetType().Name, true, new UTF8Encoding().GetBytes(JsonConvert.SerializeObject(src, JsonSettings.DefaultSettings)), null));
 
-            CreateMap<ResolvedEvent, IEvent>()
-                .ConstructUsing(src => JsonConvert.DeserializeObject<IEvent>(new UTF8Encoding().GetString(src.Event.Data), JsonSettings.DefaultSettings))
+            CreateMap<ResolvedEvent, IDomainEvent>()
+                .ConstructUsing(src => JsonConvert.DeserializeObject<IDomainEvent>(new UTF8Encoding().GetString(src.Event.Data), JsonSettings.DefaultSettings))
                 .ForMember(dest => dest.Version, opt => opt.MapFrom(src => src.Event.EventNumber));
         }
     }

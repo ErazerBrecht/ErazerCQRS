@@ -1,4 +1,4 @@
-﻿namespace Erazer.Web.ReadAPI.EventHandlers.Redux
+﻿namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers.Redux
 {
     public static class ReduxActionTypeConstants
     {

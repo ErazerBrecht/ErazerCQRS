@@ -10,20 +10,20 @@ namespace Erazer.Framework.Domain
         public Guid Id { get; protected set; }
         public int Version { get; protected set; }
 
-        private readonly List<IEvent> _changes = new List<IEvent>();
-        private readonly Dictionary<Type, Action<IEvent>> _eventHandlers = new Dictionary<Type, Action<IEvent>>();
+        private readonly List<IDomainEvent> _changes = new List<IDomainEvent>();
+        private readonly Dictionary<Type, Action<IDomainEvent>> _eventHandlers = new Dictionary<Type, Action<IDomainEvent>>();
 
         /// <summary>
         /// Register an event handler in the aggregate root.
         /// </summary>
         /// <typeparam name="TEvent">The type of the event.</typeparam>
         /// <param name="handler">The handler delegate.</param>
-        protected void Handles<TEvent>(Action<TEvent> handler) where TEvent : IEvent
+        protected void Handles<TEvent>(Action<TEvent> handler) where TEvent : IDomainEvent
         {
             _eventHandlers.Add(typeof(TEvent), @event => handler((TEvent)@event));
         }
 
-        public IEnumerable<IEvent> FlushChanges()
+        public IEnumerable<IDomainEvent> FlushChanges()
         {
             lock (_changes)
             {
@@ -40,7 +40,7 @@ namespace Erazer.Framework.Domain
             }
         }
 
-        public void LoadFromHistory(IEnumerable<IEvent> history)
+        public void LoadFromHistory(IEnumerable<IDomainEvent> history)
         {
             foreach (var e in history)
             {
@@ -52,7 +52,7 @@ namespace Erazer.Framework.Domain
             }
         }
 
-        protected void ApplyChange(IEvent @event)
+        protected void ApplyChange(IDomainEvent @event)
         {
             ApplyChange(@event, true);
         }
@@ -62,7 +62,7 @@ namespace Erazer.Framework.Domain
         /// </summary>
         /// <param name="event">The event to apply.</param>
         /// <param name="isNew">Indicates if the event is a new or historic event</param>
-        private void ApplyChange(IEvent @event, bool isNew)
+        private void ApplyChange(IDomainEvent @event, bool isNew)
         {
             var eventType = @event.GetType();
 

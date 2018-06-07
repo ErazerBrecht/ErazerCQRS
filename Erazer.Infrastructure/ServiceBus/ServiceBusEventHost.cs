@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Erazer.Framework.Events;
+using Erazer.Messages.IntegrationEvents;
 using MassTransit;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Erazer.Infrastructure.ServiceBus
 {
-    public class ServiceBusEventHost<T> : BackgroundService where T : class, IEvent
+    public class ServiceBusEventHost<T> : BackgroundService where T : class, IIntegrationEvent
 
     {
         private readonly IBusControl _bus;

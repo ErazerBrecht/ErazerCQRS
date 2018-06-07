@@ -3,7 +3,7 @@ using Erazer.Framework.Events;
 
 namespace Erazer.Domain.Events
 {
-    public class TicketStatusEvent : IEvent
+    public class TicketStatusDomainEvent : IDomainEvent
     {
         public string FromStatusId { get; set; }
         public string ToStatusId { get; set; }

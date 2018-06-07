@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using MediatR;
-using Erazer.Domain.Events;
-using Erazer.Web.ReadAPI.ViewModels;
-using Erazer.Web.ReadAPI.ViewModels.Events;
-using Erazer.Framework.FrontEnd;
 using Erazer.Domain.Data.DTOs;
 using Erazer.Domain.Data.DTOs.Events;
 using Erazer.Domain.Data.Repositories;
-using Erazer.Web.ReadAPI.EventHandlers.Redux;
-using System.Linq;
+using Erazer.Domain.Events;
 using Erazer.Domain.Files.Data.DTOs;
+using Erazer.Framework.FrontEnd;
+using Erazer.Messages.IntegrationEvents.Events;
+using Erazer.Messages.IntegrationEvents.Infrastructure;
+using Erazer.Web.ReadAPI.DomainEvents.EventHandlers.Redux;
+using Erazer.Web.ReadAPI.ViewModels;
+using Erazer.Web.ReadAPI.ViewModels.Events;
+using MediatR;
 
-namespace Erazer.Web.ReadAPI.EventHandlers
+namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
 {
-    public class TicketCreateEventHandler : AsyncNotificationHandler<TicketCreateEvent>
+    public class TicketCreateEventHandler : AsyncNotificationHandler<TicketCreateDomainEvent>
     {
         private readonly IMapper _mapper;
         private readonly ITicketQueryRepository _ticketRepository;
@@ -24,18 +26,21 @@ namespace Erazer.Web.ReadAPI.EventHandlers
         private readonly IStatusQueryRepository _statusRepository;
         private readonly ITicketEventQueryRepository _eventRepository;
         private readonly IWebsocketEmittor _websocketEmittor;
+        private readonly IIntegrationEventPublisher<TicketCreatedIntegrationEvent> _bus;
 
-        public TicketCreateEventHandler(ITicketQueryRepository ticketRepository, ITicketEventQueryRepository eventRepository, IMapper mapper, IWebsocketEmittor websocketEmittor, IPriorityQueryRepository priorityRepository, IStatusQueryRepository statusRepository)
+        public TicketCreateEventHandler(ITicketQueryRepository ticketRepository, ITicketEventQueryRepository eventRepository, IMapper mapper, IWebsocketEmittor websocketEmittor,
+            IIntegrationEventPublisher<TicketCreatedIntegrationEvent> bus, IPriorityQueryRepository priorityRepository, IStatusQueryRepository statusRepository)
         {
             _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));
             _priorityRepository = priorityRepository ?? throw new ArgumentNullException(nameof(priorityRepository));
             _statusRepository = statusRepository ?? throw new ArgumentNullException(nameof(statusRepository));
             _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _websocketEmittor = websocketEmittor ?? throw new ArgumentNullException(nameof(websocketEmittor));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         }
 
-        protected override async Task HandleCore(TicketCreateEvent message)
+        protected override async Task HandleCore(TicketCreateDomainEvent message)
         {
             var priority = _priorityRepository.Find(message.PriorityId);
             var status = _statusRepository.Find(message.StatusId);
@@ -66,7 +71,9 @@ namespace Erazer.Web.ReadAPI.EventHandlers
                 UserId = message.UserId.ToString(),
             };
 
-            await Task.WhenAll(AddInDb(ticket, @event), EmitToFrontEnd(ticket, @event));
+            await AddInDb(ticket, @event);
+            await EmitToFrontEnd(ticket, @event);
+            await AddOnBus(ticket, @event);
         }
 
         private Task AddInDb(TicketDto ticketDto, TicketEventDto eventDto)
@@ -82,6 +89,26 @@ namespace Erazer.Web.ReadAPI.EventHandlers
             vm.Events = new List<TicketEventViewModel> { _mapper.Map<TicketCreatedEventViewModel>(eventDto) };
 
             return _websocketEmittor.Emit(new ReduxTicketCreateAction(vm));
+        }
+
+        private Task AddOnBus(TicketDto ticketDto, TicketEventDto eventDto)
+        {
+            var files = ticketDto.Files.Select(f => new TicketCreatedFile(f.Id, f.Name, f.Type, f.Size));
+            var integrationEvent = new TicketCreatedIntegrationEvent(
+                ticketDto.Id,
+                ticketDto.Title,
+                ticketDto.Description,
+                ticketDto.Priority.Id,
+                ticketDto.Priority.Name,
+                ticketDto.Status.Id,
+                ticketDto.Status.Name,
+                eventDto.Id,
+                eventDto.Created,
+                eventDto.UserId,
+                files);
+
+            return _bus.Publish(integrationEvent);
+
         }
     }
 }

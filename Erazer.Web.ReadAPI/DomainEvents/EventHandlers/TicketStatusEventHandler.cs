@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Erazer.Domain.Events;
-using MediatR;
 using AutoMapper;
-using Erazer.Web.ReadAPI.ViewModels.Events;
-using Erazer.Framework.FrontEnd;
-using Erazer.Domain.Data.Repositories;
 using Erazer.Domain.Data.DTOs.Events;
-using Erazer.Web.ReadAPI.EventHandlers.Redux;
+using Erazer.Domain.Data.Repositories;
+using Erazer.Domain.Events;
+using Erazer.Framework.FrontEnd;
+using Erazer.Web.ReadAPI.DomainEvents.EventHandlers.Redux;
+using Erazer.Web.ReadAPI.ViewModels.Events;
+using MediatR;
 
-namespace Erazer.Web.ReadAPI.EventHandlers
+namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
 {
-    public class TicketStatusEventHandler : AsyncNotificationHandler<TicketStatusEvent>
+    public class TicketStatusEventHandler : AsyncNotificationHandler<TicketStatusDomainEvent>
     {
         private readonly IMapper _mapper;
         private readonly IWebsocketEmittor _websocketEmittor;
@@ -28,7 +28,7 @@ namespace Erazer.Web.ReadAPI.EventHandlers
             _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
         }
 
-        protected override async Task HandleCore(TicketStatusEvent message)
+        protected override async Task HandleCore(TicketStatusDomainEvent message)
         {
             var ticketTask =  _ticketRepository.Find(message.AggregateRootId.ToString());
             var oldStatusTask = _statusRepository.Find(message.FromStatusId);
@@ -53,9 +53,11 @@ namespace Erazer.Web.ReadAPI.EventHandlers
             };
 
             await Task.WhenAll(
-                    _websocketEmittor.Emit(new ReduxUpdateStatusAction(_mapper.Map<TicketStatusEventViewModel>(ticketEvent))),
                     _ticketRepository.Update(ticket),
                     _eventRepository.Add(ticketEvent));
+
+            await _websocketEmittor.Emit(
+                new ReduxUpdateStatusAction(_mapper.Map<TicketStatusEventViewModel>(ticketEvent)));
         }
     }
 }

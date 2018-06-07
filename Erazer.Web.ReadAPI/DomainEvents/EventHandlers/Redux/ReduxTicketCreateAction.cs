@@ -1,7 +1,7 @@
 ﻿using Erazer.Framework.FrontEnd;
 using Erazer.Web.ReadAPI.ViewModels;
 
-namespace Erazer.Web.ReadAPI.EventHandlers.Redux
+namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers.Redux
 {
     public class ReduxTicketCreateAction : ReduxAction<TicketViewModel>
     {

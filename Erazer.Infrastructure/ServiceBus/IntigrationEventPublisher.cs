@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Erazer.Framework.Events;
+using Erazer.Messages.IntegrationEvents;
+using Erazer.Messages.IntegrationEvents.Infrastructure;
 using MassTransit;
 
 namespace Erazer.Infrastructure.ServiceBus
 {
-    public class EventPublisher<T>: IEventPublisher<T> where T : class, IEvent
+    public class IntigrationEventPublisher<T>: IIntegrationEventPublisher<T> where T : class, IIntegrationEvent
     {
         private readonly IBusControl _bus;
 
-        public EventPublisher(IBusControl bus)
+        public IntigrationEventPublisher(IBusControl bus)
         {
             _bus = bus;
         }

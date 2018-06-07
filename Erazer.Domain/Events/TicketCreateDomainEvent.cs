@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Erazer.Domain.Events
 {
-    public class TicketCreateEvent: IEvent
+    public class TicketCreateDomainEvent: IDomainEvent
     {
-        public TicketCreateEvent(Guid ticketId)
+        public TicketCreateDomainEvent(Guid ticketId)
         {
             AggregateRootId = ticketId;
         }

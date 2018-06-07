@@ -1,21 +1,22 @@
 ﻿using System.Threading.Tasks;
 using MediatR;
 using System;
-using Erazer.Framework.Events;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using Erazer.Messages.IntegrationEvents;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Erazer.Infrastructure.ServiceBus
 {
-    public class EventReciever<T> : IConsumer<T> where T : class, IEvent
+    public class EventReciever<T> : IConsumer<T> where T : class, IIntegrationEvent
     {
-        private readonly IMediator _mediator;
+        private readonly IServiceProvider _provider;
         private readonly ILogger<EventReciever<T>> _logger;
 
-        public EventReciever(IMediator mediator, ILogger<EventReciever<T>> logger)
+        public EventReciever(ILogger<EventReciever<T>> logger, IServiceProvider provider)
         {
-            _mediator = mediator;
             _logger = logger;
+            _provider = provider;
         }
 
         public async Task Consume(ConsumeContext<T> context)
@@ -23,7 +24,11 @@ namespace Erazer.Infrastructure.ServiceBus
             // Process event
             try
             {
-                await _mediator.Publish(context.Message);
+                using (var scope = _provider.CreateScope())
+                {
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    await mediator.Publish(context.Message);
+                }
             }
             catch (Exception e)
             {

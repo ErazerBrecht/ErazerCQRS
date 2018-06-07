@@ -10,10 +10,10 @@ namespace Erazer.Infrastructure.Websockets
 {
     public class WebsocketEmittor : IWebsocketEmittor
     {
-        private readonly IHubContext<ReduxEventHub, IReduxHub> _hubContext;
+        private readonly IHubContext<ReduxEventHub> _hubContext;
         private readonly TelemetryClient _telemeteryClient;
 
-        public WebsocketEmittor(IHubContext<ReduxEventHub, IReduxHub> hubContext, TelemetryClient telemeteryClient)
+        public WebsocketEmittor(IHubContext<ReduxEventHub> hubContext, TelemetryClient telemeteryClient)
         {
             _hubContext = hubContext;
             _telemeteryClient = telemeteryClient;
@@ -25,7 +25,7 @@ namespace Erazer.Infrastructure.Websockets
 
             try
             {
-                await _hubContext.Clients.All.SendAction("Lol");
+                await _hubContext.Clients.All.SendAsync("SendAction", "Lol");
                 _telemeteryClient.TrackDependency("SignalR", "Websocket 'push-all'", $"TestEmit", now, DateTime.Now - now, true);
             }
             catch
@@ -42,7 +42,7 @@ namespace Erazer.Infrastructure.Websockets
 
             try
             {
-                await _hubContext.Clients.All.SendAction("Lol");
+                await _hubContext.Clients.All.SendAsync("SendAction", jsonString);
                 _telemeteryClient.TrackDependency("SignalR", "Websocket 'push-all'", $"ReduxEmit - {action.Type}", now, DateTime.Now - now, true);
             }
             catch

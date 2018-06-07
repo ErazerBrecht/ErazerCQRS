@@ -22,7 +22,7 @@ namespace Erazer.Domain
         // Constructor used for creating a new ticket!
         public Ticket(Guid id, string title, string description, string priorityId, Guid creatorUserId, List<File> files) : this()
         {
-            ApplyChange(new TicketCreateEvent(id)
+            ApplyChange(new TicketCreateDomainEvent(id)
             {
                 Title = title,
                 Description = description,
@@ -37,9 +37,9 @@ namespace Erazer.Domain
         private Ticket() 
         {
             // Register EventHandlers
-            Handles<TicketCreateEvent>(Apply);
-            Handles<TicketPriorityEvent>(Apply);
-            Handles<TicketStatusEvent>(Apply);
+            Handles<TicketCreateDomainEvent>(Apply);
+            Handles<TicketPriorityDomainEvent>(Apply);
+            Handles<TicketStatusDomainEvent>(Apply);
         }
         #endregion
 
@@ -47,7 +47,7 @@ namespace Erazer.Domain
         // Events are 'mutations' that happened in the past!
         // This blocks of code actually handle the business logic and will mutate the state of this domain class.
         // They are executed when a command arrives or when the aggregate is loaded from previous events!
-        private void Apply(TicketCreateEvent e)
+        private void Apply(TicketCreateDomainEvent e)
         {
             Id = e.AggregateRootId;
 
@@ -58,12 +58,12 @@ namespace Erazer.Domain
             _files = e.Files;
         }
 
-        private void Apply(TicketPriorityEvent e)
+        private void Apply(TicketPriorityDomainEvent e)
         {
             _priorityId = e.ToPriorityId;
         }
 
-        private void Apply(TicketStatusEvent e)
+        private void Apply(TicketStatusDomainEvent e)
         {
             _statusId = e.ToStatusId;
         }
@@ -83,7 +83,7 @@ namespace Erazer.Domain
         {
             _comments.Add(comment);
 
-            ApplyChange(new TicketCommentEvent
+            ApplyChange(new TicketCommentDomainEvent
             {
                 Comment = comment,
                 UserId = commenterId
@@ -95,7 +95,7 @@ namespace Erazer.Domain
             if (newPriorityId == _priorityId)
                 return;
 
-            ApplyChange(new TicketPriorityEvent
+            ApplyChange(new TicketPriorityDomainEvent
             {
                 FromPriorityId = _priorityId,
                 ToPriorityId = newPriorityId,
@@ -108,7 +108,7 @@ namespace Erazer.Domain
             if (newStatusId == _statusId)
                 return;
 
-            ApplyChange(new TicketStatusEvent
+            ApplyChange(new TicketStatusDomainEvent
             {
                 FromStatusId = _statusId,
                 ToStatusId = newStatusId,

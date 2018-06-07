@@ -1,7 +1,8 @@
 ﻿using System;
 using Erazer.Framework.Commands;
-using Erazer.Framework.Events;
 using Erazer.Infrastructure.ServiceBus;
+using Erazer.Messages.IntegrationEvents;
+using Erazer.Messages.IntegrationEvents.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -48,7 +49,7 @@ namespace Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit
     {
         public static IMassTransitBuilder AddEventPublisher(this IMassTransitBuilder builder)
         {
-            builder.Services.AddScoped(typeof(IEventPublisher<>), typeof(EventPublisher<>));
+            builder.Services.AddScoped(typeof(IIntegrationEventPublisher<>), typeof(IntigrationEventPublisher<>));
             return builder;
         }
 
@@ -58,7 +59,7 @@ namespace Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit
             return builder;
         }
 
-        public static IMassTransitBuilder AddMassTransitEventListerner<T>(this IMassTransitBuilder builder) where T : class, IEvent
+        public static IMassTransitBuilder AddMassTransitEventListerner<T>(this IMassTransitBuilder builder) where T : class, IIntegrationEvent
         {
             builder.Services.AddTransient(typeof(EventReciever<T>), typeof(EventReciever<T>));
             builder.Services.AddSingleton(typeof(IHostedService), typeof(ServiceBusEventHost<T>));

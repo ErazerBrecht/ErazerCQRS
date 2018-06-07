@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Erazer.Framework.FrontEnd;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
 namespace Erazer.Infrastructure.Websockets
 {
-    public class ReduxEventHub : Hub<IReduxHub>
+    public class ReduxEventHub : Hub
     {
         private readonly ILogger<ReduxEventHub> _logger;
 
@@ -26,10 +25,5 @@ namespace Erazer.Infrastructure.Websockets
             await base.OnDisconnectedAsync(exception);
             _logger.LogDebug(exception, $"Debug: Client disconnected");
         }
-    }
-
-    public interface IReduxHub
-    {
-       Task SendAction(string action);
     }
 }

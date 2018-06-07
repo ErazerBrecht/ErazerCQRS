@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using MediatR;
-using Erazer.Domain.Events;
-using Erazer.Web.ReadAPI.ViewModels.Events;
-using Erazer.Framework.FrontEnd;
-using Erazer.Domain.Data.Repositories;
 using Erazer.Domain.Data.DTOs.Events;
-using Erazer.Web.ReadAPI.EventHandlers.Redux;
+using Erazer.Domain.Data.Repositories;
+using Erazer.Domain.Events;
+using Erazer.Framework.FrontEnd;
+using Erazer.Web.ReadAPI.DomainEvents.EventHandlers.Redux;
+using Erazer.Web.ReadAPI.ViewModels.Events;
+using MediatR;
 
-namespace Erazer.Web.ReadAPI.EventHandlers
+namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
 {
-    public class TicketCommentEventHandler : AsyncNotificationHandler<TicketCommentEvent>
+    public class TicketCommentEventHandler : AsyncNotificationHandler<TicketCommentDomainEvent>
     {
         private readonly IWebsocketEmittor _websocketEmittor;
         private readonly IMapper _mapper;
@@ -24,7 +24,7 @@ namespace Erazer.Web.ReadAPI.EventHandlers
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        protected override Task HandleCore(TicketCommentEvent message)
+        protected override async Task HandleCore(TicketCommentDomainEvent message)
         {
             var ticketEvent = new CommentEventDto
             {
@@ -35,9 +35,9 @@ namespace Erazer.Web.ReadAPI.EventHandlers
                 Comment = message.Comment                
             };
 
-            return Task.WhenAll(
-                _websocketEmittor.Emit(new ReduxCommentAddedAction(_mapper.Map<TicketCommentEventViewModel>(ticketEvent))),
-                _repository.Add(ticketEvent));
+            await _repository.Add(ticketEvent);
+            await _websocketEmittor.Emit(
+                new ReduxCommentAddedAction(_mapper.Map<TicketCommentEventViewModel>(ticketEvent)));
         }
     }
 }

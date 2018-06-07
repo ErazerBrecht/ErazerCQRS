@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Erazer.Infrastructure\Erazer.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
 </Project>

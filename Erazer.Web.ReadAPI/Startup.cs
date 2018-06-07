@@ -18,8 +18,10 @@ using Erazer.Infrastructure.Websockets;
 using EventStore.ClientAPI;
 using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ReadStore.Repositories;
+using Erazer.Messages.IntegrationEvents.Events;
 using Erazer.Web.Shared.Extensions;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
+using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
 
 namespace Erazer.Web.ReadAPI
 {
@@ -65,7 +67,8 @@ namespace Erazer.Web.ReadAPI
             services.AddMvcCore().AddJsonFormatters();
 
             // CQRS
-            services.StartSubscriber<Ticket>(); //--> TODO WEBHOST
+            services.AddMassTransit(_configuration.GetSection("ServiceBusSettings"));
+            services.AddSubscriber<Ticket>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

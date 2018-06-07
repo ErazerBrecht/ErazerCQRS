@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Erazer.Framework.Events
 {
-    public interface IEvent : INotification
+    public interface IDomainEvent : INotification
     {
         Guid AggregateRootId { get; set; }          // Setter is required by AutoMapper
         int Version { get; set; }                   // Setter is required by AutoMapper
