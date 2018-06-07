@@ -72,8 +72,7 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
             };
 
             await AddInDb(ticket, @event);
-            await EmitToFrontEnd(ticket, @event);
-            await AddOnBus(ticket, @event);
+            await Task.WhenAll(EmitToFrontEnd(ticket, @event), AddOnBus(ticket, @event));
         }
 
         private Task AddInDb(TicketDto ticketDto, TicketEventDto eventDto)
@@ -108,7 +107,6 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
                 files);
 
             return _bus.Publish(integrationEvent);
-
         }
     }
 }

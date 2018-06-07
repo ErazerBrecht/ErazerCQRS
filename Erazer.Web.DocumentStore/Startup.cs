@@ -10,11 +10,9 @@ using Erazer.Infrastructure.MongoDb;
 using MongoDB.Driver;
 using Erazer.Infrastructure.DocumentStore;
 using Erazer.Infrastructure.DocumentStore.Repositories;
-using Erazer.Infrastructure.ServiceBus;
 using Erazer.Messages.Commands;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
-using MassTransit;
 
 namespace Erazer.Web.DocumentStore
 {

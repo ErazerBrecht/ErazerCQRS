@@ -19,7 +19,7 @@ namespace Erazer.Infrastructure.ServiceBus
 
             _bus = factory.Configure((cfg, host) =>
             {
-                cfg.ReceiveEndpoint(host, "ErazerCommandQueue", e =>
+                cfg.ReceiveEndpoint(host, $"ErazerCommandQueue-{typeof(T).Name}", e =>
                 {
                     e.Consumer(typeof(CommandReciever<T>), provider.GetService);
                 });

@@ -18,7 +18,6 @@ using Erazer.Infrastructure.Websockets;
 using EventStore.ClientAPI;
 using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ReadStore.Repositories;
-using Erazer.Messages.IntegrationEvents.Events;
 using Erazer.Web.Shared.Extensions;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;

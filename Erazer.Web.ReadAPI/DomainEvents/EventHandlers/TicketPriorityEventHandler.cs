@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using Erazer.Domain.Data.DTOs;
 using Erazer.Domain.Data.DTOs.Events;
 using Erazer.Domain.Data.Repositories;
 using Erazer.Domain.Events;
 using Erazer.Framework.FrontEnd;
+using Erazer.Messages.IntegrationEvents.Events;
+using Erazer.Messages.IntegrationEvents.Infrastructure;
 using Erazer.Web.ReadAPI.DomainEvents.EventHandlers.Redux;
 using Erazer.Web.ReadAPI.ViewModels.Events;
 using MediatR;
@@ -18,14 +21,17 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
         private readonly IPriorityQueryRepository _priorityRepository;
         private readonly ITicketEventQueryRepository _eventRepository;
         private readonly IWebsocketEmittor _websocketEmittor;
+        private readonly IIntegrationEventPublisher<TicketPriorityIntegrationEvent> _bus;
 
-        public TicketPriorityEventHandler(ITicketQueryRepository ticketRepository, IPriorityQueryRepository priorityRepository, ITicketEventQueryRepository eventRepository, IMapper mapper, IWebsocketEmittor websocketEmittor)
+        public TicketPriorityEventHandler(ITicketQueryRepository ticketRepository, IPriorityQueryRepository priorityRepository, ITicketEventQueryRepository eventRepository, IMapper mapper, 
+            IWebsocketEmittor websocketEmittor, IIntegrationEventPublisher<TicketPriorityIntegrationEvent> bus)
         {
             _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));
             _priorityRepository = priorityRepository ?? throw new ArgumentNullException(nameof(priorityRepository));
             _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _websocketEmittor = websocketEmittor ?? throw new ArgumentNullException(nameof(websocketEmittor));
+            _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         }
 
         protected override async Task HandleCore(TicketPriorityDomainEvent message)
@@ -49,16 +55,38 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
                 Id = Guid.NewGuid().ToString(),
                 TicketId = message.AggregateRootId.ToString(),
                 Created = message.Created,
-                UserId = message.UserId.ToString(),                
+                UserId = message.UserId.ToString(),
             };
 
-            await Task.WhenAll(
-                _ticketRepository.Update(ticket),
-                _eventRepository.Add(ticketEvent));
+            await UpdateDb(ticket, ticketEvent);
+            await Task.WhenAll(EmitToFrontEnd(ticketEvent), AddOnBus(ticket, ticketEvent));
 
-            await _websocketEmittor.Emit(
-                new ReduxUpdatePriorityAction(_mapper.Map<TicketPriorityEventViewModel>(ticketEvent)));
+        }
 
+        private Task UpdateDb(TicketDto ticketDto, PriorityEventDto eventDto)
+        {
+            return Task.WhenAll(_ticketRepository.Update(ticketDto), _eventRepository.Add(eventDto));
+        }
+
+        private Task EmitToFrontEnd(PriorityEventDto eventDto)
+        {
+            return _websocketEmittor.Emit(
+                new ReduxUpdatePriorityAction(_mapper.Map<TicketPriorityEventViewModel>(eventDto)));
+        }
+
+        private Task AddOnBus(TicketDto ticketDto, PriorityEventDto eventDto)
+        {
+            var integrationEvent = new TicketPriorityIntegrationEvent(
+                ticketDto.Priority.Id,
+                ticketDto.Priority.Name,
+                ticketDto.Id,
+                ticketDto.Title,
+                eventDto.Id,
+                eventDto.Created,
+                eventDto.UserId
+            );
+
+            return _bus.Publish(integrationEvent);
         }
     }
 }

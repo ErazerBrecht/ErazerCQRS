@@ -22,6 +22,7 @@ namespace Erazer.Infrastructure.EventStore.PersistedSubscription
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await _subscription.Connect();
+            _logger.LogInformation($"Started subsribing on PersistedSubsription for {typeof(T).Name}");
         }
     }
 }

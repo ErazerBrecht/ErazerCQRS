@@ -21,7 +21,7 @@ namespace Erazer.Infrastructure.ServiceBus
 
             _bus = factory.Configure((cfg, host) =>
             {
-                cfg.ReceiveEndpoint(host, "ErazerEventQueue",
+                cfg.ReceiveEndpoint(host, $"ErazerEventQueue-{typeof(T).Name}",
                     e => { e.Consumer(typeof(EventReciever<T>), provider.GetService); });
             });
 
