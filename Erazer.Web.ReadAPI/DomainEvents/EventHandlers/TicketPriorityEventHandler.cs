@@ -21,17 +21,17 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
         private readonly IPriorityQueryRepository _priorityRepository;
         private readonly ITicketEventQueryRepository _eventRepository;
         private readonly IWebsocketEmittor _websocketEmittor;
-        private readonly IIntegrationEventPublisher<TicketPriorityIntegrationEvent> _bus;
+        private readonly IIntegrationEventPublisher _eventPublisher;
 
         public TicketPriorityEventHandler(ITicketQueryRepository ticketRepository, IPriorityQueryRepository priorityRepository, ITicketEventQueryRepository eventRepository, IMapper mapper, 
-            IWebsocketEmittor websocketEmittor, IIntegrationEventPublisher<TicketPriorityIntegrationEvent> bus)
+            IWebsocketEmittor websocketEmittor, IIntegrationEventPublisher eventPublisher)
         {
             _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));
             _priorityRepository = priorityRepository ?? throw new ArgumentNullException(nameof(priorityRepository));
             _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _websocketEmittor = websocketEmittor ?? throw new ArgumentNullException(nameof(websocketEmittor));
-            _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+            _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
         }
 
         protected override async Task HandleCore(TicketPriorityDomainEvent message)
@@ -86,7 +86,7 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
                 eventDto.UserId
             );
 
-            return _bus.Publish(integrationEvent);
+            return _eventPublisher.Publish(integrationEvent);
         }
     }
 }

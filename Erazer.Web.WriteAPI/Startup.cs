@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using ServiceStack.Redis;
 using Erazer.Infrastructure.EventStore;
 using Erazer.Infrastructure.Redis;
+using Erazer.Infrastructure.ServiceBus;
 using Erazer.Web.WriteAPI.Services;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
@@ -23,10 +24,12 @@ namespace Erazer.Web.WriteAPI
     public class Startup
     {
         private readonly IConfiguration _configuration;
+        private readonly ServiceBusSettings _busSettings;
 
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
+            _busSettings = configuration.GetSection("ServiceBusSettings").Get<ServiceBusSettings>();
         }
 
 
@@ -41,7 +44,12 @@ namespace Erazer.Web.WriteAPI
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
             services.AddSingletonFactory<IRedisClientsManager, RedisFactory>();
-            services.AddMassTransit(_configuration.GetSection("ServiceBusSettings"));
+            services.AddCommandBus(x =>
+            {
+                x.ConnectionString = _busSettings.ConnectionString;
+                x.UserName = _busSettings.UserName;
+                x.Password = _busSettings.Password;
+            });
 
             services.AddAutoMapper();
             services.AddMediatR();

@@ -3,25 +3,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Erazer.Messages.IntegrationEvents;
 using Erazer.Messages.IntegrationEvents.Infrastructure;
-using MassTransit;
 
 namespace Erazer.Infrastructure.ServiceBus
 {
-    public class IntigrationEventPublisher<T>: IIntegrationEventPublisher<T> where T : class, IIntegrationEvent
+    public class EventPublisher: IIntegrationEventPublisher
     {
-        private readonly IBusControl _bus;
+        private readonly IEventBus _bus;
 
-        public IntigrationEventPublisher(IBusControl bus)
+        public EventPublisher(IEventBus bus)
         {
             _bus = bus;
         }
 
-        public Task Publish(T @event)
+        public Task Publish<T>(T @event) where T : class, IIntegrationEvent
         {
             return _bus.Publish(@event);
         }
 
-        public Task Publish(IEnumerable<T> events)
+        public Task Publish<T>(IEnumerable<T> events) where T : class, IIntegrationEvent
         {
             var tasks = events.Select(e => _bus.Publish(e));
             return Task.WhenAll(tasks);

@@ -26,10 +26,10 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
         private readonly IStatusQueryRepository _statusRepository;
         private readonly ITicketEventQueryRepository _eventRepository;
         private readonly IWebsocketEmittor _websocketEmittor;
-        private readonly IIntegrationEventPublisher<TicketCreatedIntegrationEvent> _bus;
+        private readonly IIntegrationEventPublisher _eventPublisher;
 
         public TicketCreateEventHandler(ITicketQueryRepository ticketRepository, ITicketEventQueryRepository eventRepository, IMapper mapper, IWebsocketEmittor websocketEmittor,
-            IIntegrationEventPublisher<TicketCreatedIntegrationEvent> bus, IPriorityQueryRepository priorityRepository, IStatusQueryRepository statusRepository)
+            IIntegrationEventPublisher eventPublisher, IPriorityQueryRepository priorityRepository, IStatusQueryRepository statusRepository)
         {
             _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));
             _priorityRepository = priorityRepository ?? throw new ArgumentNullException(nameof(priorityRepository));
@@ -37,7 +37,7 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
             _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
             _websocketEmittor = websocketEmittor ?? throw new ArgumentNullException(nameof(websocketEmittor));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+            _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
         }
 
         protected override async Task HandleCore(TicketCreateDomainEvent message)
@@ -106,7 +106,7 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
                 eventDto.UserId,
                 files);
 
-            return _bus.Publish(integrationEvent);
+            return _eventPublisher.Publish(integrationEvent);
         }
     }
 }

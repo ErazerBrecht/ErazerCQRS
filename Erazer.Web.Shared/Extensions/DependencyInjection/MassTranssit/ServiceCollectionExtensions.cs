@@ -1,6 +1,9 @@
-﻿using Erazer.Infrastructure.ServiceBus;
+﻿using System;
+using Erazer.Infrastructure.ServiceBus;
+using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit.Commands;
+using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit.Events;
 using MassTransit;
-using Microsoft.Extensions.Configuration;
+using MassTransit.ExtensionsDependencyInjectionIntegration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit
@@ -8,23 +11,58 @@ namespace Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Add MassTransit + related stuff to IoC
+        /// Add EventBus related stuff to IoC
         /// </summary>
         /// <param name="services">The services</param>
-        /// <param name="config">The settings for the servicebus</param>
+        /// <param name="configureSettings">Action to be able to configure the event bus</param>
         /// <returns></returns>
-        public static IMassTransitBuilder AddMassTransit(this IServiceCollection services, IConfigurationSection config)
+        public static IEventBusBuilder AddEventBus(this IServiceCollection services, Action<ServiceBusSettings> configureSettings = null)
         {
-            var builder = new MassTransitBuilder(services);
+            var settings = new ServiceBusSettings();
+            configureSettings?.Invoke(settings);
 
-            services.Configure<ServiceBusSettings>(config);
+            var builder = new EventBusBuilder(services, settings);
 
-            services.AddSingletonFactory<IBusControl, ServiceBusFactory>();
-            services.AddTransient<IServiceBusFactory, ServiceBusFactory>();
+            services.AddSingleton(settings);
+            services.AddMassTransit();
+            services.AddSingleton(provider => EventBusFactory.Build(cfg =>
+            {
+                cfg.Host(new Uri(settings.ConnectionString), h =>
+                {
+                    h.Username(settings.UserName); 
+                    h.Password(settings.Password);
+                });
+            }));
 
             builder.AddEventPublisher();
-            builder.AddCommandPublisher();
+            return builder;
+        }
 
+        /// <summary>
+        /// Add CommandBus related stuff to IoC
+        /// </summary>
+        /// <param name="services">The services</param>
+        /// <param name="configureSettings">Action to be able to configure the command bus</param>
+        /// <returns></returns>
+        public static ICommandBusBuilder AddCommandBus(this IServiceCollection services, Action<ServiceBusSettings> configureSettings = null)
+        {
+            var settings = new ServiceBusSettings();
+            configureSettings?.Invoke(settings);
+
+            var builder = new CommandBusBuilder(services, settings);
+
+            services.AddSingleton(settings);
+            services.AddMassTransit();
+            services.AddSingleton(provider => CommandBusFactory.Build(cfg =>
+            {
+                cfg.Host(new Uri(settings.ConnectionString), h =>
+                {
+                    h.Username(settings.UserName);
+                    h.Password(settings.Password);
+                });
+            }));
+
+            builder.AddCommandPublisher();
             return builder;
         }
     }

@@ -1,5 +1,4 @@
-﻿using Erazer.Framework.Events;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
@@ -8,9 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Erazer.Framework.Commands;
+using Erazer.Messages;
 using Erazer.Messages.Commands;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Transforms;
@@ -20,9 +19,9 @@ namespace Erazer.Web.WriteAPI.Services
 {
     public class FileUploader : IFileUploader
     {
-        private readonly ICommandPublisher<UploadFileCommand> _publisher;
+        private readonly ICommandPublisher _publisher;
 
-        public FileUploader(ICommandPublisher<UploadFileCommand> publisher)
+        public FileUploader(ICommandPublisher publisher)
         {
             _publisher = publisher;
         }
@@ -30,7 +29,7 @@ namespace Erazer.Web.WriteAPI.Services
         public async Task<IEnumerable<TicketFile>> UploadFiles(Guid userId, params IFormFile[] formFiles)
         {
             var files = GenerateFileUploadCommands(userId, formFiles).ToList();
-            await _publisher.Publish(files);
+            await _publisher.Publish<UploadFileCommand>(files, CommandBusConstants.ErazerDocumentStore);
 
             return files.Select(f => new TicketFile(f.Id, f.Name, f.Type, f.Data.Length, f.Created, f.UserId));
         }

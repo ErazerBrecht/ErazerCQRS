@@ -1,36 +1,29 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Erazer.Framework.Commands;
-using MassTransit;
 using Microsoft.Extensions.Options;
 
 namespace Erazer.Infrastructure.ServiceBus
 {
-    public class CommandPublisher<T> : ICommandPublisher<T> where T : class, ICommand
+    public class CommandPublisher: ICommandPublisher
     {
-        private readonly IBusControl _bus;
-        private readonly Uri _sendUri;
+        private readonly ICommandBus _bus;
 
-        public CommandPublisher(IBusControl bus, IOptions<ServiceBusSettings> options)
+        public CommandPublisher(ICommandBus bus, IOptions<ServiceBusSettings> options)
         {
             _bus = bus;
-            _sendUri = new Uri($"{options.Value.ConnectionString}ErazerCommandQueue-{typeof(T).Name}");
         }
 
-        public async Task Publish(T command)
+        public Task Publish<T>(T command, string endpoint) where T : class, ICommand
         {
-            var endPoint = await _bus.GetSendEndpoint(_sendUri);
-            await endPoint.Send(command);
+            return _bus.Send(command, endpoint);
         }
 
-        public async Task Publish(IEnumerable<T> commands)
+        public Task Publish<T>(IEnumerable<T> commands, string endpoint) where T : class, ICommand
         {
-            var endPoint = await _bus.GetSendEndpoint(_sendUri);
-
-            var tasks = commands.Select(e => endPoint.Send(e));
-            await Task.WhenAll(tasks);
+            var tasks = commands.Select(e => _bus.Send(e, endpoint));
+            return Task.WhenAll(tasks);
         }
     }
 }

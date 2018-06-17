@@ -18,6 +18,8 @@ using Erazer.Infrastructure.Websockets;
 using EventStore.ClientAPI;
 using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ReadStore.Repositories;
+using Erazer.Infrastructure.ServiceBus;
+using Erazer.Messages;
 using Erazer.Web.Shared.Extensions;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
@@ -27,10 +29,12 @@ namespace Erazer.Web.ReadAPI
     public class Startup
     {
         private readonly IConfiguration _configuration;
+        private readonly ServiceBusSettings _busSettings;
 
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
+            _busSettings = _configuration.GetSection("ServiceBusSettings").Get<ServiceBusSettings>();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -66,8 +70,13 @@ namespace Erazer.Web.ReadAPI
             services.AddMvcCore().AddJsonFormatters();
 
             // CQRS
-            services.AddMassTransit(_configuration.GetSection("ServiceBusSettings"));
             services.AddSubscriber<Ticket>();
+            services.AddEventBus(x =>
+            {
+                x.ConnectionString = _busSettings.ConnectionString;
+                x.UserName = _busSettings.UserName;
+                x.Password = _busSettings.Password;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
