@@ -1,9 +1,9 @@
-<ticket-event [event]="event">
+<ticket-event [event]="commentEvent">
   <div class="icon">
     <i [ngClass]="icon"></i>
   </div>
   <div class="subject">
     {{event.userName}} added a comment
   </div>
-  <div class="content"><markdown-viewer [data]="event.comment"></markdown-viewer></div>
+  <div class="content"><markdown-viewer [data]="commentEvent.comment"></markdown-viewer></div>
 </ticket-event>

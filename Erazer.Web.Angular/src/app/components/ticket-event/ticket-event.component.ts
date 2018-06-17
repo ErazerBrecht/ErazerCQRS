@@ -9,7 +9,7 @@ import { IEvent } from '../../entities/read/interfaces/iEvent';
 })
 export class TicketEventComponent {
   @Input() event: IEvent;
-  protected icon: Array<string>;
+  icon: Array<string>;
 
   constructor() { }
 }

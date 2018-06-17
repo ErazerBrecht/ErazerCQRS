@@ -30,12 +30,18 @@ const Highest = class {
    public static readonly description: string = "TODO5";
 }
 
+class PriorityOption implements IOption {
+    id: string;
+    title: string;
+    description: string;
+}
+
 export class PriorityValues {
-    public static readonly lowest: IOption = Lowest;
-    public static readonly low: IOption = Low;
-    public static readonly medium: IOption = Medium;
-    public static readonly high: IOption = High;
-    public static readonly highest: IOption = Highest;
+    public static readonly lowest: PriorityOption = Lowest;
+    public static readonly low: PriorityOption = Low;
+    public static readonly medium: PriorityOption = Medium;
+    public static readonly high: PriorityOption = High;
+    public static readonly highest: PriorityOption = Highest;
 }
 
 
