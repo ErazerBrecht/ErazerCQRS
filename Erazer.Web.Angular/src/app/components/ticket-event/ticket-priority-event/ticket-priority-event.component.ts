@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TicketEventComponent } from '../ticket-event.component';
 import { PriorityEvent } from '../../../entities/read/events/priorityEvent';
 
@@ -8,15 +8,10 @@ import { PriorityEvent } from '../../../entities/read/events/priorityEvent';
   templateUrl: './ticket-priority-event.component.html',
   styleUrls: ['./ticket-priority-event.component.css']
 })
-export class TicketPriorityEventComponent extends TicketEventComponent implements OnInit {
-  priorityEvent: PriorityEvent;
+export class TicketPriorityEventComponent extends TicketEventComponent<PriorityEvent> {
 
   constructor() {
     super();
     this.icon = ['fa', 'fa-list-ol'];
-  }
-
-  ngOnInit(): void {
-    this.priorityEvent = this.event as PriorityEvent;
   }
 }

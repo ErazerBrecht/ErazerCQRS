@@ -1,8 +1,8 @@
-<ticket-event [event]="statusEvent">
+<ticket-event [event]="event">
   <div class="icon">
     <i [ngClass]="icon"></i>
   </div>
   <div class="subject">
-    <div>{{statusEvent.userName}} changed the status from {{statusEvent.fromStatus.name}} to {{statusEvent.toStatus.name}}</div>
+    <div>{{event.userName}} changed the status from {{event.fromStatus.name}} to {{event.toStatus.name}}</div>
   </div>
 </ticket-event>

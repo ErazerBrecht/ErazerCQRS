@@ -7,8 +7,8 @@ import { IEvent } from '../../entities/read/interfaces/iEvent';
   templateUrl: './ticket-event.component.html',
   styleUrls: ['./ticket-event.component.css']
 })
-export class TicketEventComponent {
-  @Input() event: IEvent;
+export class TicketEventComponent<T extends IEvent> {
+  @Input() event: T;
   icon: Array<string>;
 
   constructor() { }

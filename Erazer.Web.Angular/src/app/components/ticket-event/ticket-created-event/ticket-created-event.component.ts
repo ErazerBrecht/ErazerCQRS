@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TicketEventComponent } from '../ticket-event.component';
 import { IEvent } from '../../../entities/read/interfaces/iEvent';
 
@@ -8,15 +8,9 @@ import { IEvent } from '../../../entities/read/interfaces/iEvent';
   templateUrl: './ticket-created-event.component.html',
   styleUrls: ['./ticket-created-event.component.css']
 })
-export class TicketCreatedEventComponent extends TicketEventComponent implements OnInit {
-  createdEvent: IEvent;
-
+export class TicketCreatedEventComponent extends TicketEventComponent<IEvent> {
   constructor() {
     super();
     this.icon = ['fa', 'fa-bookmark'];
-  }
-
-  ngOnInit(): void {
-    this.createdEvent = this.event;
   }
 }

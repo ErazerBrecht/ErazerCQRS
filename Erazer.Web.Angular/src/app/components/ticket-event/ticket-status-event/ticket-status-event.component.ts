@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TicketEventComponent } from '../ticket-event.component'
 import { StatusEvent } from '../../../entities/read/events/statusEvent';
 
@@ -8,15 +8,10 @@ import { StatusEvent } from '../../../entities/read/events/statusEvent';
   templateUrl: './ticket-status-event.component.html',
   styleUrls: ['./ticket-status-event.component.css']
 })
-export class TicketStatusEventComponent extends TicketEventComponent implements OnInit {
-  statusEvent: StatusEvent;
+export class TicketStatusEventComponent extends TicketEventComponent<StatusEvent> {
 
   constructor() {
     super();
     this.icon = ['fa', 'fa-tasks'];
  }
-
- ngOnInit(): void {
-  this.statusEvent = this.event as StatusEvent;
-}
 }
