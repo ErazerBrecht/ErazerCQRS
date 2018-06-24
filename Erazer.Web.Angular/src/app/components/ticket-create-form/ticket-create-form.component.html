@@ -20,11 +20,7 @@
     <priority-selector [label]="'Priority:'" [control]="ticketCreateForm.controls['priority']" class="col-md-12"></priority-selector>
   </div>
 
-  <div class="form-group row">
-    <div class="col-md-12">
-      <input #file type="file" accept=".jpg,.jpeg,.png" multiple (change)="onfileChange(file.files)" />
-    </div>
-  </div>
+  <image-uploader [control]="ticketCreateForm.controls['images']" (fileChanged)="onFileChange($event)"></image-uploader>
 
   <button type="submit" [disabled]="!ticketCreateForm.valid" class="col-xs-12 btn btn-primary btn-lg">
     Save

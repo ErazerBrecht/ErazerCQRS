@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { FilePondModule } from 'ngx-filepond';
 
 import { AppComponent } from './app.component';
 
@@ -45,6 +46,7 @@ import { TicketCreatedEventComponent } from './components/ticket-event/ticket-cr
 import { TicketDetailBasicComponent } from './components/ticket-detail-basic/ticket-detail-basic.component';
 import { TicketDetailEventsComponent } from './components/ticket-detail-events/ticket-detail-events.component';
 import { FileComponentComponent } from './components/file-component/file-component.component';
+import { ImageUploaderComponent } from './components/image-uploader/image-uploader.component';
 
 // State-managment REDUX
 import { StoreModule } from '@ngrx/store';
@@ -82,7 +84,8 @@ import { RealTime } from "./common/realtime";
     TicketPriorityEventComponent,
     MarkdownViewerComponent,
     TicketCreatedEventComponent,
-    FileComponentComponent
+    FileComponentComponent,
+    ImageUploaderComponent
   ],
   imports: [
     BrowserModule,
@@ -90,6 +93,7 @@ import { RealTime } from "./common/realtime";
     ReactiveFormsModule,
     HttpClientModule,
     routing,
+    FilePondModule, 
     StoreModule.forRoot(rootReducer),
     StoreDevtoolsModule.instrument({
       maxAge: 50
