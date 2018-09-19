@@ -44,7 +44,7 @@ namespace Erazer.Framework.Domain
         {
             foreach (var e in history)
             {
-                if (e.Version != Version)
+                if (e.Version != Version + 1)
                 {
                     throw new EventsOutOfOrderException(e.AggregateRootId);
                 }

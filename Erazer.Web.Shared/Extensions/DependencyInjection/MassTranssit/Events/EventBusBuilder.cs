@@ -21,8 +21,9 @@ namespace Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit.Events
         /// The services.
         /// </value>
         IServiceCollection Services { get; }
+
         /// <summary>
-        /// TODO
+        /// Gets the bus settings 
         /// </summary>
         ServiceBusSettings Settings { get; }
     }
@@ -33,7 +34,7 @@ namespace Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit.Events
         /// Initializes a new instance of the <see cref="EventBusBuilder"/> class.
         /// </summary>
         /// <param name="services">The services.</param>
-        /// <param name="settings">TODO</param>
+        /// <param name="settings">The settings of the bus</param>
         /// <exception cref="System.ArgumentNullException">services</exception>
         public EventBusBuilder(IServiceCollection services, ServiceBusSettings settings)
         {
@@ -42,25 +43,32 @@ namespace Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit.Events
         }
 
         /// <inheritdoc />
-        /// <summary>
-        /// Gets the services.
-        /// </summary>
-        /// <value>
-        /// The services.
-        /// </value>
         public IServiceCollection Services { get; }
 
+        /// <inheritdoc />
         public ServiceBusSettings Settings { get; }
     }
 
     public static class EventBusBuilderExtensions
     {
+        /// <summary>
+        /// Adds the EventPublisher service, this is used for 'publishing' events on the bus
+        /// </summary>
+        /// <param name="builder">The builder</param>
+        /// <returns></returns>
         public static IEventBusBuilder AddEventPublisher(this IEventBusBuilder builder)
         {
             builder.Services.AddScoped<IIntegrationEventPublisher, EventPublisher>();
             return builder;
         }
 
+        /// <summary>
+        /// Adds events listeners
+        /// This will startup a background 'job' that listens to the specifc event types and 'publishes' it with Mediatr.
+        /// </summary>
+        /// <param name="configure">Method to configure the queue name and the event types for consuming</param>
+        /// <param name="builder">The builder</param>
+        /// <returns></returns>
         public static IEventBusBuilder AddEventListeners(this IEventBusBuilder builder, Action<EventServiceCollectionConfigurator> configure)
         {
             if (configure == null)

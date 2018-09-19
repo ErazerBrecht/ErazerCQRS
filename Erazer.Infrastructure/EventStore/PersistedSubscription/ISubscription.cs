@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Erazer.Framework.Domain;
 
 namespace Erazer.Infrastructure.EventStore.PersistedSubscription
 {
-    public interface ISubscription<T>: IDisposable where T : AggregateRoot
+    public interface ISubscription: IDisposable
     {
-        Task Connect();
+        void Connect();
     }
 }

@@ -1,87 +1,80 @@
 ﻿using AutoMapper;
-using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
-using EventStore.ClientAPI;
 using MediatR;
 using Microsoft.ApplicationInsights;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using Erazer.Shared;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using SqlStreamStore;
+using SqlStreamStore.Streams;
+using SqlStreamStore.Subscriptions;
 
 namespace Erazer.Infrastructure.EventStore.PersistedSubscription
 {
-    public class EventStoreSubscription<T> : ISubscription<T>, IDisposable where T : AggregateRoot
+    public class EventStoreSubscription : ISubscription
     {
-        private const string _groupName = "erazercqrs";
-
-        private readonly IEventStoreConnection _eventStoreConnection;
+        private readonly IStreamStore _eventStoreConnection;
         private readonly IServiceProvider _provider;
         private readonly TelemetryClient _telemetryClient;
+        private readonly ILogger<EventStoreSubscription> _logger;
 
-        private EventStorePersistentSubscriptionBase EventStorePersistentSubscriptionBase { get; set; }
+        private IAllStreamSubscription _subscription;
 
-        public EventStoreSubscription(IEventStoreConnection eventStoreConnection, TelemetryClient telemeteryClient, IServiceProvider provider)
+        public EventStoreSubscription(IStreamStore eventStoreConnection, TelemetryClient telemeteryClient, IServiceProvider provider, ILogger<EventStoreSubscription> logger)
         {
             _eventStoreConnection = eventStoreConnection;
             _telemetryClient = telemeteryClient;
             _provider = provider;
+            _logger = logger;
         }
 
 
-        private static void CreateSubscription(IEventStoreConnection conn)
+        public void Connect()
         {
-            PersistentSubscriptionSettings settings = PersistentSubscriptionSettings.Create()
-                .DoNotResolveLinkTos()
-                .StartFromCurrent();
+           _subscription = _eventStoreConnection.SubscribeToAll(null, EventAppeared, SubscriptionDropped);
         }
 
-
-        public async Task Connect()
-        {
-            var streamName = $"$ce-{typeof(T).Name}";
-
-            EventStorePersistentSubscriptionBase = await _eventStoreConnection.ConnectToPersistentSubscriptionAsync(
-                   streamName,
-                   _groupName,
-                   EventAppeared,
-                   SubscriptionDropped
-            );
-        }
-
-        private void SubscriptionDropped(EventStorePersistentSubscriptionBase subscription, SubscriptionDropReason reason, Exception ex)
+        private void SubscriptionDropped(IAllStreamSubscription subscription, SubscriptionDroppedReason reason, Exception ex)
         {
             _telemetryClient.TrackEvent("SubscriptionDropped", new Dictionary<string, string> { { "Reason", reason.ToString() } });
 
             if (ex != null)
+            {
                 _telemetryClient.TrackException(ex);
+                _logger.LogError(ex, "Subscription dropped!", reason.ToString());
+            }
 
-            Connect().Wait();
+            Task.Delay(5000).Wait();
+            Connect();
         }
 
-        private async Task EventAppeared(EventStorePersistentSubscriptionBase subscription, ResolvedEvent resolvedEvent)
+        private async Task EventAppeared(IAllStreamSubscription subscription, StreamMessage resolvedEvent, CancellationToken token)
         {
-            _telemetryClient.TrackEvent("New event appeared from EventStore (read model)", new Dictionary<string, string> {
-                { "Type", resolvedEvent.Event.EventType },
-                { "EventNumber", resolvedEvent.Event.EventNumber.ToString() },
-                { "Created (Epoch)", resolvedEvent.Event.CreatedEpoch.ToString() }
+            _telemetryClient.TrackEvent("New event appeared from EventStore subsription", new Dictionary<string, string> {
+                { "Type", resolvedEvent.Type },
+                { "EventNumber", resolvedEvent.StreamVersion.ToString() },
+                { "Created (Epoch)", resolvedEvent.CreatedUtc.ToLongDateString() }
             });
-
 
             using (var scope = _provider.CreateScope())
             {
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
 
-                var @event = mapper.Map<IDomainEvent>(resolvedEvent);
-                await mediator.Publish(@event);
+                var json = await resolvedEvent.GetJsonData(token);
+                var @event = JsonConvert.DeserializeObject<IDomainEvent>(json, JsonSettings.DefaultSettings);
+                await mediator.Publish(@event, token);
             }
         }
 
-
         public void Dispose()
         {
-            EventStorePersistentSubscriptionBase.Stop(TimeSpan.FromSeconds(15));
+            _subscription.Dispose();
+            _logger.LogInformation("Finished subscribing on EventStore");
         }
     }
 }

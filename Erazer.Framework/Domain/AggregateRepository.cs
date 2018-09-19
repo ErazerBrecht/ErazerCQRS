@@ -18,7 +18,7 @@ namespace Erazer.Framework.Domain
 
         public async Task<T> Get<T>(Guid aggregateId) where T : AggregateRoot
         {
-            var events = await _eventStore.Get<T>(aggregateId, -1);
+            var events = await _eventStore.Get<T>(aggregateId, 0);
             var eventList = events as IList<IDomainEvent> ?? events.ToList();
 
             if (!eventList.Any())

@@ -3,7 +3,6 @@ using AutoMapper;
 using Erazer.Framework.Cache;
 using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
-using EventStore.ClientAPI;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +16,7 @@ using Erazer.Infrastructure.ServiceBus;
 using Erazer.Web.WriteAPI.Services;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
+using SqlStreamStore;
 
 
 namespace Erazer.Web.WriteAPI
@@ -42,7 +42,7 @@ namespace Erazer.Web.WriteAPI
             services.Configure<RedisSettings>(_configuration.GetSection("CacheSettings"));
 
             // Add 'Infrasructure' Providers
-            services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
+            services.AddSingletonFactory<IStreamStore, EventStoreFactory>();
             services.AddSingletonFactory<IRedisClientsManager, RedisFactory>();
             services.AddCommandBus(x =>
             {

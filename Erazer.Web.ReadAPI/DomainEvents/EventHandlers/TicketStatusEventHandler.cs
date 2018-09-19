@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using Erazer.Domain.Data.DTOs;
 using Erazer.Domain.Data.DTOs.Events;
 using Erazer.Domain.Data.Repositories;
 using Erazer.Domain.Events;
 using Erazer.Framework.FrontEnd;
+using Erazer.Messages.IntegrationEvents.Events;
+using Erazer.Messages.IntegrationEvents.Infrastructure;
 using Erazer.Web.ReadAPI.DomainEvents.EventHandlers.Redux;
 using Erazer.Web.ReadAPI.ViewModels.Events;
 using MediatR;
@@ -18,14 +21,17 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
         private readonly ITicketQueryRepository _ticketRepository;
         private readonly IStatusQueryRepository _statusRepository;
         private readonly ITicketEventQueryRepository _eventRepository;
+        private readonly IIntegrationEventPublisher _eventPublisher;
 
-        public TicketStatusEventHandler(IMapper mapper, IWebsocketEmittor websocketEmittor, ITicketQueryRepository ticketRepository, IStatusQueryRepository statusRepository, ITicketEventQueryRepository eventRepository)
+
+        public TicketStatusEventHandler(IMapper mapper, IWebsocketEmittor websocketEmittor, ITicketQueryRepository ticketRepository, IStatusQueryRepository statusRepository, ITicketEventQueryRepository eventRepository, IIntegrationEventPublisher eventPublisher)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _websocketEmittor = websocketEmittor ?? throw new ArgumentNullException(nameof(websocketEmittor));
             _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));
             _statusRepository = statusRepository ?? throw new ArgumentNullException(nameof(statusRepository));
             _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
+            _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
         }
 
         protected override async Task HandleCore(TicketStatusDomainEvent message)
@@ -52,12 +58,34 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
                 UserId = message.UserId.ToString(),
             };
 
-            await Task.WhenAll(
-                    _ticketRepository.Update(ticket),
-                    _eventRepository.Add(ticketEvent));
+            await UpdateDb(ticket, ticketEvent);
+            await Task.WhenAll(EmitToFrontEnd(ticketEvent), AddOnBus(ticket, ticketEvent));
+        }
 
-            await _websocketEmittor.Emit(
-                new ReduxUpdateStatusAction(_mapper.Map<TicketStatusEventViewModel>(ticketEvent)));
+        private Task UpdateDb(TicketDto ticketDto, StatusEventDto eventDto)
+        {
+            return Task.WhenAll(_ticketRepository.Update(ticketDto), _eventRepository.Add(eventDto));
+        }
+
+        private Task EmitToFrontEnd(StatusEventDto eventDto)
+        {
+            return _websocketEmittor.Emit(
+                new ReduxUpdateStatusAction(_mapper.Map<TicketStatusEventViewModel>(eventDto)));
+        }
+
+        private Task AddOnBus(TicketDto ticketDto, StatusEventDto eventDto)
+        {
+            var integrationEvent = new TicketStatusIntegrationEvent(
+                ticketDto.Status.Id,
+                ticketDto.Status.Name,
+                ticketDto.Id,
+                ticketDto.Title,
+                eventDto.Id,
+                eventDto.Created,
+                eventDto.UserId
+            );
+
+            return _eventPublisher.Publish(integrationEvent);
         }
     }
 }

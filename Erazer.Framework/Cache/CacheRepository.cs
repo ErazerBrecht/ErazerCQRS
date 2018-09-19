@@ -27,11 +27,11 @@ namespace Erazer.Framework.Cache
                 if (_cache.IsTracked(aggregateId))
                 {
                     aggregate = (T) _cache.Get(aggregateId);
-                    var events = (await _eventStore.Get<T>(aggregateId, aggregate.Version)).ToList();
+                    var events = (await _eventStore.Get<T>(aggregateId, aggregate.Version + 1)).ToList();
 
                     // Check if there are any new events added between save in cache and now!
                     // If this is the case remove aggregate from cache and retrieve it.
-                    if (events.Any() && events.First().Version != aggregate.Version)
+                    if (events.Any() && events.First().Version != aggregate.Version + 1)
                     {
                         _cache.Remove(aggregateId);
                     }

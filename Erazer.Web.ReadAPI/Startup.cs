@@ -15,14 +15,13 @@ using Erazer.Domain;
 using Erazer.Infrastructure.MongoDb;
 using Erazer.Infrastructure.EventStore;
 using Erazer.Infrastructure.Websockets;
-using EventStore.ClientAPI;
 using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ReadStore.Repositories;
 using Erazer.Infrastructure.ServiceBus;
-using Erazer.Messages;
 using Erazer.Web.Shared.Extensions;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
+using SqlStreamStore;
 
 namespace Erazer.Web.ReadAPI
 {
@@ -50,7 +49,7 @@ namespace Erazer.Web.ReadAPI
 
             // Add 'Infrasructure' Providers
             services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
-            services.AddSingletonFactory<IEventStoreConnection, EventStoreFactory>();
+            services.AddSingletonFactory<IStreamStore, EventStoreFactory>();
             services.AddScoped<IWebsocketEmittor, WebsocketEmittor>();
 
             services.AddMongoDbClassMaps();

@@ -14,8 +14,8 @@ namespace Erazer.Web.Shared.Extensions
     {
         public static void AddSubscriber<T>(this IServiceCollection collection) where T: AggregateRoot
         {
-            collection.AddSingleton(typeof(ISubscription<T>), typeof(EventStoreSubscription<T>));
-            collection.AddSingleton(typeof(IHostedService), typeof(PersistedSubscriptionHost<T>));
+            collection.AddSingleton(typeof(ISubscription), typeof(EventStoreSubscription));
+            collection.AddSingleton(typeof(IHostedService), typeof(SubscriptionJob));
         }
 
         public static void AddMongoDbClassMaps(this IServiceCollection services)

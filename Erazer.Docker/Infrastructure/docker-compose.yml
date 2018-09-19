@@ -8,17 +8,8 @@ services:
       - redis-data:/data
     ports:
       - 6379:6379
-  eventstore:
-    image: eventstore/eventstore
-    environment:
-      - EVENTSTORE_RUN_PROJECTIONS=All
-    volumes: 
-      - eventstore-data:/var/lib/eventstore
-    ports:
-      - 1113:1113
-      - 2113:2113
   mongo:
-    image: mongo:4.0.0-rc0-xenial
+    image: mongo:4
     volumes:
       - mongo-data:/data/db
     ports:
@@ -33,5 +24,4 @@ services:
 volumes:
   redis-data:
   mongo-data:
-  eventstore-data:
   rabbit:

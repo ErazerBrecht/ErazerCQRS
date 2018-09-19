@@ -1,12 +1,12 @@
 ﻿using System;
 using Erazer.Framework.Factories;
-using EventStore.ClientAPI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SqlStreamStore;
 
 namespace Erazer.Infrastructure.EventStore
 {
-    public class EventStoreFactory : IFactory<IEventStoreConnection>
+    public class EventStoreFactory : IFactory<IStreamStore>
     {
         private readonly IOptions<EventStoreSettings> _options;
         private readonly ILogger<EventStoreFactory> _logger;
@@ -22,28 +22,15 @@ namespace Erazer.Infrastructure.EventStore
             _logger.LogInformation($"Building a connection to a 'GetEventStore' server\n\t ConnectionString: {options.Value.ConnectionString}");
         }
 
-        public IEventStoreConnection Build()
+        public IStreamStore Build()
         {
-            try
+            // TODO FIND OUT THE CORRECT NEEDED SETTINGS!
+            var settings = new MsSqlStreamStoreV3Settings(_options.Value.ConnectionString)
             {
-                // TODO Use different settings on different env's
-                var settings = ConnectionSettings.Create()
-                                    .SetHeartbeatTimeout(TimeSpan.FromSeconds(30))
-                                    .UseConsoleLogger();
+                DisableDeletionTracking = true
+            };
 
-                var connection = EventStoreConnection.Create(_options.Value.ConnectionString, settings);
-
-                connection.ConnectAsync().Wait();
-                connection.GetStreamMetadataAsync("$users").Wait();
-
-                _logger.LogInformation($"Created a succesful connection with the 'GetEventStore' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
-                return connection;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex, $"Could NOT create a succesful connection with the 'GetEventStore' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
-                throw;
-            }
+            return new MsSqlStreamStoreV3(settings);
         }
     }
 }

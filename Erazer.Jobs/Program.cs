@@ -54,7 +54,6 @@ namespace Erazer.Jobs
         {
             services.AddLogging();
 
-
             services
                 .AddEventBus(x =>
                 {
@@ -67,6 +66,7 @@ namespace Erazer.Jobs
                     x.EventQueueName = EventBusConstants.ErazerJobs;
                     x.AddEventListener<TicketCreatedIntegrationEvent>();
                     x.AddEventListener<TicketPriorityIntegrationEvent>();
+                    x.AddEventListener<TicketStatusIntegrationEvent>();
                 });
 
             services.AddMediatR();
