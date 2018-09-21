@@ -32,13 +32,10 @@ namespace Erazer.Infrastructure.MongoDb
 
         public IMongoDatabase Build()
         {
-            var url = new Uri(_options.Value.ConnectionString);
-            var client = new MongoClient(new MongoClientSettings()
-            {
-                Server = new MongoServerAddress(url.Host, url.Port),
-                ClusterConfigurator = AddTelemeteryLogging()
-            });
+            var settings = MongoClientSettings.FromUrl(new MongoUrl(_options.Value.ConnectionString));
+            settings.ClusterConfigurator = AddTelemeteryLogging();
 
+            var client = new MongoClient(settings);
             var db = client.GetDatabase(_options.Value.Database);
 
             // Check if MongoDb connection is succesful created!

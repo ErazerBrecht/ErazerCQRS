@@ -6,9 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Erazer.Infrastructure.MongoDb;
 using Erazer.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using SqlStreamStore;
 using SqlStreamStore.Streams;
@@ -63,11 +65,27 @@ namespace Erazer.Infrastructure.EventStore.PersistedSubscription
 
             using (var scope = _provider.CreateScope())
             {
+                var session = scope.ServiceProvider.GetRequiredService<IMongoDbSession>();
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+                await session.StartTransaction();
 
                 var json = await resolvedEvent.GetJsonData(token);
                 var @event = JsonConvert.DeserializeObject<IDomainEvent>(json, JsonSettings.DefaultSettings);
-                await mediator.Publish(@event, token);
+
+                try
+                {
+                    await mediator.Publish(@event, token);
+                    await session.Commit();
+                    await session.ExecuteSideEffects();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Event handling failed for {@event.GetType()}");
+                    await session.Abort();
+
+                    throw;
+                }      
             }
         }
 

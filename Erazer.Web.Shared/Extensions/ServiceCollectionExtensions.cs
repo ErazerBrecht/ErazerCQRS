@@ -12,7 +12,7 @@ namespace Erazer.Web.Shared.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddSubscriber<T>(this IServiceCollection collection) where T: AggregateRoot
+        public static void AddSubscriber(this IServiceCollection collection)
         {
             collection.AddSingleton(typeof(ISubscription), typeof(EventStoreSubscription));
             collection.AddSingleton(typeof(IHostedService), typeof(SubscriptionJob));

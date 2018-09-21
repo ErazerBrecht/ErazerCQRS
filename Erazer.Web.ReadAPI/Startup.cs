@@ -48,8 +48,9 @@ namespace Erazer.Web.ReadAPI
             services.AddSingletonFactory<TelemetryClient, TelemeteryFactory>();
 
             // Add 'Infrasructure' Providers
-            services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
             services.AddSingletonFactory<IStreamStore, EventStoreFactory>();
+            services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
+            services.AddScoped<IMongoDbSession, MongoDbSession>();
             services.AddScoped<IWebsocketEmittor, WebsocketEmittor>();
 
             services.AddMongoDbClassMaps();
@@ -69,7 +70,7 @@ namespace Erazer.Web.ReadAPI
             services.AddMvcCore().AddJsonFormatters();
 
             // CQRS
-            services.AddSubscriber<Ticket>();
+            services.AddSubscriber();
             services.AddEventBus(x =>
             {
                 x.ConnectionString = _busSettings.ConnectionString;

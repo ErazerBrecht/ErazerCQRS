@@ -8,12 +8,24 @@ services:
       - redis-data:/data
     ports:
       - 6379:6379
-  mongo:
+  mongo-1:
     image: mongo:4
+    container_name: mongo-1
     volumes:
-      - mongo-data:/data/db
+      - mongo-1-data:/data/db
+      - ./etc/mongod.conf:/etc/mongod.conf
     ports:
-      - 27017:27017
+      - 3000:3000
+    command: ["mongod", "--config", "/etc/mongod.conf", "--port", "3000"]
+  mongo-2:
+    image: mongo:4
+    container_name: mongo-2
+    volumes:
+      - mongo-2-data:/data/db
+      - ./etc/mongod.conf:/etc/mongod.conf
+    ports:
+      - 3001:3001
+    command: ["mongod", "--config", "/etc/mongod.conf", "--port", "3001"]
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
@@ -23,5 +35,6 @@ services:
       - rabbit:/var/lib/rabbitmq
 volumes:
   redis-data:
-  mongo-data:
+  mongo-1-data:
+  mongo-2-data:
   rabbit:
