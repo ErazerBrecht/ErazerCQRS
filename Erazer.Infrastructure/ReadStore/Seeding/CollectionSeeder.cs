@@ -11,6 +11,9 @@ namespace Erazer.Infrastructure.ReadStore.Seeding
             var collections = await (await db.ListCollectionsAsync()).ToListAsync();
             var collectionNames = collections.Select(y => y.GetValue("name").AsString).ToList();
 
+            if (!collectionNames.Contains("Position"))
+                await db.CreateCollectionAsync("Position");
+
             if (!collectionNames.Contains("Tickets"))
                 await db.CreateCollectionAsync("Tickets");
 

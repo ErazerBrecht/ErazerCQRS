@@ -6,7 +6,7 @@ import { PriorityValues } from '../../configuration/priorityConstants';
 import { StatusValues } from '../../configuration/statusConstants';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,  
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ticket-detail-basic',
   templateUrl: './ticket-detail-basic.component.html',
   styleUrls: ['./ticket-detail-basic.component.css']
@@ -24,12 +24,12 @@ export class TicketDetailBasicComponent implements OnInit, OnChanges {
   priorityControl: FormControl;
   typeControl: FormControl;
   descriptionControl: FormControl;
-  
-  constructor() { 
+
+  constructor() {
     this.statusControl = new FormControl();
     this.priorityControl = new FormControl();
-    this.typeControl = new FormControl('');      // TODO Type   
-    this.descriptionControl = new FormControl('', Validators.required);   
+    this.typeControl = new FormControl('');      // TODO Type
+    this.descriptionControl = new FormControl('', Validators.required);
   }
 
   ngOnInit(): void {
@@ -46,10 +46,9 @@ export class TicketDetailBasicComponent implements OnInit, OnChanges {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges){
-      this.statusControl.patchValue((changes.ticket.currentValue as TicketDetail).status.id);
-      this.priorityControl.patchValue((changes.ticket.currentValue as TicketDetail).priority.id);
-      this.descriptionControl.patchValue((changes.ticket.currentValue as TicketDetail).description);
+  ngOnChanges(changes: SimpleChanges) {
+    this.statusControl.patchValue((changes.ticket.currentValue as TicketDetail).status.id, { emitEvent: false });
+    this.priorityControl.patchValue((changes.ticket.currentValue as TicketDetail).priority.id, { emitEvent: false });
+    this.descriptionControl.patchValue((changes.ticket.currentValue as TicketDetail).description, { emitEvent: false });
   }
-
 }

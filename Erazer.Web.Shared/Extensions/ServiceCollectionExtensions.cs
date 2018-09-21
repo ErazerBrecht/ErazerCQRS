@@ -1,11 +1,12 @@
 ﻿using Erazer.Framework.Domain;
-using Erazer.Infrastructure.EventStore.PersistedSubscription;
 using Erazer.Infrastructure.MongoDb.Base;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Reflection;
+using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.ReadStore.ClassMaps;
+using Erazer.Infrastructure.ReadStore.Repositories;
 using Microsoft.Extensions.Hosting;
 
 namespace Erazer.Web.Shared.Extensions
@@ -14,8 +15,10 @@ namespace Erazer.Web.Shared.Extensions
     {
         public static void AddSubscriber(this IServiceCollection collection)
         {
-            collection.AddSingleton(typeof(ISubscription), typeof(EventStoreSubscription));
-            collection.AddSingleton(typeof(IHostedService), typeof(SubscriptionJob));
+            collection.AddSingleton<IPositionRepository, PositionRepository>();
+
+            collection.AddSingleton<ISubscription, Subscription>();
+            collection.AddSingleton<IHostedService, SubscriptionJob>();
         }
 
         public static void AddMongoDbClassMaps(this IServiceCollection services)

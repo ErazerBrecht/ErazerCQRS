@@ -14,6 +14,7 @@ using Erazer.Framework.FrontEnd;
 using Erazer.Domain;
 using Erazer.Infrastructure.MongoDb;
 using Erazer.Infrastructure.EventStore;
+using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.Websockets;
 using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ReadStore.Repositories;
