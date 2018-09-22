@@ -8,6 +8,15 @@ services:
       - redis-data:/data
     ports:
       - 6379:6379
+  sql:
+    image: postgres
+    restart: always
+    volumes: 
+      - sql-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: erazercqrs
+    ports:
+      - 5432:5432
   mongo-1:
     image: mongo:4
     container_name: mongo-1
@@ -35,6 +44,7 @@ services:
       - rabbit:/var/lib/rabbitmq
 volumes:
   redis-data:
+  sql-data:
   mongo-1-data:
   mongo-2-data:
   rabbit:

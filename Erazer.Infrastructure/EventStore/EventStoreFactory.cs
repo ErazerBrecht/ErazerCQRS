@@ -24,13 +24,8 @@ namespace Erazer.Infrastructure.EventStore
 
         public IStreamStore Build()
         {
-            // TODO FIND OUT THE CORRECT NEEDED SETTINGS!
-            var settings = new MsSqlStreamStoreV3Settings(_options.Value.ConnectionString)
-            {
-                DisableDeletionTracking = true
-            };
-
-            return new MsSqlStreamStoreV3(settings);
+            var settings = new PostgresStreamStoreSettings(_options.Value.ConnectionString);   
+            return new PostgresStreamStore(settings);
         }
     }
 }
