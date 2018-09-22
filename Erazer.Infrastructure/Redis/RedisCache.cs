@@ -4,47 +4,70 @@ using Erazer.Framework.Domain;
 using Newtonsoft.Json;
 using ServiceStack.Redis;
 using Erazer.Shared;
+using Microsoft.ApplicationInsights;
 
 namespace Erazer.Infrastructure.Redis
 {
     public class RedisCache : ICache
     {
         private readonly IRedisClientsManager _manager;
+        private readonly TelemetryClient _telemeteryClient;
 
-        public RedisCache(IRedisClientsManager manager)
+        public RedisCache(IRedisClientsManager manager, TelemetryClient telemeteryClient)
         {
             _manager = manager;
+            _telemeteryClient = telemeteryClient;
         }
 
-        public bool IsTracked(Guid id)
+        public bool IsTracked(Guid aggregateId)
         {
+            var now = DateTimeOffset.Now;
+            var id = aggregateId.ToString();
+
             using (var redis = _manager.GetClient())
             {
-                return redis.ContainsKey(id.ToString());
+                var result = redis.ContainsKey(id);
+                _telemeteryClient.TrackDependency("DB", "Redis", $"IsTracked succeeded - AggregateId: {id} Result: {result}", now, DateTimeOffset.Now - now, true);
+
+                return result;
             }
         }
 
-        public void Set(Guid id, AggregateRoot aggregate)
+        public void Set(Guid aggregateId, AggregateRoot aggregate)
         {
+            var now = DateTimeOffset.Now;
+            var id = aggregateId.ToString();
+
             using (var redis = _manager.GetClient())
             {
-                redis.SetValue(id.ToString(), JsonConvert.SerializeObject(aggregate, aggregate.GetType(), JsonSettings.AggregateSerializer));
+                redis.SetValue(id, JsonConvert.SerializeObject(aggregate, aggregate.GetType(), JsonSettings.AggregateSerializer));
+                _telemeteryClient.TrackDependency("DB", "Redis", $"SetValue succeeded - AggregateId: {id} AggregateType: {aggregate.GetType()}", now, DateTimeOffset.Now - now, true);
             }
         }
 
-        public AggregateRoot Get(Guid id)
+        public AggregateRoot Get(Guid aggregateId)
         {
+            var now = DateTimeOffset.Now;
+            var id = aggregateId.ToString();
+
             using (var redis = _manager.GetClient())
             {
-                return JsonConvert.DeserializeObject<AggregateRoot>(redis.GetValue(id.ToString()), JsonSettings.AggregateSerializer);
+                var result = JsonConvert.DeserializeObject<AggregateRoot>(redis.GetValue(id), JsonSettings.AggregateSerializer);
+                _telemeteryClient.TrackDependency("DB", "Redis", $"Get succeeded - AggregateId: {id} Version: {result.Version}", now, DateTimeOffset.Now - now, true);
+
+                return result;
             }
         }
 
-        public void Remove(Guid id)
+        public void Remove(Guid aggregateId)
         {
+            var now = DateTimeOffset.Now;
+            var id = aggregateId.ToString();
+
             using (var redis = _manager.GetClient())
             {
-                redis.Remove(id.ToString());
+                redis.Remove(id);
+                _telemeteryClient.TrackDependency("DB", "Redis", $"Remove succeeded - AggregateId: {id}", now, DateTimeOffset.Now - now, true);
             }
         }
     }

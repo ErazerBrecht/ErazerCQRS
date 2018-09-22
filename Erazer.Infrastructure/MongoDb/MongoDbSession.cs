@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using TaskExtensions = GreenPipes.Internals.Extensions.TaskExtensions;
 
 namespace Erazer.Infrastructure.MongoDb
 {
@@ -57,7 +56,7 @@ namespace Erazer.Infrastructure.MongoDb
         {
             _logger.LogTrace("Starting MongoDb session");
             _mongoSession = await _mongoDb.Client.StartSessionAsync();
-            _logger.LogDebug("MongoDb session started");
+            _logger.LogTrace("MongoDb session started");
 
             _logger.LogTrace("Starting MongoDb transaction");
             _mongoSession.StartTransaction();

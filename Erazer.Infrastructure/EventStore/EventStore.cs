@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using Erazer.Framework.Events;
 using Erazer.Framework.Domain;
 using Erazer.Shared;
+using Microsoft.ApplicationInsights;
 using Newtonsoft.Json;
 using SqlStreamStore;
 using SqlStreamStore.Infrastructure;
@@ -16,36 +16,40 @@ namespace Erazer.Infrastructure.EventStore
     public class EventStore : IEventStore
     {
         private readonly IStreamStore _storeConnection;
+        private readonly TelemetryClient _telemetryClient;
 
 
-        public EventStore(IStreamStore storeConnection)
+        public EventStore(IStreamStore storeConnection, TelemetryClient telemetryClient)
         {
             _storeConnection = storeConnection;
+            _telemetryClient = telemetryClient;
         }
 
-        // AggregageId is already available in events => TODO Remove parameter
         // TODO FIX EXPECTEDVERSION!!!
-        public Task Save<T>(Guid aggregateId, IEnumerable<IDomainEvent> events) where T : AggregateRoot
+        public async Task Save<T>(Guid aggregateId, IEnumerable<IDomainEvent> events) where T : AggregateRoot
         {
-            var streamName = GetStreamName<T>(aggregateId);
-            var messages = GenerateStreamMessage<T>(streamName, events).ToArray();
+            var now = DateTimeOffset.Now;
+            var domainEvents = events as List<IDomainEvent> ?? events.ToList();
 
-            return _storeConnection.AppendToStream(streamName, ExpectedVersion.Any, messages);
+            var streamName = GetStreamName<T>(aggregateId);
+            var messages = GenerateStreamMessage<T>(streamName, domainEvents).ToArray();
+
+            await _storeConnection.AppendToStream(streamName, ExpectedVersion.Any, messages);
+            _telemetryClient.TrackDependency("DB", "EventStore (SQL)", $"Saving events succeeded - AggregateId: {aggregateId} EventCount: {domainEvents.Count}", now, DateTimeOffset.Now - now, true);
         }
 
         public async Task<IEnumerable<IDomainEvent>> Get<T>(Guid aggregateId, int fromVersion) where T : AggregateRoot
         {
+            var now = DateTimeOffset.Now;
             var streamName = GetStreamName<T>(aggregateId);
-
-            //var startPosition = StreamPosition.Start;
-            //if (fromVersion > -1)
-            //    // +1 is used to filter out the current version
-            //    // Example Aggregate is on version 3, If I want all version starting from 3 I only need 4,5,6,... not 3!
-            //    startPosition += fromVersion + 1;
 
             // TODO FIX HARD LIMIT OF 1000 
             var eventCollection = await _storeConnection.ReadStreamForwards(streamName, fromVersion, 1000, false);
-            return (await DeserialzeEvents(eventCollection.Messages)).ToList();
+            var result = (await DeserialzeEvents(eventCollection.Messages)).ToList();
+
+            _telemetryClient.TrackDependency("DB", "EventStore (SQL)", $"Retrieving events succeeded - AggregateId: {aggregateId} EventCount: {result.Count}", now, DateTimeOffset.Now - now, true);
+            return result;
+
         }
 
         private static string GetStreamName<T>(Guid aggregateId) where T : AggregateRoot

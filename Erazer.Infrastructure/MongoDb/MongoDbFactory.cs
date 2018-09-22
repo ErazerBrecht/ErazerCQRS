@@ -66,11 +66,11 @@ namespace Erazer.Infrastructure.MongoDb
                 cb.Subscribe<CommandSucceededEvent>(e =>
                 {
                     if (ShouldCommandEventBeLogged(e.CommandName))
-                        _telemetryClient.TrackDependency("MongoDB", "Command succeeded", e.CommandName, DateTime.Now, e.Duration, true);
+                        _telemetryClient.TrackDependency("DB", "MongoDB", $"Command succeeded {e.CommandName}", DateTime.Now, e.Duration, true);
                 });
                 cb.Subscribe<CommandFailedEvent>(e =>
                 {
-                    _telemetryClient.TrackDependency("MongoDB", "Command failed", $"{e.CommandName} - {e.ToString()}", DateTime.Now.Subtract(e.Duration), e.Duration, false);
+                    _telemetryClient.TrackDependency("DB", "MongoDB", $"Command failed {e.CommandName} - {e.ToString()}", DateTime.Now, e.Duration, false);
                 });
             };
         }
