@@ -18,6 +18,7 @@ namespace Erazer.Infrastructure.EventStore
         private readonly IStreamStore _storeConnection;
         private readonly TelemetryClient _telemetryClient;
 
+        private static readonly Guid ConstantGuid = Guid.Parse("C34AEF64-CCE7-4B03-99D7-3279090B5271");
 
         public EventStore(IStreamStore storeConnection, TelemetryClient telemetryClient)
         {
@@ -25,16 +26,15 @@ namespace Erazer.Infrastructure.EventStore
             _telemetryClient = telemetryClient;
         }
 
-        // TODO FIX EXPECTEDVERSION!!!
-        public async Task Save<T>(Guid aggregateId, IEnumerable<IDomainEvent> events) where T : AggregateRoot
+        public async Task Save<T>(Guid aggregateId, int expectedVersion, IEnumerable<IDomainEvent> events) where T : AggregateRoot
         {
             var now = DateTimeOffset.Now;
             var domainEvents = events as List<IDomainEvent> ?? events.ToList();
 
             var streamName = GetStreamName<T>(aggregateId);
-            var messages = GenerateStreamMessage<T>(streamName, domainEvents).ToArray();
+            var messages = GenerateStreamMessage<T>(streamName, expectedVersion, domainEvents).ToArray();
 
-            await _storeConnection.AppendToStream(streamName, ExpectedVersion.Any, messages);
+            await _storeConnection.AppendToStream(streamName, expectedVersion, messages);
             _telemetryClient.TrackDependency("DB", "EventStore (SQL)", $"Saving events succeeded - AggregateId: {aggregateId} EventCount: {domainEvents.Count}", now, DateTimeOffset.Now - now, true);
         }
 
@@ -44,7 +44,7 @@ namespace Erazer.Infrastructure.EventStore
             var streamName = GetStreamName<T>(aggregateId);
 
             // TODO FIX HARD LIMIT OF 1000 
-            var eventCollection = await _storeConnection.ReadStreamForwards(streamName, fromVersion, 1000, false);
+            var eventCollection = await _storeConnection.ReadStreamForwards(streamName, fromVersion, 1000);
             var result = (await DeserialzeEvents(eventCollection.Messages)).ToList();
 
             _telemetryClient.TrackDependency("DB", "EventStore (SQL)", $"Retrieving events succeeded - AggregateId: {aggregateId} EventCount: {result.Count}", now, DateTimeOffset.Now - now, true);
@@ -58,14 +58,14 @@ namespace Erazer.Infrastructure.EventStore
         }
 
         // TODO Using CLR type name is an antipattern -> FIX IT!
-        private static IEnumerable<NewStreamMessage> GenerateStreamMessage<T>(string streamName, IEnumerable<IDomainEvent> events) where T : AggregateRoot
+        private static IEnumerable<NewStreamMessage> GenerateStreamMessage<T>(string streamName, int expectedVersion, IEnumerable<IDomainEvent> events) where T : AggregateRoot
         {
-            var generator = new DeterministicGuidGenerator(Guid.Parse("C34AEF64-CCE7-4B03-99D7-3279090B5271"));
+            var generator = new DeterministicGuidGenerator(ConstantGuid);
 
             foreach (var @event in events)
             {
                 var jsonData = JsonConvert.SerializeObject(@event, JsonSettings.DefaultSettings);
-                var messageId = generator.Create(streamName, ExpectedVersion.Any, jsonData);
+                var messageId = generator.Create(streamName, expectedVersion, jsonData);
                 yield return new NewStreamMessage(messageId, @event.GetType().Name, jsonData);
             }
         }

@@ -55,12 +55,12 @@ namespace Erazer.Web.WriteAPI
             services.AddMediatR();
 
             // TODO Place in seperate file (Arne)
-            services.AddScoped<IEventStore, Infrastructure.EventStore.EventStore> ();
+            services.AddScoped<IEventStore, EventStore> ();
             // WITH CACHE
             services.AddScoped<ICache, RedisCache>();
             services.AddScoped<IAggregateRepository>(y => new CacheRepository(new AggregateRepository(y.GetService<IEventStore>()), y.GetService<IEventStore>(), y.GetService<ICache>()));
             // WITHOUT CACHE
-            //services.AddScoped<IAggregateRepository, AggregateRepository>();
+            // services.AddScoped<IAggregateRepository, AggregateRepository>();
 
             services.AddScoped<IFileUploader, FileUploader>();        
 

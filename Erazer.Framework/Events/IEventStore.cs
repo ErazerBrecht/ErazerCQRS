@@ -7,7 +7,7 @@ namespace Erazer.Framework.Events
 {
     public interface IEventStore
     {
-        Task Save<T>(Guid aggregateId, IEnumerable<IDomainEvent> events) where T : AggregateRoot;
+        Task Save<T>(Guid aggregateId, int expectedVersion, IEnumerable<IDomainEvent> events) where T : AggregateRoot;
         Task<IEnumerable<IDomainEvent>> Get<T>(Guid aggregateId, int fromVersion) where T : AggregateRoot;
     }
 }

@@ -34,7 +34,7 @@ namespace Erazer.Domain
         }
 
         // Need of a parameterless constructor to build Aggregate from events!
-        private Ticket() 
+        private Ticket()
         {
             // Register EventHandlers
             Handles<TicketCreateDomainEvent>(Apply);

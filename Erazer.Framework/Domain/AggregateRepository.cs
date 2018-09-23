@@ -33,8 +33,13 @@ namespace Erazer.Framework.Domain
 
         public Task Save<T>(T aggregate) where T : AggregateRoot
         {
+            var currentVersion = aggregate.Version;
             var changes = aggregate.FlushChanges();
-            return _eventStore.Save<T>(aggregate.Id, changes);
+
+            if (aggregate.Version < 0)
+                throw new NoEventsException(aggregate.Id);
+
+            return _eventStore.Save<T>(aggregate.Id, currentVersion, changes);
         }
     }
 }

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using ServiceStack.Redis;
 using Erazer.Shared;
 using Microsoft.ApplicationInsights;
+using Microsoft.Extensions.Options;
 
 namespace Erazer.Infrastructure.Redis
 {
@@ -12,11 +13,13 @@ namespace Erazer.Infrastructure.Redis
     {
         private readonly IRedisClientsManager _manager;
         private readonly TelemetryClient _telemeteryClient;
+        private readonly IOptions<RedisSettings> _options;
 
-        public RedisCache(IRedisClientsManager manager, TelemetryClient telemeteryClient)
+        public RedisCache(IRedisClientsManager manager, TelemetryClient telemeteryClient, IOptions<RedisSettings> options)
         {
             _manager = manager;
             _telemeteryClient = telemeteryClient;
+            _options = options;
         }
 
         public bool IsTracked(Guid aggregateId)
@@ -40,7 +43,7 @@ namespace Erazer.Infrastructure.Redis
 
             using (var redis = _manager.GetClient())
             {
-                redis.SetValue(id, JsonConvert.SerializeObject(aggregate, aggregate.GetType(), JsonSettings.AggregateSerializer));
+                redis.SetValue(id, JsonConvert.SerializeObject(aggregate, aggregate.GetType(), JsonSettings.AggregateSerializer), TimeSpan.FromSeconds(_options.Value.ExpireSeconds));
                 _telemeteryClient.TrackDependency("DB", "Redis", $"SetValue succeeded - AggregateId: {id} AggregateType: {aggregate.GetType()}", now, DateTimeOffset.Now - now, true);
             }
         }

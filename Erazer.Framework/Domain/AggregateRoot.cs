@@ -13,6 +13,11 @@ namespace Erazer.Framework.Domain
         private readonly List<IDomainEvent> _changes = new List<IDomainEvent>();
         private readonly Dictionary<Type, Action<IDomainEvent>> _eventHandlers = new Dictionary<Type, Action<IDomainEvent>>();
 
+        protected AggregateRoot()
+        {
+            Version = -1;       
+        } 
+
         /// <summary>
         /// Register an event handler in the aggregate root.
         /// </summary>
@@ -35,6 +40,7 @@ namespace Erazer.Framework.Domain
                     @event.Created = DateTime.UtcNow;
                 }
 
+                Version = Version + changes.Length;
                 _changes.Clear();
                 return changes;
             }
@@ -44,10 +50,16 @@ namespace Erazer.Framework.Domain
         {
             foreach (var e in history)
             {
+                // Aggregate starts on version -1 
+                // Next event should be event 0
+                // Aggregate is than on version 0
+                // Next event should be event 1
+                // Aggregate is than on version 1...
                 if (e.Version != Version + 1)
                 {
                     throw new EventsOutOfOrderException(e.AggregateRootId);
                 }
+
                 ApplyChange(e, false);
             }
         }
