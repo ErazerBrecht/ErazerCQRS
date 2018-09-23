@@ -26,7 +26,7 @@ namespace Erazer.Framework.Domain
                 throw new AggregateNotFoundException(typeof(T), aggregateId);
             }
 
-            var aggregate = AggregateFactory.Build<T>();
+            var aggregate = AggregateFactory<T>.Build();
             aggregate.LoadFromHistory(eventList);
             return aggregate;
         }
