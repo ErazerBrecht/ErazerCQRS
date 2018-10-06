@@ -3,6 +3,7 @@ using Erazer.Framework.Events;
 
 namespace Erazer.Domain.Events
 {
+    [Event("TicketStatusEvent")]
     public class TicketStatusDomainEvent : IDomainEvent
     {
         public string FromStatusId { get; set; }
@@ -12,6 +13,5 @@ namespace Erazer.Domain.Events
 
         public Guid AggregateRootId { get; set; }
         public int Version { get; set; }
-
     }
 }

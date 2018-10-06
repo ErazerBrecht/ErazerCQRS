@@ -17,13 +17,15 @@ namespace Erazer.Infrastructure.EventStore
     {
         private readonly IStreamStore _storeConnection;
         private readonly TelemetryClient _telemetryClient;
+        private readonly IEventTypeMapping _eventMap;
 
         private static readonly Guid ConstantGuid = Guid.Parse("C34AEF64-CCE7-4B03-99D7-3279090B5271");
 
-        public EventStore(IStreamStore storeConnection, TelemetryClient telemetryClient)
+        public EventStore(IStreamStore storeConnection, TelemetryClient telemetryClient, IEventTypeMapping eventMap)
         {
             _storeConnection = storeConnection;
             _telemetryClient = telemetryClient;
+            _eventMap = eventMap;
         }
 
         public async Task Save<T>(Guid aggregateId, int expectedVersion, IEnumerable<IDomainEvent> events) where T : AggregateRoot
@@ -57,8 +59,7 @@ namespace Erazer.Infrastructure.EventStore
             return $"{typeof(T).Name}-{aggregateId}";
         }
 
-        // TODO Using CLR type name is an antipattern -> FIX IT!
-        private static IEnumerable<NewStreamMessage> GenerateStreamMessage<T>(string streamName, int expectedVersion, IEnumerable<IDomainEvent> events) where T : AggregateRoot
+        private IEnumerable<NewStreamMessage> GenerateStreamMessage<T>(string streamName, int expectedVersion, IEnumerable<IDomainEvent> events) where T : AggregateRoot
         {
             var generator = new DeterministicGuidGenerator(ConstantGuid);
 
@@ -66,11 +67,11 @@ namespace Erazer.Infrastructure.EventStore
             {
                 var jsonData = JsonConvert.SerializeObject(@event, JsonSettings.DefaultSettings);
                 var messageId = generator.Create(streamName, expectedVersion, jsonData);
-                yield return new NewStreamMessage(messageId, @event.GetType().Name, jsonData);
+                yield return new NewStreamMessage(messageId, _eventMap.GetName(@event), jsonData);
             }
         }
 
-        private static Task<IDomainEvent[]> DeserialzeEvents(IEnumerable<StreamMessage> messages)
+        private Task<IDomainEvent[]> DeserialzeEvents(IEnumerable<StreamMessage> messages)
         {
             // Maybe use a custom JSON.NET deserializer...
 
@@ -78,7 +79,8 @@ namespace Erazer.Infrastructure.EventStore
             {
                 var version = m.StreamVersion;
                 var json = await m.GetJsonData();
-                var @event = JsonConvert.DeserializeObject<IDomainEvent>(json, JsonSettings.DefaultSettings);
+                var eventType = _eventMap.GetType(m.Type);
+                var @event = (IDomainEvent) JsonConvert.DeserializeObject(json, eventType, JsonSettings.DefaultSettings);
                 @event.Version = version;
                 return @event;
             }));

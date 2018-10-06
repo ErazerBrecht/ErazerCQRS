@@ -1,9 +1,9 @@
-﻿using Erazer.Framework.Domain;
-using Erazer.Infrastructure.MongoDb.Base;
+﻿using Erazer.Infrastructure.MongoDb.Base;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Reflection;
+using Erazer.Infrastructure.EventStore;
 using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.ReadStore.ClassMaps;
 using Erazer.Infrastructure.ReadStore.Repositories;
@@ -15,6 +15,7 @@ namespace Erazer.Web.Shared.Extensions
     {
         public static void AddSubscriber(this IServiceCollection collection)
         {
+            collection.AddSingleton<IEventTypeMapping, EventTypeMapping>();
             collection.AddSingleton<IPositionRepository, PositionRepository>();
 
             collection.AddSingleton<ISubscription, Subscription>();

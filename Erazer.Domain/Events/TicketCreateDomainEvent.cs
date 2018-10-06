@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace Erazer.Domain.Events
 {
+    [Event("TicketCreateEvent")]
     public class TicketCreateDomainEvent: IDomainEvent
     {
         public TicketCreateDomainEvent(Guid ticketId)

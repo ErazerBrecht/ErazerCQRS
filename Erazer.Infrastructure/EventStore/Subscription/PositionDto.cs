@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Erazer.Infrastructure.EventStore.Subscription
+﻿namespace Erazer.Infrastructure.EventStore.Subscription
 {
     public class PositionDto
     {

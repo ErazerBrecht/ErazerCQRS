@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Erazer.Framework.Factories;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

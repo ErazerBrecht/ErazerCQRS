@@ -37,12 +37,12 @@ namespace Erazer.Web.WriteAPI
         public void ConfigureServices(IServiceCollection services)
         {
             // Add 'Configration'
-            services.AddSingleton<IConfiguration>(_configuration);
+            services.AddSingleton(_configuration);
             services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
             services.Configure<RedisSettings>(_configuration.GetSection("CacheSettings"));
 
             // Add 'Infrasructure' Providers
-            services.AddSingletonFactory<IStreamStore, EventStoreFactory>();
+            services.AddScopedFactory<IStreamStore, EventStoreFactory>();
             services.AddSingletonFactory<IRedisClientsManager, RedisFactory>();
             services.AddCommandBus(x =>
             {
@@ -56,6 +56,7 @@ namespace Erazer.Web.WriteAPI
 
             // TODO Place in seperate file (Arne)
             services.AddScoped<IEventStore, EventStore> ();
+            services.AddSingleton<IEventTypeMapping, EventTypeMapping>();
             // WITH CACHE
             services.AddScoped<ICache, RedisCache>();
             services.AddScoped<IAggregateRepository>(y => new CacheRepository(new AggregateRepository(y.GetService<IEventStore>()), y.GetService<IEventStore>(), y.GetService<ICache>()));

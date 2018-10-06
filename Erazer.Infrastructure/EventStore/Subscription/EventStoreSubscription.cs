@@ -20,17 +20,20 @@ namespace Erazer.Infrastructure.EventStore.Subscription
     {
         private readonly IStreamStore _eventStoreConnection;
         private readonly IPositionRepository _positionRepository;
-        private readonly IServiceProvider _provider;
         private readonly TelemetryClient _telemetryClient;
+        private readonly IEventTypeMapping _eventMap;
+        private readonly IServiceProvider _provider;
         private readonly ILogger<Subscription> _logger;
 
         private IAllStreamSubscription _subscription;
 
-        public Subscription(IStreamStore eventStoreConnection, IPositionRepository positionRepository, TelemetryClient telemeteryClient, IServiceProvider provider, ILogger<Subscription> logger)
+        public Subscription(IStreamStore eventStoreConnection, IPositionRepository positionRepository, TelemetryClient telemeteryClient, IEventTypeMapping eventMap, 
+            IServiceProvider provider, ILogger<Subscription> logger)
         {
             _eventStoreConnection = eventStoreConnection;
             _positionRepository = positionRepository;
             _telemetryClient = telemeteryClient;
+            _eventMap = eventMap;
             _provider = provider;
             _logger = logger;
         }
@@ -71,7 +74,9 @@ namespace Erazer.Infrastructure.EventStore.Subscription
                 await session.StartTransaction();
 
                 var json = await resolvedEvent.GetJsonData(token);
-                var @event = JsonConvert.DeserializeObject<IDomainEvent>(json, JsonSettings.DefaultSettings);
+                var eventType = _eventMap.GetType(resolvedEvent.Type);
+                var @event = (IDomainEvent) JsonConvert.DeserializeObject(json, eventType, JsonSettings.DefaultSettings);
+                @event.Version = resolvedEvent.StreamVersion;
 
                 try
                 {

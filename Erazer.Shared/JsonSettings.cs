@@ -19,10 +19,10 @@ namespace Erazer.Shared
             DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
             FloatFormatHandling = FloatFormatHandling.DefaultValue,
             NullValueHandling = NullValueHandling.Include,
-            PreserveReferencesHandling = PreserveReferencesHandling.All,
+            PreserveReferencesHandling = PreserveReferencesHandling.None,
             ReferenceLoopHandling = ReferenceLoopHandling.Error,
             StringEscapeHandling = StringEscapeHandling.EscapeNonAscii,
-            TypeNameHandling = TypeNameHandling.All
+            TypeNameHandling = TypeNameHandling.None
         };
 
         public static JsonSerializerSettings AggregateSerializer
@@ -30,6 +30,7 @@ namespace Erazer.Shared
             get
             {
                 var settings = DefaultSettings;
+                settings.TypeNameHandling = TypeNameHandling.Objects;
                 settings.ContractResolver = new PrivateContractResolver();
                 settings.ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor;
                 return settings;
@@ -41,8 +42,6 @@ namespace Erazer.Shared
             get
             {
                 var settings = DefaultSettings;
-                settings.PreserveReferencesHandling = PreserveReferencesHandling.None;
-                settings.TypeNameHandling = TypeNameHandling.None;
                 settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 return settings;
             }

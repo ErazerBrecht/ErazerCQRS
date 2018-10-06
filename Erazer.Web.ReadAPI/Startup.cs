@@ -53,7 +53,7 @@ namespace Erazer.Web.ReadAPI
             services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
             services.AddScoped<IMongoDbSession, MongoDbSession>();
             services.AddScoped<IWebsocketEmittor, WebsocketEmittor>();
-
+            
             services.AddMongoDbClassMaps();
             services.AddAutoMapper();
             services.AddMediatR();
