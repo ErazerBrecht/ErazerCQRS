@@ -7,7 +7,7 @@ My learning steps into the world of CQRS and EventSourcing
   - Read side -> **MongoDb**
     - TODO Validation of 'Queries'
     - TODO Logging with aid of [Mediatr Behaviours](https://github.com/jbogard/MediatR/wiki/Behaviors)
-  - Write side -> Eventsourcing -> [**SqlStreamStore**](https://geteventstore.com)
+  - Write side -> Eventsourcing -> [**SqlStreamStore**](https://github.com/SQLStreamStore/SQLStreamStore)
     - TODO Validation of 'Commands'
     - DDD
     - Caching of Aggregate -> **REDIS**
