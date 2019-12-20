@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Erazer.Domain.Data.DTOs.Events;
 using Erazer.Domain.Data.Repositories;

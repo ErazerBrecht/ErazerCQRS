@@ -3,7 +3,6 @@ using Erazer.Infrastructure.EventStore;
 using FluentMigrator;
 using Microsoft.Extensions.Options;
 using Npgsql;
-using SqlStreamStore;
 
 namespace Erazer.Migrations.Migrations
 {

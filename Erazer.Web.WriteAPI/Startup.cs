@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using ServiceStack.Redis;
 using Erazer.Infrastructure.EventStore;
 using Erazer.Infrastructure.Logging;
@@ -17,10 +16,8 @@ using Erazer.Infrastructure.ServiceBus;
 using Erazer.Web.WriteAPI.Services;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
-using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Hosting;
 using SqlStreamStore;
-
 
 namespace Erazer.Web.WriteAPI
 {

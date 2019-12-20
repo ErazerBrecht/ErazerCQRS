@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using MediatR;
 using AutoMapper;
 using Erazer.Infrastructure.MongoDb;
@@ -17,7 +16,6 @@ using Erazer.Messages.Commands;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit.Commands;
-using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Hosting;
 
 namespace Erazer.Web.DocumentStore
