@@ -22,7 +22,7 @@ My learning steps into the world of CQRS and EventSourcing
       - RPC calls
 
 - Websockets
-  - SignlarR
+  - SignalR
 
 - Angular (> 4)
   - TODO Upgrade to Angular 9
