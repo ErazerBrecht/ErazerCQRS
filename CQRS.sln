@@ -17,15 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.Shared", "Erazer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.DocumentStore", "Erazer.Web.DocumentStore\Erazer.Web.DocumentStore.csproj", "{EFDD2243-C0EE-4B22-906F-092F0348930C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Shared", "Erazer.Shared\Erazer.Shared.csproj", "{8C00EC48-336E-4799-88AA-2FE56FA2193E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Messages", "Erazer.Messages\Erazer.Messages.csproj", "{92EED0F5-ADB4-4BE6-B9DE-13817BE3D202}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Jobs", "Erazer.Jobs\Erazer.Jobs.csproj", "{E043A67B-5A44-42C7-9981-208C8C4C94DC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlStreamStore", "..\SQLStreamStore\src\SqlStreamStore\SqlStreamStore.csproj", "{5C80B849-505C-40F8-B3F8-453FFDC7D37F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlStreamStore.Postgres", "..\SQLStreamStore\src\SqlStreamStore.Postgres\SqlStreamStore.Postgres.csproj", "{2790AE88-4354-4522-87A9-537E48EAD94B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Migrations", "Erazer.Migrations\Erazer.Migrations.csproj", "{DEA7DAD6-498A-458F-8CB8-FD32796F90C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,10 +57,6 @@ Global
 		{EFDD2243-C0EE-4B22-906F-092F0348930C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFDD2243-C0EE-4B22-906F-092F0348930C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFDD2243-C0EE-4B22-906F-092F0348930C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8C00EC48-336E-4799-88AA-2FE56FA2193E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C00EC48-336E-4799-88AA-2FE56FA2193E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8C00EC48-336E-4799-88AA-2FE56FA2193E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C00EC48-336E-4799-88AA-2FE56FA2193E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{92EED0F5-ADB4-4BE6-B9DE-13817BE3D202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{92EED0F5-ADB4-4BE6-B9DE-13817BE3D202}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92EED0F5-ADB4-4BE6-B9DE-13817BE3D202}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -73,14 +65,10 @@ Global
 		{E043A67B-5A44-42C7-9981-208C8C4C94DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E043A67B-5A44-42C7-9981-208C8C4C94DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E043A67B-5A44-42C7-9981-208C8C4C94DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C80B849-505C-40F8-B3F8-453FFDC7D37F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C80B849-505C-40F8-B3F8-453FFDC7D37F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C80B849-505C-40F8-B3F8-453FFDC7D37F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C80B849-505C-40F8-B3F8-453FFDC7D37F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2790AE88-4354-4522-87A9-537E48EAD94B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2790AE88-4354-4522-87A9-537E48EAD94B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2790AE88-4354-4522-87A9-537E48EAD94B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2790AE88-4354-4522-87A9-537E48EAD94B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEA7DAD6-498A-458F-8CB8-FD32796F90C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEA7DAD6-498A-458F-8CB8-FD32796F90C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEA7DAD6-498A-458F-8CB8-FD32796F90C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEA7DAD6-498A-458F-8CB8-FD32796F90C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

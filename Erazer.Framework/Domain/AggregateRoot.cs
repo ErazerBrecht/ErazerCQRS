@@ -8,7 +8,7 @@ namespace Erazer.Framework.Domain
     public abstract class AggregateRoot
     {
         public Guid Id { get; protected set; }
-        public int Version { get; protected set; }
+        public int Version { get; private set; }
 
         private readonly List<IDomainEvent> _changes = new List<IDomainEvent>();
         private readonly Dictionary<Type, Action<IDomainEvent>> _eventHandlers = new Dictionary<Type, Action<IDomainEvent>>();
@@ -33,14 +33,8 @@ namespace Erazer.Framework.Domain
             lock (_changes)
             {
                 var changes = _changes.ToArray();
-
-                foreach (var @event in changes)
-                {
-                    @event.AggregateRootId = Id;
-                    @event.Created = DateTime.UtcNow;
-                }
-
-                Version = Version + changes.Length;
+                Version += changes.Length;
+                
                 _changes.Clear();
                 return changes;
             }

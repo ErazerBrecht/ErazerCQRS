@@ -18,9 +18,9 @@ namespace Erazer.Domain.Events
         public string StatusId { get; set; }
         public List<File> Files { get; set; }
 
-        public Guid UserId { get; set; }
-        public DateTime Created { get; set; }
         public Guid AggregateRootId { get; set; }
         public int Version { get; set; }
+        public DateTime Created { get; set; }
+        public Guid? UserId { get; set; }
     }
 }

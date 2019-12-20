@@ -1,25 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="5.1.2" />
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.6.4" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.7.0-beta0001" />
-    <PackageReference Include="ServiceStack.Redis.Core" Version="5.1.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.12.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.10.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="ServiceStack.Redis.Core" Version="5.7.0" />
+    <PackageReference Include="SqlStreamStore.Postgres" Version="1.2.0-beta.8" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SQLStreamStore\src\SqlStreamStore.Postgres\SqlStreamStore.Postgres.csproj" />
     <ProjectReference Include="..\Erazer.Domain\Erazer.Domain.csproj" />
     <ProjectReference Include="..\Erazer.Messages\Erazer.Messages.csproj" />
-    <ProjectReference Include="..\Erazer.Shared\Erazer.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Erazer.Infrastructure.EventStore.Subscription
 {
     public interface ISubscription: IDisposable
     {
-        void Connect(long? position);
+        Task Connect();
     }
 }

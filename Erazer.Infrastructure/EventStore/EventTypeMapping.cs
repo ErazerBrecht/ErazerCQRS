@@ -8,7 +8,7 @@ namespace Erazer.Infrastructure.EventStore
 {
     public class EventTypeMapping : IEventTypeMapping
     {
-        private readonly Dictionary<string, Type> _map;
+        private readonly IReadOnlyDictionary<string, Type> _map;
 
         public EventTypeMapping()
         {

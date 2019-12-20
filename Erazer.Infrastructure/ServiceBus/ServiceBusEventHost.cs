@@ -10,17 +10,24 @@ namespace Erazer.Infrastructure.ServiceBus
         private readonly IEventBus _bus;
         private readonly ILogger<ServiceBusEventHost> _logger;
 
-        public ServiceBusEventHost(IEventBus bus, ILogger<ServiceBusEventHost> logger, IApplicationLifetime lifetime)
+        public ServiceBusEventHost(IEventBus bus, ILogger<ServiceBusEventHost> logger)
         {
             _bus = bus;
             _logger = logger;
-            lifetime.ApplicationStopping.Register(async () => await _bus.Stop());
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await _bus.Start(stoppingToken);
             _logger.LogInformation("Listening for events");
+        }
+        
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogWarning("Stop listing for events");
+
+            _bus?.Stop(cancellationToken);
+            return base.StopAsync(cancellationToken);
         }
     }
 }

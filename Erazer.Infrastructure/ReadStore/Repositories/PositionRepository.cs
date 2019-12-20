@@ -16,7 +16,7 @@ namespace Erazer.Infrastructure.ReadStore.Repositories
             _collection = database.GetCollection<PositionDto>("Position");
         }
 
-        public Task<PositionDto> GetCurrentPosistion()
+        public Task<PositionDto> GetCurrentPosition()
         {
             return _collection.AsQueryable().SingleOrDefaultAsync();
         }

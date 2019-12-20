@@ -11,11 +11,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ServiceStack.Redis;
 using Erazer.Infrastructure.EventStore;
+using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.Redis;
 using Erazer.Infrastructure.ServiceBus;
 using Erazer.Web.WriteAPI.Services;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
+using Microsoft.ApplicationInsights;
+using Microsoft.Extensions.Hosting;
 using SqlStreamStore;
 
 
@@ -41,8 +44,11 @@ namespace Erazer.Web.WriteAPI
             services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
             services.Configure<RedisSettings>(_configuration.GetSection("CacheSettings"));
 
-            // Add 'Infrasructure' Providers
-            services.AddScopedFactory<IStreamStore, EventStoreFactory>();
+            // Add Telemetry
+            services.AddSingletonFactory<ITelemetry, TelemeteryFactory>();
+            
+            // Add 'Infrastructure' Providers
+            services.AddSingletonFactory<IStreamStore, EventStoreFactory>();
             services.AddSingletonFactory<IRedisClientsManager, RedisFactory>();
             services.AddCommandBus(x =>
             {
@@ -54,8 +60,8 @@ namespace Erazer.Web.WriteAPI
             services.AddAutoMapper();
             services.AddMediatR();
 
-            // TODO Place in seperate file (Arne)
-            services.AddScoped<IEventStore, EventStore> ();
+            // TODO Place in separate file (Arne)
+            services.AddSingleton<IEventStore, EventStore>();
             services.AddSingleton<IEventTypeMapping, EventTypeMapping>();
             // WITH CACHE
             services.AddScoped<ICache, RedisCache>();
@@ -66,18 +72,18 @@ namespace Erazer.Web.WriteAPI
             services.AddScoped<IFileUploader, FileUploader>();        
 
             // Add MVC
-            services.AddCors();
-            services.AddMvcCore().AddJsonFormatters();
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseRouting();
             app.UseCors(builder =>
             {
                 builder.WithOrigins("http://localhost:4200")            // Load this from ENV or Config file
@@ -85,7 +91,11 @@ namespace Erazer.Web.WriteAPI
                        .AllowAnyHeader()
                        .SetPreflightMaxAge(TimeSpan.FromHours(1));
             });
-            app.UseMvc();
+            
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }

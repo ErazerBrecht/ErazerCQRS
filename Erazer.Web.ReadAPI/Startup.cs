@@ -12,6 +12,7 @@ using MongoDB.Driver;
 using Erazer.Domain.Data.Repositories;
 using Erazer.Framework.FrontEnd;
 using Erazer.Domain;
+using Erazer.Framework.Events;
 using Erazer.Infrastructure.MongoDb;
 using Erazer.Infrastructure.EventStore;
 using Erazer.Infrastructure.EventStore.Subscription;
@@ -22,6 +23,7 @@ using Erazer.Infrastructure.ServiceBus;
 using Erazer.Web.Shared.Extensions;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
+using Microsoft.Extensions.Hosting;
 using SqlStreamStore;
 
 namespace Erazer.Web.ReadAPI
@@ -45,10 +47,10 @@ namespace Erazer.Web.ReadAPI
             services.Configure<WebsocketSettings>(_configuration.GetSection("WebsocketSettings"));
             services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
 
-            // Add Singleton TelemeterClient
-            services.AddSingletonFactory<TelemetryClient, TelemeteryFactory>();
+            // Add Telemetry
+            services.AddSingletonFactory<ITelemetry, TelemeteryFactory>();
 
-            // Add 'Infrasructure' Providers
+            // Add 'Infrastructure' Providers
             services.AddSingletonFactory<IStreamStore, EventStoreFactory>();
             services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
             services.AddScoped<IMongoDbSession, MongoDbSession>();
@@ -59,7 +61,7 @@ namespace Erazer.Web.ReadAPI
             services.AddMediatR();
             services.AddSignalR();
 
-            // TODO Place in seperate file (Arne) > services.AddTicket();
+            // TODO Place in separate file (Arne) > services.AddTicket();
             // Query repositories
             services.AddScoped<ITicketQueryRepository, TicketRepository>();
             services.AddScoped<ITicketEventQueryRepository, TicketEventRepository>();
@@ -67,11 +69,16 @@ namespace Erazer.Web.ReadAPI
             services.AddScoped<IPriorityQueryRepository, PriorityRepository>();
 
             // Add MVC
-            services.AddCors();
-            services.AddMvcCore().AddJsonFormatters();
+            services
+                .AddControllers()
+                .AddNewtonsoftJson();
 
             // CQRS
+            services.AddSingleton<IEventStore, EventStore>();
+            services.AddSingleton<IEventTypeMapping, EventTypeMapping>();
             services.AddSubscriber();
+            
+            // ServiceBus
             services.AddEventBus(x =>
             {
                 x.ConnectionString = _busSettings.ConnectionString;
@@ -81,13 +88,14 @@ namespace Erazer.Web.ReadAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServer server)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServer server)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseRouting();
             app.UseCors(builder =>
             {
                 builder.WithOrigins("http://localhost:4200")            // Load this from ENV or Config file
@@ -98,7 +106,10 @@ namespace Erazer.Web.ReadAPI
             });
 
             app.UseWebsocketEmittor();
-            app.UseMvc();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }

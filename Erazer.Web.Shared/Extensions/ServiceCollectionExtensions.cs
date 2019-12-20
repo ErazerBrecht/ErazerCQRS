@@ -19,7 +19,7 @@ namespace Erazer.Web.Shared.Extensions
             collection.AddSingleton<IPositionRepository, PositionRepository>();
 
             collection.AddSingleton<ISubscription, Subscription>();
-            collection.AddSingleton<IHostedService, SubscriptionJob>();
+            collection.AddSingleton<IHostedService, SubscriptionBackgroundService>();
         }
 
         public static void AddMongoDbClassMaps(this IServiceCollection services)

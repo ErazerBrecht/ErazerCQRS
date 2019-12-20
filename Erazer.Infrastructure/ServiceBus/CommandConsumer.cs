@@ -13,7 +13,7 @@ namespace Erazer.Infrastructure.ServiceBus
         private readonly ILogger<CommandConsumer<T>> _logger;
         private readonly IMediator _mediator;
 
-        public CommandConsumer(IServiceProvider provider, ILogger<CommandConsumer<T>> logger, IMediator mediator)
+        public CommandConsumer(ILogger<CommandConsumer<T>> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
@@ -21,14 +21,16 @@ namespace Erazer.Infrastructure.ServiceBus
 
         public async Task Consume(ConsumeContext<T> context)
         {
-            // Process command
+            var command = context.Message;
+
             try
             {
-                await _mediator.Send(context.Message);
+                _logger.LogInformation($"Received '{command.GetType().Name}' command from {context.SourceAddress}");
+                await _mediator.Send(command);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Exception when executing command {context.Message}");
+                _logger.LogError(e, $"Exception when executing command {command}");
                 throw;
             }
         }

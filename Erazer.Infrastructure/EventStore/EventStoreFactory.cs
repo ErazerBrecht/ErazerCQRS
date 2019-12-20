@@ -19,12 +19,12 @@ namespace Erazer.Infrastructure.EventStore
             if (string.IsNullOrWhiteSpace(options.Value.ConnectionString))
                 throw new ArgumentNullException(options.Value.ConnectionString, "Connection string is required when setting up a connection with a 'GetEventStore' server");
 
-            _logger.LogInformation($"Building a connection to a 'GetEventStore' server\n\t ConnectionString: {options.Value.ConnectionString}");
+            _logger.LogInformation($"Building a connection to the 'EventStore'");
         }
 
         public IStreamStore Build()
         {
-            var settings = new PostgresStreamStoreSettings(_options.Value.ConnectionString);   
+            var settings = new PostgresStreamStoreSettings(_options.Value.ConnectionString); 
             return new PostgresStreamStore(settings);
         }
     }

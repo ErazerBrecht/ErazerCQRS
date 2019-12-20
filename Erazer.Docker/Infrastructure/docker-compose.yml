@@ -22,10 +22,10 @@ services:
     container_name: mongo-1
     volumes:
       - mongo-1-data:/data/db
-      - ./etc/mongod.conf:/etc/mongod.conf
+      - /etc/mongod.conf:/etc/mongod.conf
     ports:
       - 3000:3000
-    command: ["mongod", "--config", "/etc/mongod.conf", "--port", "3000"]
+    command: ["mongod", "--replSet", "rs0", "--port", "3000"]
   mongo-2:
     image: mongo:4
     container_name: mongo-2
@@ -34,9 +34,14 @@ services:
       - ./etc/mongod.conf:/etc/mongod.conf
     ports:
       - 3001:3001
-    command: ["mongod", "--config", "/etc/mongod.conf", "--port", "3001"]
+    command: ["mongod",  "--replSet", "rs0", "--port", "3001"]
+  mongo-rs:
+    build: ./etc/setup
+    depends_on:
+      - "mongo-1"
+      - "mongo-2"
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: datafyit/rabbitmq:shovel
     ports:
       - 15672:15672
       - 5672:5672

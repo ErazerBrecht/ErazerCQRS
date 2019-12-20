@@ -11,17 +11,24 @@ namespace Erazer.Infrastructure.ServiceBus
         private readonly ICommandBus _bus;
         private readonly ILogger<ServiceBusCommandHost> _logger;
 
-        public ServiceBusCommandHost(ICommandBus bus, ILogger<ServiceBusCommandHost> logger, IApplicationLifetime lifetime, IServiceProvider provider)
+        public ServiceBusCommandHost(ICommandBus bus, ILogger<ServiceBusCommandHost> logger)
         {
             _bus = bus;
             _logger = logger;
-            lifetime.ApplicationStopping.Register(async () => await _bus.Stop());
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await _bus.Start(stoppingToken);
             _logger.LogInformation("Listening for commands");
+        }
+        
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogWarning("Stop listing for commands");
+
+            _bus?.Stop(cancellationToken);
+            return base.StopAsync(cancellationToken);
         }
     }
 }

@@ -68,12 +68,11 @@ namespace Erazer.Infrastructure.MongoDb
            if (_mongoSession?.IsInTransaction != true)
                throw new Exception("Cannot commit when there is no transaction started!");
 
-            return _mongoSession.CommitTransactionAsync();
+           return _mongoSession.CommitTransactionAsync();
         }
 
         public Task Abort()
         {
-            
             if (_mongoSession?.IsInTransaction != true)
                 throw new Exception("Cannot commit when there is no transaction started!");
 
