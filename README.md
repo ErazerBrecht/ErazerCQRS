@@ -1,5 +1,5 @@
 # ErazerCQRS
-My learning steps into the world of CQRS and EventSourcing
+My learning steps into the world of CQRS and EventSourcing in .NET Core (C#)
 
 ## Features
 
