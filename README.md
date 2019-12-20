@@ -7,21 +7,23 @@ My learning steps into the world of CQRS and EventSourcing
   - Read side -> **MongoDb**
     - TODO Validation of 'Queries'
     - TODO Logging with aid of [Mediatr Behaviours](https://github.com/jbogard/MediatR/wiki/Behaviors)
-  - Write side -> Eventsourcing -> [**GetEventStore**](https://geteventstore.com)
+  - Write side -> Eventsourcing -> [**SqlStreamStore**](https://geteventstore.com)
     - TODO Validation of 'Commands'
+    - DDD
     - Caching of Aggregate -> **REDIS**
-	- DDD
   - Decoupling Read side & Write side
-    - Azure Servicebus
-    - Consequence: Eventual Consistency 
+    - Subscription based
+  - Communication 
+    - RabbitMQ -> Multiple applications without tight coupling
+      - Events
+      - Commands
+    - gRPC -> TODO
+      - RPC calls
+   
 
-- TODO Angular (> 4)
-  - Currently in development on a seperate git repo.
-  	- Will become public soon.
-  - Using Angular CLI
-  - Using ngrx-store
-  - Using websockets
-  	- Check issue [#7](/../../issues/7)
+- Angular (> 4)
+  - TODO Upgrade to Angular 9
+  - TODO Enable Ivy
 
 - TODO Docker
 - TODO Authentication and Authorization
