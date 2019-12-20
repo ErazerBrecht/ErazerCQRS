@@ -15,11 +15,14 @@ My learning steps into the world of CQRS and EventSourcing
     - Subscription based
   - Communication 
     - RabbitMQ -> Multiple applications without tight coupling
+      - MassTransit
       - Events
       - Commands
     - gRPC -> TODO
       - RPC calls
-   
+
+- Websockets
+  - SignlarR
 
 - Angular (> 4)
   - TODO Upgrade to Angular 9
