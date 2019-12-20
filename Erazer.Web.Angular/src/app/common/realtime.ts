@@ -1,9 +1,8 @@
-import { WEBSOCKETS_API } from '../configuration/config'
-import { Store } from "@ngrx/store";
-import { Injectable } from "@angular/core";
-import { State } from "../redux/state/state";
+import { Store } from '@ngrx/store';
+import { Injectable } from '@angular/core';
+import { State } from '../redux/state/state';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
-import { READ_API } from "../configuration/config";
+import { READ_API } from '../configuration/config';
 
 @Injectable()
 export class RealTime {
@@ -12,7 +11,7 @@ export class RealTime {
     constructor(private store: Store<State>) {
         this._hubConnection = new HubConnectionBuilder()
             .withUrl(`${READ_API}/events`)
-            .configureLogging(LogLevel.Trace)
+            .configureLogging(LogLevel.Information)
             .build();
     }
 
@@ -24,11 +23,12 @@ export class RealTime {
 
         this._hubConnection.onclose((error: Error) => {
             console.log('WebSocket connection was closed');
-            
-            if (error)
+
+            if (error) {
                 console.log(error.message);
-            else
+            } else {
                 console.log('Unkown reason');
+            }
 
             console.log('Reconnect');
             this.connect();
@@ -40,7 +40,7 @@ export class RealTime {
             })
             .catch(err => {
                 console.log('Error while establishing connection');
-                setTimeout(() => { this.connect() }, 2000);
+                setTimeout(() => { this.connect(); }, 5000);
             });
     }
 

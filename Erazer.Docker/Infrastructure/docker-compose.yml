@@ -8,23 +8,40 @@ services:
       - redis-data:/data
     ports:
       - 6379:6379
-  eventstore:
-    image: eventstore/eventstore
-    environment:
-      - EVENTSTORE_RUN_PROJECTIONS=All
+  sql:
+    image: postgres
+    restart: always
     volumes: 
-      - eventstore-data:/var/lib/eventstore
+      - sql-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: erazercqrs
     ports:
-      - 1113:1113
-      - 2113:2113
-  mongo:
-    image: mongo:4.0.0-rc0-xenial
+      - 5432:5432
+  mongo-1:
+    image: mongo:4
+    container_name: mongo-1
     volumes:
-      - mongo-data:/data/db
+      - mongo-1-data:/data/db
+      - /etc/mongod.conf:/etc/mongod.conf
     ports:
-      - 27017:27017
+      - 3000:3000
+    command: ["mongod", "--replSet", "rs0", "--port", "3000"]
+  mongo-2:
+    image: mongo:4
+    container_name: mongo-2
+    volumes:
+      - mongo-2-data:/data/db
+      - ./etc/mongod.conf:/etc/mongod.conf
+    ports:
+      - 3001:3001
+    command: ["mongod",  "--replSet", "rs0", "--port", "3001"]
+  mongo-rs:
+    build: ./etc/setup
+    depends_on:
+      - "mongo-1"
+      - "mongo-2"
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: datafyit/rabbitmq:shovel
     ports:
       - 15672:15672
       - 5672:5672
@@ -32,6 +49,7 @@ services:
       - rabbit:/var/lib/rabbitmq
 volumes:
   redis-data:
-  mongo-data:
-  eventstore-data:
+  sql-data:
+  mongo-1-data:
+  mongo-2-data:
   rabbit:

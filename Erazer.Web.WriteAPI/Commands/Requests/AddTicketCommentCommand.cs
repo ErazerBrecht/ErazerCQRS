@@ -1,6 +1,5 @@
 ﻿using System;
 using Erazer.Framework.Commands;
-using MediatR;
 
 namespace Erazer.Web.WriteAPI.Commands.Requests
 {

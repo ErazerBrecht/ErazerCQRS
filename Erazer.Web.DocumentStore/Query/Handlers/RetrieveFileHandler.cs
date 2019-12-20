@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Erazer.Web.DocumentStore.Query.Handlers
 {
-    public class RetrieveFileHandler : AsyncRequestHandler<FileRequest, FileContentDto>
+    internal class RetrieveFileHandler : AsyncRequestHandler<FileRequest, FileContentDto>
     {
         private readonly IFileRepository _fileRepository;
 

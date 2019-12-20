@@ -12,7 +12,6 @@ using Erazer.Framework.Commands;
 using Erazer.Messages;
 using Erazer.Messages.Commands;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Transforms;
 using TicketFile = Erazer.Domain.Files.File;
 
 namespace Erazer.Web.WriteAPI.Services

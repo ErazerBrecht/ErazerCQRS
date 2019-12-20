@@ -13,7 +13,6 @@ namespace Erazer.Web.WriteAPI
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseApplicationInsights()
                 .UseUrls("http://localhost:5001");
     }
 }

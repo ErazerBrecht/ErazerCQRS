@@ -9,6 +9,7 @@ using Erazer.Domain.Data.Repositories;
 using Erazer.Domain.Events;
 using Erazer.Domain.Files.Data.DTOs;
 using Erazer.Framework.FrontEnd;
+using Erazer.Infrastructure.MongoDb;
 using Erazer.Messages.IntegrationEvents.Events;
 using Erazer.Messages.IntegrationEvents.Infrastructure;
 using Erazer.Web.ReadAPI.DomainEvents.EventHandlers.Redux;
@@ -21,6 +22,7 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
     public class TicketCreateEventHandler : AsyncNotificationHandler<TicketCreateDomainEvent>
     {
         private readonly IMapper _mapper;
+        private readonly IMongoDbSession _session;
         private readonly ITicketQueryRepository _ticketRepository;
         private readonly IPriorityQueryRepository _priorityRepository;
         private readonly IStatusQueryRepository _statusRepository;
@@ -29,8 +31,9 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
         private readonly IIntegrationEventPublisher _eventPublisher;
 
         public TicketCreateEventHandler(ITicketQueryRepository ticketRepository, ITicketEventQueryRepository eventRepository, IMapper mapper, IWebsocketEmittor websocketEmittor,
-            IIntegrationEventPublisher eventPublisher, IPriorityQueryRepository priorityRepository, IStatusQueryRepository statusRepository)
+            IIntegrationEventPublisher eventPublisher, IPriorityQueryRepository priorityRepository, IStatusQueryRepository statusRepository, IMongoDbSession session)
         {
+            _session = session ?? throw new ArgumentNullException(nameof(session));
             _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));
             _priorityRepository = priorityRepository ?? throw new ArgumentNullException(nameof(priorityRepository));
             _statusRepository = statusRepository ?? throw new ArgumentNullException(nameof(statusRepository));
@@ -72,7 +75,7 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
             };
 
             await AddInDb(ticket, @event);
-            await Task.WhenAll(EmitToFrontEnd(ticket, @event), AddOnBus(ticket, @event));
+            _session.AddSideEffect(() => SideEffects(ticket, @event));
         }
 
         private Task AddInDb(TicketDto ticketDto, TicketEventDto eventDto)
@@ -82,11 +85,18 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
                 _eventRepository.Add(eventDto));
         }
 
+        private Task SideEffects(TicketDto ticketDto, TicketEventDto eventDto)
+        {
+            return Task.WhenAll(
+                EmitToFrontEnd(ticketDto, eventDto),
+                AddOnBus(ticketDto, eventDto)
+            );
+        }
+
         private Task EmitToFrontEnd(TicketDto ticketDto, TicketEventDto eventDto)
         {
             var vm = _mapper.Map<TicketViewModel>(ticketDto);
             vm.Events = new List<TicketEventViewModel> { _mapper.Map<TicketCreatedEventViewModel>(eventDto) };
-
             return _websocketEmittor.Emit(new ReduxTicketCreateAction(vm));
         }
 

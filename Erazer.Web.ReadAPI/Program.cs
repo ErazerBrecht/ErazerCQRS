@@ -16,7 +16,6 @@ namespace Erazer.Web.ReadAPI
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseApplicationInsights()
                 .UseUrls("http://localhost:5000");
     }
 }

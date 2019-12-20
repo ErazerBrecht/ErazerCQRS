@@ -1,10 +1,12 @@
 {
-  "Erazer.Web.DocumentStore": {
-    "commandName": "Project",
-    "launchBrowser": false,
-    "environmentVariables": {
-      "ASPNETCORE_ENVIRONMENT": "Development"
-    },
-    "applicationUrl": "http://localhost:5002/"
+  "profiles": {
+    "Erazer.Web.DocumentStore": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5002/"
+    }
   }
 }

@@ -18,7 +18,7 @@ namespace Erazer.Framework.Domain
 
         public async Task<T> Get<T>(Guid aggregateId) where T : AggregateRoot
         {
-            var events = await _eventStore.Get<T>(aggregateId, -1);
+            var events = await _eventStore.Get<T>(aggregateId, 0);
             var eventList = events as IList<IDomainEvent> ?? events.ToList();
 
             if (!eventList.Any())
@@ -26,15 +26,20 @@ namespace Erazer.Framework.Domain
                 throw new AggregateNotFoundException(typeof(T), aggregateId);
             }
 
-            var aggregate = AggregateFactory.Build<T>();
+            var aggregate = AggregateFactory<T>.Build();
             aggregate.LoadFromHistory(eventList);
             return aggregate;
         }
 
         public Task Save<T>(T aggregate) where T : AggregateRoot
         {
+            var currentVersion = aggregate.Version;
             var changes = aggregate.FlushChanges();
-            return _eventStore.Save<T>(aggregate.Id, changes);
+
+            if (aggregate.Version < 0)
+                throw new NoEventsException(aggregate.Id);
+
+            return _eventStore.Save<T>(aggregate.Id, currentVersion, changes);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Erazer.Domain
         }
 
         // Need of a parameterless constructor to build Aggregate from events!
-        private Ticket() 
+        private Ticket()
         {
             // Register EventHandlers
             Handles<TicketCreateDomainEvent>(Apply);
@@ -72,7 +72,8 @@ namespace Erazer.Domain
 
         #region Domain methods
         /// <summary>
-        /// These methods will appy events to our domain This code should use a ubiquitous language.
+        /// These methods will apply events to our domain
+        /// This code should use a ubiquitous language.
         /// This will make sure even non developers will be able to read the method signature easy!
         /// 
         /// They also handle domain validation

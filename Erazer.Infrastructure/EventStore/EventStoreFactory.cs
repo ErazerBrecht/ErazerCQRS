@@ -1,12 +1,12 @@
 ﻿using System;
 using Erazer.Framework.Factories;
-using EventStore.ClientAPI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SqlStreamStore;
 
 namespace Erazer.Infrastructure.EventStore
 {
-    public class EventStoreFactory : IFactory<IEventStoreConnection>
+    public class EventStoreFactory : IFactory<IStreamStore>
     {
         private readonly IOptions<EventStoreSettings> _options;
         private readonly ILogger<EventStoreFactory> _logger;
@@ -19,31 +19,13 @@ namespace Erazer.Infrastructure.EventStore
             if (string.IsNullOrWhiteSpace(options.Value.ConnectionString))
                 throw new ArgumentNullException(options.Value.ConnectionString, "Connection string is required when setting up a connection with a 'GetEventStore' server");
 
-            _logger.LogInformation($"Building a connection to a 'GetEventStore' server\n\t ConnectionString: {options.Value.ConnectionString}");
+            _logger.LogInformation($"Building a connection to the 'EventStore'");
         }
 
-        public IEventStoreConnection Build()
+        public IStreamStore Build()
         {
-            try
-            {
-                // TODO Use different settings on different env's
-                var settings = ConnectionSettings.Create()
-                                    .SetHeartbeatTimeout(TimeSpan.FromSeconds(30))
-                                    .UseConsoleLogger();
-
-                var connection = EventStoreConnection.Create(_options.Value.ConnectionString, settings);
-
-                connection.ConnectAsync().Wait();
-                connection.GetStreamMetadataAsync("$users").Wait();
-
-                _logger.LogInformation($"Created a succesful connection with the 'GetEventStore' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
-                return connection;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex, $"Could NOT create a succesful connection with the 'GetEventStore' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
-                throw;
-            }
+            var settings = new PostgresStreamStoreSettings(_options.Value.ConnectionString); 
+            return new PostgresStreamStore(settings);
         }
     }
 }

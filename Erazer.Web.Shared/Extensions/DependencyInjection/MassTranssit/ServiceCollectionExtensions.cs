@@ -3,7 +3,6 @@ using Erazer.Infrastructure.ServiceBus;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit.Commands;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit.Events;
 using MassTransit;
-using MassTransit.ExtensionsDependencyInjectionIntegration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit
@@ -24,7 +23,6 @@ namespace Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit
             var builder = new EventBusBuilder(services, settings);
 
             services.AddSingleton(settings);
-            services.AddMassTransit();
             services.AddSingleton(provider => EventBusFactory.Build(cfg =>
             {
                 cfg.Host(new Uri(settings.ConnectionString), h =>
@@ -52,7 +50,6 @@ namespace Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit
             var builder = new CommandBusBuilder(services, settings);
 
             services.AddSingleton(settings);
-            services.AddMassTransit();
             services.AddSingleton(provider => CommandBusFactory.Build(cfg =>
             {
                 cfg.Host(new Uri(settings.ConnectionString), h =>

@@ -6,6 +6,7 @@ using Erazer.Domain.Data.DTOs.Events;
 using Erazer.Domain.Data.Repositories;
 using Erazer.Domain.Events;
 using Erazer.Framework.FrontEnd;
+using Erazer.Infrastructure.MongoDb;
 using Erazer.Messages.IntegrationEvents.Events;
 using Erazer.Messages.IntegrationEvents.Infrastructure;
 using Erazer.Web.ReadAPI.DomainEvents.EventHandlers.Redux;
@@ -17,6 +18,7 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
     public class TicketPriorityEventHandler : AsyncNotificationHandler<TicketPriorityDomainEvent>
     {
         private readonly IMapper _mapper;
+        private readonly IMongoDbSession _session;
         private readonly ITicketQueryRepository _ticketRepository;
         private readonly IPriorityQueryRepository _priorityRepository;
         private readonly ITicketEventQueryRepository _eventRepository;
@@ -24,8 +26,9 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
         private readonly IIntegrationEventPublisher _eventPublisher;
 
         public TicketPriorityEventHandler(ITicketQueryRepository ticketRepository, IPriorityQueryRepository priorityRepository, ITicketEventQueryRepository eventRepository, IMapper mapper, 
-            IWebsocketEmittor websocketEmittor, IIntegrationEventPublisher eventPublisher)
+            IWebsocketEmittor websocketEmittor, IIntegrationEventPublisher eventPublisher, IMongoDbSession session)
         {
+            _session = session ?? throw new ArgumentNullException(nameof(session));
             _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));
             _priorityRepository = priorityRepository ?? throw new ArgumentNullException(nameof(priorityRepository));
             _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
@@ -59,13 +62,17 @@ namespace Erazer.Web.ReadAPI.DomainEvents.EventHandlers
             };
 
             await UpdateDb(ticket, ticketEvent);
-            await Task.WhenAll(EmitToFrontEnd(ticketEvent), AddOnBus(ticket, ticketEvent));
-
+            _session.AddSideEffect(() => SideEffects(ticket, ticketEvent));
         }
 
         private Task UpdateDb(TicketDto ticketDto, PriorityEventDto eventDto)
         {
             return Task.WhenAll(_ticketRepository.Update(ticketDto), _eventRepository.Add(eventDto));
+        }
+
+        private Task SideEffects(TicketDto ticket, PriorityEventDto ticketEvent)
+        {
+            return Task.WhenAll(EmitToFrontEnd(ticketEvent), AddOnBus(ticket, ticketEvent));
         }
 
         private Task EmitToFrontEnd(PriorityEventDto eventDto)

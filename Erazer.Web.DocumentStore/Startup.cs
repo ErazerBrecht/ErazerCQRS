@@ -3,19 +3,20 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using MediatR;
 using AutoMapper;
 using Erazer.Infrastructure.MongoDb;
 using MongoDB.Driver;
 using Erazer.Infrastructure.DocumentStore;
 using Erazer.Infrastructure.DocumentStore.Repositories;
+using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ServiceBus;
 using Erazer.Messages;
 using Erazer.Messages.Commands;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
 using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit.Commands;
+using Microsoft.Extensions.Hosting;
 
 namespace Erazer.Web.DocumentStore
 {
@@ -36,6 +37,7 @@ namespace Erazer.Web.DocumentStore
             services.AddSingleton(_configuration);
             services.Configure<MongoDbSettings>(_configuration.GetSection("MongoDbSettings"));
 
+            services.AddSingletonFactory<ITelemetry, TelemeteryFactory>();
             services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
 
             services.AddAutoMapper();
@@ -43,11 +45,10 @@ namespace Erazer.Web.DocumentStore
 
             services.AddScoped<IFileRepository, FileRepository>();
 
-
             // Add MVC
-            services.AddCors();
-            services.AddMvcCore().AddJsonFormatters();
+            services.AddControllers();
 
+            // Add ServiceBus
             services
                 .AddCommandBus(x =>
                 {
@@ -63,12 +64,14 @@ namespace Erazer.Web.DocumentStore
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            
+            app.UseRouting();
 
             app.UseCors(builder =>
             {
@@ -77,7 +80,11 @@ namespace Erazer.Web.DocumentStore
                        .AllowAnyHeader()
                        .SetPreflightMaxAge(TimeSpan.FromHours(1));
             });
-            app.UseMvc();
+            
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }

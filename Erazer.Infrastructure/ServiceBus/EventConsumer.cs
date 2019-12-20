@@ -20,14 +20,15 @@ namespace Erazer.Infrastructure.ServiceBus
 
         public async Task Consume(ConsumeContext<T> context)
         {
-            // Process event
+            var @event = context.Message;
             try
             {
-                await _mediator.Publish(context.Message);
+                _logger.LogInformation($"Received '{@event.GetType().Name}' command from {context.SourceAddress}");
+                await _mediator.Publish(@event);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Exception when executing event {context.Message}");
+                _logger.LogError(e, $"Exception when executing event {@event}");
                 throw;
             }
         }

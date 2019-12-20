@@ -1,5 +1,4 @@
 ﻿using Erazer.Framework.Factories;
-using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
@@ -7,6 +6,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Core.Configuration;
 using MongoDB.Driver.Core.Events;
 using System;
+using Erazer.Infrastructure.Logging;
 
 namespace Erazer.Infrastructure.MongoDb
 {
@@ -14,13 +14,13 @@ namespace Erazer.Infrastructure.MongoDb
     {
         private readonly IOptions<MongoDbSettings> _options;
         private readonly ILogger<IMongoDatabase> _logger;
-        private readonly TelemetryClient _telemetryClient;
+        private readonly ITelemetry _telemetryClient;
 
-        public MongoDbFactory(IOptions<MongoDbSettings> options, ILogger<IMongoDatabase> logger, TelemetryClient telemeteryClient)
+        public MongoDbFactory(IOptions<MongoDbSettings> options, ILogger<IMongoDatabase> logger, ITelemetry telemetryClient)
         {
             _options = options;
             _logger = logger;
-            _telemetryClient = telemeteryClient;
+            _telemetryClient = telemetryClient;
 
             if (string.IsNullOrWhiteSpace(options.Value.ConnectionString))
                 throw new MongoConfigurationException("Connection string is required when setting up a connection with a MongoDb server!");
@@ -32,32 +32,29 @@ namespace Erazer.Infrastructure.MongoDb
 
         public IMongoDatabase Build()
         {
-            var url = new Uri(_options.Value.ConnectionString);
-            var client = new MongoClient(new MongoClientSettings()
-            {
-                Server = new MongoServerAddress(url.Host, url.Port),
-                ClusterConfigurator = AddTelemeteryLogging()
-            });
+            var settings = MongoClientSettings.FromUrl(new MongoUrl(_options.Value.ConnectionString));
+            settings.ClusterConfigurator = AddTelemetryLogging();
 
+            var client = new MongoClient(settings);
             var db = client.GetDatabase(_options.Value.Database);
 
-            // Check if MongoDb connection is succesful created!
+            // Check if MongoDb connection is successful created!
             try
             {
                 db.RunCommandAsync((Command<BsonDocument>) "{ping:1}").Wait();
-                _logger.LogInformation($"Created a succesful connection with the 'MongoDb' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t Database: {_options.Value.Database}");
+                _logger.LogInformation($"Created a successful connection with the 'MongoDb' server");
             }
             catch
             {
-                var ex = new MongoClientException($"Could NOT create a succesful connection with 'MongoDb' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t");
-                _logger.LogCritical(ex, $"Could NOT create a succesful connection with the 'MongoDb' server\n\t ConnectionString: {_options.Value.ConnectionString}\n\t Database: {_options.Value.Database}");
+                var ex = new MongoClientException($"Could NOT create a successful connection with 'MongoDb'");
+                _logger.LogCritical(ex, $"Could NOT create a successful connection with the 'MongoDb'");
                 throw ex;
             }
 
             return db;
         }
 
-        private Action<ClusterBuilder> AddTelemeteryLogging()
+        private Action<ClusterBuilder> AddTelemetryLogging()
         {
             return cb =>
             {
@@ -69,11 +66,11 @@ namespace Erazer.Infrastructure.MongoDb
                 cb.Subscribe<CommandSucceededEvent>(e =>
                 {
                     if (ShouldCommandEventBeLogged(e.CommandName))
-                        _telemetryClient.TrackDependency("MongoDB", "Command succeeded", e.CommandName, DateTime.Now, e.Duration, true);
+                        _telemetryClient.TrackDependency("DB", "MongoDB", $"Command succeeded {e.CommandName}", DateTime.Now, e.Duration, true);
                 });
                 cb.Subscribe<CommandFailedEvent>(e =>
                 {
-                    _telemetryClient.TrackDependency("MongoDB", "Command failed", $"{e.CommandName} - {e.ToString()}", DateTime.Now.Subtract(e.Duration), e.Duration, false);
+                    _telemetryClient.TrackDependency("DB", "MongoDB", $"Command failed {e.CommandName} - {e.ToString()}", DateTime.Now, e.Duration, false);
                 });
             };
         }

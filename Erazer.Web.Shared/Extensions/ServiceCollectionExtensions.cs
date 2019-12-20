@@ -1,21 +1,25 @@
-﻿using Erazer.Framework.Domain;
-using Erazer.Infrastructure.EventStore.PersistedSubscription;
-using Erazer.Infrastructure.MongoDb.Base;
+﻿using Erazer.Infrastructure.MongoDb.Base;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Reflection;
+using Erazer.Infrastructure.EventStore;
+using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.ReadStore.ClassMaps;
+using Erazer.Infrastructure.ReadStore.Repositories;
 using Microsoft.Extensions.Hosting;
 
 namespace Erazer.Web.Shared.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddSubscriber<T>(this IServiceCollection collection) where T: AggregateRoot
+        public static void AddSubscriber(this IServiceCollection collection)
         {
-            collection.AddSingleton(typeof(ISubscription<T>), typeof(EventStoreSubscription<T>));
-            collection.AddSingleton(typeof(IHostedService), typeof(PersistedSubscriptionHost<T>));
+            collection.AddSingleton<IEventTypeMapping, EventTypeMapping>();
+            collection.AddSingleton<IPositionRepository, PositionRepository>();
+
+            collection.AddSingleton<ISubscription, Subscription>();
+            collection.AddSingleton<IHostedService, SubscriptionBackgroundService>();
         }
 
         public static void AddMongoDbClassMaps(this IServiceCollection services)
