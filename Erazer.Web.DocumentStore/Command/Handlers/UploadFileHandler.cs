@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Erazer.Domain.Files.Data.DTOs;
 using Erazer.Infrastructure.DocumentStore;
-using Erazer.Messages.Commands;
 using Erazer.Messages.Commands.Models;
 using MediatR;
 

@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Erazer.Messages;
 using Erazer.Messages.Commands;
 using Erazer.Messages.Commands.Infrastructure;
 using Erazer.Messages.Commands.Models;
