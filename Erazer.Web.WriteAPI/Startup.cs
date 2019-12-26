@@ -15,7 +15,6 @@ using Erazer.Infrastructure.Redis;
 using Erazer.Infrastructure.ServiceBus;
 using Erazer.Web.WriteAPI.Services;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
-using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
 using Microsoft.Extensions.Hosting;
 using SqlStreamStore;
 
@@ -36,7 +35,7 @@ namespace Erazer.Web.WriteAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add 'Configration'
+            // Add 'Configuration'
             services.AddSingleton(_configuration);
             services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
             services.Configure<RedisSettings>(_configuration.GetSection("CacheSettings"));
@@ -47,9 +46,10 @@ namespace Erazer.Web.WriteAPI
             // Add 'Infrastructure' Providers
             services.AddSingletonFactory<IStreamStore, EventStoreFactory>();
             services.AddSingletonFactory<IRedisClientsManager, RedisFactory>();
-            services.AddCommandBus(x =>
+            services.AddBus(x =>
             {
                 x.ConnectionString = _busSettings.ConnectionString;
+                x.ConnectionName = "Erazer.Web.WriteAPI";
                 x.UserName = _busSettings.UserName;
                 x.Password = _busSettings.Password;
             });

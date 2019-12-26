@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-namespace Erazer.Messages.IntegrationEvents.Events
+
+namespace Erazer.Messages.IntegrationEvents.Models
 {
     public class TicketCreatedIntegrationEvent : IIntegrationEvent
     {

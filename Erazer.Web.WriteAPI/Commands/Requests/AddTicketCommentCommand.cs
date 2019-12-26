@@ -1,5 +1,5 @@
 ﻿using System;
-using Erazer.Framework.Commands;
+using Erazer.Messages.Commands;
 
 namespace Erazer.Web.WriteAPI.Commands.Requests
 {

@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Erazer.Framework.Commands;
-using Erazer.Messages;
 using Erazer.Messages.Commands;
+using Erazer.Messages.Commands.Infrastructure;
+using Erazer.Messages.Commands.Models;
 using SixLabors.ImageSharp.Processing;
 using TicketFile = Erazer.Domain.Files.File;
 
@@ -28,7 +28,7 @@ namespace Erazer.Web.WriteAPI.Services
         public async Task<IEnumerable<TicketFile>> UploadFiles(Guid userId, params IFormFile[] formFiles)
         {
             var files = GenerateFileUploadCommands(userId, formFiles).ToList();
-            await _publisher.Publish<UploadFileCommand>(files, CommandBusConstants.ErazerDocumentStore);
+            await _publisher.Publish<UploadFileCommand>(files, CommandBusEndPoints.ErazerDocumentStore);
 
             return files.Select(f => new TicketFile(f.Id, f.Name, f.Type, f.Data.Length, f.Created, f.UserId));
         }

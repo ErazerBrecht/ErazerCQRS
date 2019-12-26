@@ -12,6 +12,13 @@ namespace Erazer.Infrastructure.Logging
             IDictionary<string, string> properties = null,
             IDictionary<string, double> metrics = null);
 
+        void TrackSpan(
+            string name,
+            string data,
+            DateTimeOffset startTime,
+            TimeSpan duration,
+            bool success);
+        
         void TrackDependency(
             string dependencyTypeName,
             string dependencyName,

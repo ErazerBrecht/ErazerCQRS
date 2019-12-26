@@ -1,7 +1,6 @@
 ﻿using System;
-using Erazer.Framework.Commands;
 
-namespace Erazer.Messages.Commands
+namespace Erazer.Messages.Commands.Models
 {
     public class UploadFileCommand: ICommand
     {
