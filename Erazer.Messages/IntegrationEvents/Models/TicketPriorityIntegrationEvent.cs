@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Erazer.Messages.IntegrationEvents.Events
+namespace Erazer.Messages.IntegrationEvents.Models
 {
-    public class TicketStatusIntegrationEvent : IIntegrationEvent
+    public class TicketPriorityIntegrationEvent : IIntegrationEvent
     {
-        public string StatusId { get; }
-        public string StatusName { get; }
+        public string PriorityId { get; }
+        public string PriorityName { get; }
 
         public string TicketId { get; }
         public string TicketTitle { get; }
@@ -16,11 +16,11 @@ namespace Erazer.Messages.IntegrationEvents.Events
         public string UserId { get; }
 
 
-        public TicketStatusIntegrationEvent(string statusId, string statusName, string ticketId, string ticketTitle,
+        public TicketPriorityIntegrationEvent(string priorityId, string priorityName, string ticketId, string ticketTitle,
             string createEventId, DateTime created, string userId)
         {
-            StatusId = statusId;
-            StatusName = statusName;
+            PriorityId = priorityId;
+            PriorityName = priorityName;
             TicketId = ticketId;
             TicketTitle = ticketTitle;
             CreateEventId = createEventId;

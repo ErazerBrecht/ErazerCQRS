@@ -11,11 +11,9 @@ using Erazer.Infrastructure.DocumentStore;
 using Erazer.Infrastructure.DocumentStore.Repositories;
 using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ServiceBus;
-using Erazer.Messages;
 using Erazer.Messages.Commands;
+using Erazer.Messages.Commands.Models;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
-using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
-using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit.Commands;
 using Microsoft.Extensions.Hosting;
 
 namespace Erazer.Web.DocumentStore
@@ -49,18 +47,18 @@ namespace Erazer.Web.DocumentStore
             services.AddControllers();
 
             // Add ServiceBus
-            services
-                .AddCommandBus(x =>
+            services.AddBus(x =>
+            {
+                x.ConnectionString = _busSettings.ConnectionString;
+                x.ConnectionName = "Erazer.Web.DocumentStore";
+                x.UserName = _busSettings.UserName;
+                x.Password = _busSettings.Password;
+                x.AddCommands(y =>
                 {
-                    x.ConnectionString = _busSettings.ConnectionString;
-                    x.UserName = _busSettings.UserName;
-                    x.Password = _busSettings.Password;
-                })
-                .AddCommandListeners(x =>
-                {
-                    x.CommandQueueName = CommandBusConstants.ErazerDocumentStore;
-                    x.AddCommandListener<UploadFileCommand>();
+                    y.QueueName = CommandBusEndPoints.ErazerDocumentStore;
+                    y.AddCommandListener<UploadFileCommand>();
                 });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,21 +68,18 @@ namespace Erazer.Web.DocumentStore
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.UseRouting();
 
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:4200")            // Load this from ENV or Config file
-                       .WithMethods("GET")
-                       .AllowAnyHeader()
-                       .SetPreflightMaxAge(TimeSpan.FromHours(1));
+                builder.WithOrigins("http://localhost:4200") // Load this from ENV or Config file
+                    .WithMethods("GET")
+                    .AllowAnyHeader()
+                    .SetPreflightMaxAge(TimeSpan.FromHours(1));
             });
-            
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDefaultControllerRoute();
-            });
+
+            app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
         }
     }
 }

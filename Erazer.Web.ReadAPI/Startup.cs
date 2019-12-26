@@ -19,7 +19,6 @@ using Erazer.Infrastructure.ReadStore.Repositories;
 using Erazer.Infrastructure.ServiceBus;
 using Erazer.Web.Shared.Extensions;
 using Erazer.Web.Shared.Extensions.DependencyInjection;
-using Erazer.Web.Shared.Extensions.DependencyInjection.MassTranssit;
 using Microsoft.Extensions.Hosting;
 using SqlStreamStore;
 
@@ -76,7 +75,7 @@ namespace Erazer.Web.ReadAPI
             services.AddSubscriber();
             
             // ServiceBus
-            services.AddEventBus(x =>
+            services.AddBus(x =>
             {
                 x.ConnectionString = _busSettings.ConnectionString;
                 x.UserName = _busSettings.UserName;
