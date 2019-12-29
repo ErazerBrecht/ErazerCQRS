@@ -11,7 +11,7 @@ using MediatR;
 
 namespace Erazer.Syncing.Handlers
 {
-    public class TicketCommentEventHandler : INotificationHandler<TicketCommentDomainEvent>
+    internal class TicketCommentEventHandler : INotificationHandler<TicketCommentDomainEvent>
     {
         private readonly ITicketEventQueryRepository _repository;
         private readonly IWebsocketEmitter _websocketEmitter;

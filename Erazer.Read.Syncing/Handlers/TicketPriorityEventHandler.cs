@@ -14,7 +14,7 @@ using MediatR;
 
 namespace Erazer.Syncing.Handlers
 {
-    public class TicketPriorityEventHandler : INotificationHandler<TicketPriorityDomainEvent>
+    internal class TicketPriorityEventHandler : INotificationHandler<TicketPriorityDomainEvent>
     {
         private readonly IMapper _mapper;
         private readonly ITicketQueryRepository _ticketRepository;

@@ -14,7 +14,7 @@ using MediatR;
 
 namespace Erazer.Syncing.Handlers
 {
-    public class TicketStatusEventHandler : INotificationHandler<TicketStatusDomainEvent>
+    internal class TicketStatusEventHandler : INotificationHandler<TicketStatusDomainEvent>
     {
         private readonly IMapper _mapper;
         private readonly IWebsocketEmitter _websocketEmitter;
