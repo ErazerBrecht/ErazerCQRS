@@ -15,13 +15,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.WriteAPI", "Eraz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.Shared", "Erazer.Web.Shared\Erazer.Web.Shared.csproj", "{F01C26ED-9439-4368-A542-E1E85DF56376}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.DocumentStore", "Erazer.Web.DocumentStore\Erazer.Web.DocumentStore.csproj", "{EFDD2243-C0EE-4B22-906F-092F0348930C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.DocumentStore.Web", "Erazer.DocumentStore.Web\Erazer.DocumentStore.Web.csproj", "{EFDD2243-C0EE-4B22-906F-092F0348930C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Messages", "Erazer.Messages\Erazer.Messages.csproj", "{92EED0F5-ADB4-4BE6-B9DE-13817BE3D202}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Jobs", "Erazer.Jobs\Erazer.Jobs.csproj", "{E043A67B-5A44-42C7-9981-208C8C4C94DC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Migrations", "Erazer.Migrations\Erazer.Migrations.csproj", "{DEA7DAD6-498A-458F-8CB8-FD32796F90C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.DataSyncing", "Erazer.DataSyncing\Erazer.DataSyncing.csproj", "{C6A79619-710C-476F-B9A4-6FC22EDF4B68}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Erazer.DocumentStore", "Erazer.DocumentStore", "{0F7D7F53-D68F-4EFB-B933-0A668683DBE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.DocumentStore.Application", "Erazer.DocumentStore.Application\Erazer.DocumentStore.Application.csproj", "{8CF423C3-DB06-4469-B108-42B5FFBD50AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,11 +75,23 @@ Global
 		{DEA7DAD6-498A-458F-8CB8-FD32796F90C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEA7DAD6-498A-458F-8CB8-FD32796F90C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEA7DAD6-498A-458F-8CB8-FD32796F90C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6A79619-710C-476F-B9A4-6FC22EDF4B68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6A79619-710C-476F-B9A4-6FC22EDF4B68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6A79619-710C-476F-B9A4-6FC22EDF4B68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6A79619-710C-476F-B9A4-6FC22EDF4B68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CF423C3-DB06-4469-B108-42B5FFBD50AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CF423C3-DB06-4469-B108-42B5FFBD50AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CF423C3-DB06-4469-B108-42B5FFBD50AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CF423C3-DB06-4469-B108-42B5FFBD50AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71BBA406-7736-4F57-A9EA-725C558D428D}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8CF423C3-DB06-4469-B108-42B5FFBD50AB} = {0F7D7F53-D68F-4EFB-B933-0A668683DBE3}
+		{EFDD2243-C0EE-4B22-906F-092F0348930C} = {0F7D7F53-D68F-4EFB-B933-0A668683DBE3}
 	EndGlobalSection
 EndGlobal

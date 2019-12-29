@@ -1,12 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Erazer.Web.DocumentStore</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Erazer.DocumentStore.Application\Erazer.DocumentStore.Application.csproj" />
     <ProjectReference Include="..\Erazer.Infrastructure\Erazer.Infrastructure.csproj" />
-    <ProjectReference Include="..\Erazer.Messages\Erazer.Messages.csproj" />
     <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />
   </ItemGroup>
 

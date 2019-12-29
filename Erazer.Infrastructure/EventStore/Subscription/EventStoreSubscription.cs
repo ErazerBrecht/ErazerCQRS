@@ -16,7 +16,6 @@ namespace Erazer.Infrastructure.EventStore.Subscription
         private readonly IEventStore _eventStore;
         private readonly IPositionRepository _positionRepository;
         private readonly ITelemetry _telemetryClient;
-        private readonly IEventTypeMapping _eventMap;
         private readonly IServiceProvider _provider;
         private readonly ILogger<Subscription> _logger;
 
@@ -29,7 +28,6 @@ namespace Erazer.Infrastructure.EventStore.Subscription
             _eventStore = eventStore;
             _positionRepository = positionRepository;
             _telemetryClient = telemetryClient;
-            _eventMap = eventMap;
             _provider = provider;
             _logger = logger;
         }
