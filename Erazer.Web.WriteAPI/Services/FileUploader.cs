@@ -1,17 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats.Png;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Erazer.Messages.Commands;
+﻿using Erazer.Messages.Commands;
 using Erazer.Messages.Commands.Infrastructure;
 using Erazer.Messages.Commands.Models;
-using SixLabors.ImageSharp.Processing;
 using TicketFile = Erazer.Domain.Files.File;
 
 namespace Erazer.Web.WriteAPI.Services

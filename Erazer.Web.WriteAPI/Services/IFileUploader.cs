@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Erazer.Domain.Files;
+﻿using Erazer.Domain.Files;
 
 namespace Erazer.Web.WriteAPI.Services
 {

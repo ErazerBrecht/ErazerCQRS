@@ -1,6 +1,4 @@
-﻿using Erazer.Domain.Data.DTOs;
-using Erazer.Infrastructure.MongoDb.Base;
-using MongoDB.Bson.Serialization;
+﻿using Erazer.Infrastructure.MongoDb.Base;
 
 namespace Erazer.Infrastructure.ReadStore.ClassMaps
 {

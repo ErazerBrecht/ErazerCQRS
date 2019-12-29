@@ -1,10 +1,4 @@
-﻿using System;
-using Erazer.Framework.Factories;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using SqlStreamStore;
-
-namespace Erazer.Infrastructure.EventStore
+﻿namespace Erazer.Infrastructure.EventStore
 {
     public class EventStoreFactory : IFactory<IStreamStore>
     {

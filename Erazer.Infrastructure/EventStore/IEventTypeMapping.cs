@@ -1,7 +1,4 @@
-﻿using System;
-using Erazer.Framework.Events;
-
-namespace Erazer.Infrastructure.EventStore
+﻿namespace Erazer.Infrastructure.EventStore
 {
     public interface IEventTypeMapping
     {

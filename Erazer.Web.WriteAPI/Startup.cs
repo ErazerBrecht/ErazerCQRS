@@ -1,22 +1,7 @@
-﻿using System;
-using AutoMapper;
-using Erazer.Framework.Cache;
+﻿using Erazer.Framework.Cache;
 using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
-using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using ServiceStack.Redis;
-using Erazer.Infrastructure.EventStore;
-using Erazer.Infrastructure.Logging;
-using Erazer.Infrastructure.Redis;
-using Erazer.Infrastructure.ServiceBus;
 using Erazer.Web.WriteAPI.Services;
-using Erazer.Web.Shared.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using SqlStreamStore;
 
 namespace Erazer.Web.WriteAPI
 {

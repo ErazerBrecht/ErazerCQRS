@@ -1,11 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Erazer.Infrastructure.Logging;
+﻿using Erazer.Infrastructure.Logging;
 using Erazer.Messages.IntegrationEvents;
-using MassTransit;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Erazer.Infrastructure.ServiceBus.Events
 {

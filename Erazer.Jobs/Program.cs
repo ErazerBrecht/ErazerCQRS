@@ -1,12 +1,4 @@
-using System;
-using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
-using Erazer.Infrastructure.ServiceBus;
 using Erazer.Messages.IntegrationEvents.Models;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Erazer.Jobs
 {

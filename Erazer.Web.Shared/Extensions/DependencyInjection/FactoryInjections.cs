@@ -1,6 +1,4 @@
-﻿using System;
-using Erazer.Framework.Factories;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Erazer.Framework.Factories;
 
 namespace Erazer.Web.Shared.Extensions.DependencyInjection
 {

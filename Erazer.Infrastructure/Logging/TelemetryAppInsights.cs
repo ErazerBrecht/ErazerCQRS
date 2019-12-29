@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.ApplicationInsights;
-
-namespace Erazer.Infrastructure.Logging
+﻿namespace Erazer.Infrastructure.Logging
 {
     public class TelemetryAppInsights : ITelemetry
     {

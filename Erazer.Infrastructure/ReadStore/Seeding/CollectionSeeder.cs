@@ -6,6 +6,7 @@ namespace Erazer.Infrastructure.ReadStore.Seeding
 {
     public static class CollectionSeeder
     {
+        // TODO Use reflection to get all 'IProjection' classes...
         public static async Task Seed(IMongoDatabase db)
         {
             var collections = await (await db.ListCollectionsAsync()).ToListAsync();
@@ -14,6 +15,9 @@ namespace Erazer.Infrastructure.ReadStore.Seeding
             if (!collectionNames.Contains("Position"))
                 await db.CreateCollectionAsync("Position");
 
+            if (!collectionNames.Contains("TicketList"))
+                await db.CreateCollectionAsync("TicketList");
+            
             if (!collectionNames.Contains("Tickets"))
                 await db.CreateCollectionAsync("Tickets");
 

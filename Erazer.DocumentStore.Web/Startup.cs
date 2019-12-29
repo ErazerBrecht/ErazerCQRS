@@ -1,20 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using MediatR;
-using AutoMapper;
-using Erazer.Infrastructure.MongoDb;
-using MongoDB.Driver;
-using Erazer.Infrastructure.DocumentStore;
-using Erazer.Infrastructure.DocumentStore.Repositories;
-using Erazer.Infrastructure.Logging;
-using Erazer.Infrastructure.ServiceBus;
+﻿using Erazer.Infrastructure.DocumentStore;
 using Erazer.Messages.Commands;
 using Erazer.Messages.Commands.Models;
-using Erazer.Web.Shared.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace Erazer.Web.DocumentStore
 {

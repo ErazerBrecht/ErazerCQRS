@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore;
-
-namespace Erazer.Web.WriteAPI
+﻿namespace Erazer.Web.WriteAPI
 {
     public class Program
     {

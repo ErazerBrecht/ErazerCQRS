@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
-
-namespace Erazer.Web.WriteAPI.ViewModels
+﻿namespace Erazer.Web.WriteAPI.ViewModels
 {
     public class NewTicketViewModel
     {

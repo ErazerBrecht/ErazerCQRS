@@ -1,16 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Erazer.Framework.Events;
-using Erazer.Framework.Domain;
-using Erazer.Infrastructure.EventStore.Subscription;
+﻿using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.Logging;
-using Newtonsoft.Json;
-using SqlStreamStore;
-using SqlStreamStore.Infrastructure;
-using SqlStreamStore.Streams;
 
 namespace Erazer.Infrastructure.EventStore
 {

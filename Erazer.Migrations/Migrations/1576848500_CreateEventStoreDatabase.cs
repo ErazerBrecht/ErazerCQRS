@@ -1,10 +1,4 @@
-﻿using System;
-using Erazer.Infrastructure.EventStore;
-using FluentMigrator;
-using Microsoft.Extensions.Options;
-using Npgsql;
-
-namespace Erazer.Migrations.Migrations
+﻿namespace Erazer.Migrations.Migrations
 {
     [Migration(1576848500)]
     public class CreateEventStoreDatabase : Migration

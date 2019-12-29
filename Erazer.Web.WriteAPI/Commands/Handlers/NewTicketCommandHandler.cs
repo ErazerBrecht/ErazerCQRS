@@ -1,8 +1,6 @@
-﻿using System.Threading.Tasks;
-using Erazer.Domain;
+﻿using Erazer.Domain;
 using Erazer.Framework.Domain;
 using Erazer.Web.WriteAPI.Commands.Requests;
-using MediatR;
 
 namespace Erazer.Web.WriteAPI.Commands.Handlers
 {

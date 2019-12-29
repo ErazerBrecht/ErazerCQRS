@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Erazer.Infrastructure.Logging;
+﻿using Erazer.Infrastructure.Logging;
 using Erazer.Messages.IntegrationEvents;
 using Erazer.Messages.IntegrationEvents.Infrastructure;
-using MassTransit;
 
 namespace Erazer.Infrastructure.ServiceBus.Events
 {

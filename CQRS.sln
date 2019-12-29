@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Infrastructure", "Er
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Framework", "Erazer.Framework\Erazer.Framework.csproj", "{48FF42D1-2EED-4334-8030-CC1326FFE65B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.ReadAPI", "Erazer.Web.ReadAPI\Erazer.Web.ReadAPI.csproj", "{8526C618-B58D-49EA-BBD8-4787E3E09119}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Read.Web", "Erazer.Read.Web\Erazer.Read.Web.csproj", "{8526C618-B58D-49EA-BBD8-4787E3E09119}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Web.WriteAPI", "Erazer.Web.WriteAPI\Erazer.Web.WriteAPI.csproj", "{855EAD6C-7CB2-4DE6-9496-F0DBB2C05C82}"
 EndProject
@@ -23,11 +23,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erazer.Jobs", "Erazer.Jobs\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Migrations", "Erazer.Migrations\Erazer.Migrations.csproj", "{DEA7DAD6-498A-458F-8CB8-FD32796F90C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.DataSyncing", "Erazer.DataSyncing\Erazer.DataSyncing.csproj", "{C6A79619-710C-476F-B9A4-6FC22EDF4B68}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Read.Syncing", "Erazer.Read.Syncing\Erazer.Read.Syncing.csproj", "{C6A79619-710C-476F-B9A4-6FC22EDF4B68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Erazer.DocumentStore", "Erazer.DocumentStore", "{0F7D7F53-D68F-4EFB-B933-0A668683DBE3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.DocumentStore.Application", "Erazer.DocumentStore.Application\Erazer.DocumentStore.Application.csproj", "{8CF423C3-DB06-4469-B108-42B5FFBD50AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Erazer.Read", "Erazer.Read", "{A7E19D2F-A29F-4C82-AE16-4E071F80306F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Read.Data", "Erazer.Read.Data\Erazer.Read.Data.csproj", "{EA511D18-769D-4156-827F-708541F9310F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Read.Application", "Erazer.Read.Application\Erazer.Read.Application.csproj", "{9A964FE6-C771-4A9E-987F-2A65DBD0EB3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Read.ViewModels", "Erazer.Read.ViewModels\Erazer.Read.ViewModels.csproj", "{EFB089A1-462B-4F41-BF03-96446B2671F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Read.Mapping", "Erazer.Read.Mapping\Erazer.Read.Mapping.csproj", "{D32978B9-5EC5-4647-A248-00E647E5E992}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +93,22 @@ Global
 		{8CF423C3-DB06-4469-B108-42B5FFBD50AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CF423C3-DB06-4469-B108-42B5FFBD50AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CF423C3-DB06-4469-B108-42B5FFBD50AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA511D18-769D-4156-827F-708541F9310F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA511D18-769D-4156-827F-708541F9310F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA511D18-769D-4156-827F-708541F9310F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA511D18-769D-4156-827F-708541F9310F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A964FE6-C771-4A9E-987F-2A65DBD0EB3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A964FE6-C771-4A9E-987F-2A65DBD0EB3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A964FE6-C771-4A9E-987F-2A65DBD0EB3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A964FE6-C771-4A9E-987F-2A65DBD0EB3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFB089A1-462B-4F41-BF03-96446B2671F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFB089A1-462B-4F41-BF03-96446B2671F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFB089A1-462B-4F41-BF03-96446B2671F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFB089A1-462B-4F41-BF03-96446B2671F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D32978B9-5EC5-4647-A248-00E647E5E992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D32978B9-5EC5-4647-A248-00E647E5E992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D32978B9-5EC5-4647-A248-00E647E5E992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D32978B9-5EC5-4647-A248-00E647E5E992}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,5 +119,11 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8CF423C3-DB06-4469-B108-42B5FFBD50AB} = {0F7D7F53-D68F-4EFB-B933-0A668683DBE3}
 		{EFDD2243-C0EE-4B22-906F-092F0348930C} = {0F7D7F53-D68F-4EFB-B933-0A668683DBE3}
+		{EA511D18-769D-4156-827F-708541F9310F} = {A7E19D2F-A29F-4C82-AE16-4E071F80306F}
+		{C6A79619-710C-476F-B9A4-6FC22EDF4B68} = {A7E19D2F-A29F-4C82-AE16-4E071F80306F}
+		{8526C618-B58D-49EA-BBD8-4787E3E09119} = {A7E19D2F-A29F-4C82-AE16-4E071F80306F}
+		{9A964FE6-C771-4A9E-987F-2A65DBD0EB3D} = {A7E19D2F-A29F-4C82-AE16-4E071F80306F}
+		{EFB089A1-462B-4F41-BF03-96446B2671F8} = {A7E19D2F-A29F-4C82-AE16-4E071F80306F}
+		{D32978B9-5EC5-4647-A248-00E647E5E992} = {A7E19D2F-A29F-4C82-AE16-4E071F80306F}
 	EndGlobalSection
 EndGlobal

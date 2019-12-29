@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard3.1</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +23,8 @@
     <ProjectReference Include="..\Erazer.DocumentStore.Application\Erazer.DocumentStore.Application.csproj" />
     <ProjectReference Include="..\Erazer.Domain\Erazer.Domain.csproj" />
     <ProjectReference Include="..\Erazer.Messages\Erazer.Messages.csproj" />
+    <ProjectReference Include="..\Erazer.Read.Application\Erazer.Read.Application.csproj" />
+    <ProjectReference Include="..\Erazer.Read.Syncing\Erazer.Read.Syncing.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Erazer.Domain.Constants;
-using Erazer.Domain.Data.DTOs;
+﻿using Erazer.Domain.Constants;
 using Erazer.Domain.Data.Repositories;
 
 namespace Erazer.Infrastructure.ReadStore.Seeding

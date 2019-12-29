@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
-
-namespace Erazer.Infrastructure.Websockets
+﻿namespace Erazer.Infrastructure.Websockets
 {
     public class ReduxEventHub : Hub
     {

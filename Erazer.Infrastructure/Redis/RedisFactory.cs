@@ -1,10 +1,4 @@
-﻿using System;
-using Erazer.Framework.Factories;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using ServiceStack.Redis;
-
-namespace Erazer.Infrastructure.Redis
+﻿namespace Erazer.Infrastructure.Redis
 {
     public class RedisFactory : IFactory<IRedisClientsManager>
     {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Erazer.Messages.IntegrationEvents;
+﻿using Erazer.Messages.IntegrationEvents;
 
 namespace Erazer.Infrastructure.ServiceBus.Events
 {

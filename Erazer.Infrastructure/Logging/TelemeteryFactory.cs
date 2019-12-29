@@ -1,8 +1,4 @@
-﻿using System;
-using Erazer.Framework.Factories;
-using Microsoft.Extensions.Logging;
-
-namespace Erazer.Infrastructure.Logging
+﻿namespace Erazer.Infrastructure.Logging
 {
     public class TelemeteryFactory : IFactory<ITelemetry>
     {

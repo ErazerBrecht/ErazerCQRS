@@ -1,10 +1,4 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System;
-using Erazer.Framework.FrontEnd;
-using Erazer.Infrastructure.Logging;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
+﻿using Erazer.Infrastructure.Logging;
 
 namespace Erazer.Infrastructure.Websockets
 {

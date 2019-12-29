@@ -1,10 +1,4 @@
-﻿using System;
-using Erazer.Framework.Cache;
-using Erazer.Framework.Domain;
-using Erazer.Infrastructure.Logging;
-using Newtonsoft.Json;
-using ServiceStack.Redis;
-using Microsoft.Extensions.Options;
+﻿using Erazer.Infrastructure.Logging;
 
 namespace Erazer.Infrastructure.Redis
 {

@@ -1,6 +1,4 @@
-﻿using System;
-using Erazer.Messages.IntegrationEvents.Models;
-using MediatR;
+﻿using Erazer.Messages.IntegrationEvents.Models;
 
 namespace Erazer.Jobs.EventHandlers
 {

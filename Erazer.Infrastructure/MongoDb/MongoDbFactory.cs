@@ -1,12 +1,4 @@
-﻿using Erazer.Framework.Factories;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using MongoDB.Driver.Core.Configuration;
-using MongoDB.Driver.Core.Events;
-using System;
-using Erazer.Infrastructure.Logging;
+﻿using Erazer.Infrastructure.Logging;
 
 namespace Erazer.Infrastructure.MongoDb
 {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Erazer.Infrastructure.MongoDb;
+﻿using Erazer.Infrastructure.MongoDb;
 
 namespace Erazer.Infrastructure.EventStore.Subscription
 {

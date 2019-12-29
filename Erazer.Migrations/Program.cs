@@ -1,11 +1,4 @@
-﻿using System;
-using System.IO;
-using Erazer.Infrastructure.EventStore;
-using Erazer.Migrations.Migrations;
-using FluentMigrator.Runner;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
+﻿using Erazer.Migrations.Migrations;
 
 namespace Erazer.Migrations
 {

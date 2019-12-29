@@ -1,15 +1,4 @@
-﻿using Erazer.Infrastructure.MongoDb.Base;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
-using System.Reflection;
-using Erazer.Infrastructure.EventStore;
-using Erazer.Infrastructure.EventStore.Subscription;
-using Erazer.Infrastructure.ReadStore.ClassMaps;
-using Erazer.Infrastructure.ReadStore.Repositories;
-using Microsoft.Extensions.Hosting;
-
-namespace Erazer.Web.Shared.Extensions
+﻿namespace Erazer.Web.Shared.Extensions
 {
     public static class ServiceCollectionExtensions
     {

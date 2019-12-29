@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-
-namespace Erazer.Infrastructure.Websockets
+﻿namespace Erazer.Infrastructure.Websockets
 {
     public static class WebsocketExtensions
     {

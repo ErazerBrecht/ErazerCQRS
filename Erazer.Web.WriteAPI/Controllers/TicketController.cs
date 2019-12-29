@@ -1,12 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Erazer.Web.WriteAPI.Commands.Requests;
+﻿using Erazer.Web.WriteAPI.Commands.Requests;
 using Erazer.Web.WriteAPI.ViewModels;
 using Erazer.Web.WriteAPI.Services;
-using System.Linq;
-using System.Collections.Generic;
 using Erazer.Domain.Files;
 
 namespace Erazer.Web.WriteAPI.Controllers

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Erazer.Web.WriteAPI.ViewModels
+﻿namespace Erazer.Web.WriteAPI.ViewModels
 {
     public class UpdateTicketPriorityViewModel
     {
