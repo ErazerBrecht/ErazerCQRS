@@ -1,4 +1,11 @@
-﻿namespace Erazer.Infrastructure.ServiceBus.Extensions
+﻿using System;
+using System.Linq;
+using GreenPipes;
+using MassTransit;
+using MassTransit.ExtensionsDependencyInjectionIntegration;
+using MassTransit.RabbitMqTransport;
+
+namespace Erazer.Infrastructure.ServiceBus.Extensions
 {
     public static class MassTransitRegistrationExtensions
     {

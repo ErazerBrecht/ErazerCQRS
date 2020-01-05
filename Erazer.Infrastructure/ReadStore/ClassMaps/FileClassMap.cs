@@ -1,6 +1,8 @@
-﻿using Erazer.Infrastructure.MongoDb.Base;
+﻿using Erazer.Infrastructure.MongoDb;
+using Erazer.Read.Data.File;
+using MongoDB.Bson.Serialization;
 
-namespace Erazer.Infrastructure.DocumentStore.ClassMaps
+namespace Erazer.Infrastructure.ReadStore.ClassMaps
 {
     public class FileClassMap : MongoDbClassMap<FileDto>
     {
@@ -12,14 +14,6 @@ namespace Erazer.Infrastructure.DocumentStore.ClassMaps
             cm.MapProperty(f => f.Id).SetElementName("id");
             cm.MapProperty(f => f.Name).SetElementName("name");
             cm.MapProperty(f => f.Type).SetElementName("type");
-        }
-    }
-
-    public class FileContentClassMap : MongoDbClassMap<FileContentDto>
-    {
-        public override void Map(BsonClassMap<FileContentDto> cm)
-        {
-            cm.MapProperty(f => f.Data).SetElementName("data");
         }
     }
 }

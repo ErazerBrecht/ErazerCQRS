@@ -1,5 +1,11 @@
-﻿using Erazer.Infrastructure.Logging;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Erazer.Infrastructure.Logging;
 using Erazer.Messages.Commands;
+using MassTransit;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Erazer.Infrastructure.ServiceBus.Commands
 {
@@ -23,17 +29,15 @@ namespace Erazer.Infrastructure.ServiceBus.Commands
 
             try
             {
-                using (var scope = _provider.CreateScope())
-                {
-                    _telemetry.TrackEvent($"Received command {typeName} | {messageId}");
+                using var scope = _provider.CreateScope();
+                _telemetry.TrackEvent($"Received command {typeName} | {messageId}");
 
-                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                    await mediator.Send(context.Message);
+                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                await mediator.Send(context.Message);
                     
-                    _telemetry.TrackSpan("Command consumer", $"Handled command {typeName} | {messageId}", now, sw.Elapsed, true);
-                }
+                _telemetry.TrackSpan("Command consumer", $"Handled command {typeName} | {messageId}", now, sw.Elapsed, true);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _telemetry.TrackSpan("Command consumer", $"Exception when executing command {context.Message} | {messageId}", now, sw.Elapsed, false);
                 throw;

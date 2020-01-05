@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Erazer.Domain.Files.Data.DTOs;
+using Erazer.DocumentStore.Application.DTOs;
 
-namespace Erazer.Infrastructure.DocumentStore
+namespace Erazer.DocumentStore.Application.Infrastructure
 {
     public interface IFileRepository
     {

@@ -1,4 +1,10 @@
-﻿namespace Erazer.Infrastructure.EventStore
+﻿using System;
+using Erazer.Framework.Factories;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using SqlStreamStore;
+
+namespace Erazer.Infrastructure.EventStore
 {
     public class EventStoreFactory : IFactory<IStreamStore>
     {
@@ -7,8 +13,8 @@
 
         public EventStoreFactory(IOptions<EventStoreSettings> options, ILogger<EventStoreFactory> logger)
         {
-            _options = options;
-            _logger = logger;
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             if (string.IsNullOrWhiteSpace(options.Value.ConnectionString))
                 throw new ArgumentNullException(options.Value.ConnectionString, "Connection string is required when setting up a connection with a 'GetEventStore' server");

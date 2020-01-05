@@ -13,13 +13,14 @@ namespace Erazer.Syncing.Handlers
 {
     internal class TicketCommentEventHandler : INotificationHandler<TicketCommentDomainEvent>
     {
-        private readonly ITicketEventQueryRepository _repository;
+        private readonly IDbHelper<CommentEventDto> _dbHelper;
         private readonly IWebsocketEmitter _websocketEmitter;
         private readonly IMapper _mapper;
 
-        public TicketCommentEventHandler(ITicketEventQueryRepository repository, IWebsocketEmitter websocketEmitter,
+        public TicketCommentEventHandler(IDbHelper<CommentEventDto> dbHelper, IWebsocketEmitter websocketEmitter,
             IMapper mapper)
         {
+            _dbHelper = dbHelper ?? throw new ArgumentNullException(nameof(dbHelper));
             _websocketEmitter = websocketEmitter ?? throw new ArgumentNullException(nameof(websocketEmitter));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -43,7 +44,7 @@ namespace Erazer.Syncing.Handlers
 
         private async Task AddInDb(CommentEventDto eventDto)
         {
-            await _repository.Add(eventDto);
+            await _dbHelper.Add(eventDto);
         }
 
         private Task EmitToFrontEnd(CommentEventDto eventDto)

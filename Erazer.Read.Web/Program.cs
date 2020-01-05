@@ -1,11 +1,13 @@
-﻿namespace Erazer.Web.ReadAPI
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+
+namespace Erazer.Web.ReadAPI
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             var host = CreateWebHostBuilder(args).Build();
-            host.Services.Seed();
             host.Run();
         }
 

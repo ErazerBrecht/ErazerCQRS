@@ -1,5 +1,6 @@
 ﻿using Erazer.Infrastructure.EventStore.Subscription;
-using Erazer.Infrastructure.MongoDb.Base;
+using Erazer.Infrastructure.MongoDb;
+using MongoDB.Bson.Serialization;
 
 namespace Erazer.Infrastructure.ReadStore.ClassMaps
 {

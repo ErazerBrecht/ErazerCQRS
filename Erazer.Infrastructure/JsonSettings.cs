@@ -1,4 +1,8 @@
-﻿namespace Erazer.Infrastructure
+﻿using System.Reflection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+
+namespace Erazer.Infrastructure
 {
     public sealed class JsonSettings
     {

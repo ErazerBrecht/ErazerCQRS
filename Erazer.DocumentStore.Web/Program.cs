@@ -1,4 +1,7 @@
-﻿namespace Erazer.Web.DocumentStore
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+
+namespace Erazer.Web.DocumentStore
 {
     public class Program
     {

@@ -8,10 +8,6 @@ namespace Erazer.Domain.Events
     [Event("TicketCreateEvent")]
     public class TicketCreateDomainEvent: IDomainEvent
     {
-        public TicketCreateDomainEvent(Guid ticketId)
-        {
-            AggregateRootId = ticketId;
-        }
         public string Title { get; set; }
         public string Description { get; set; }
         public string PriorityId { get; set; }
@@ -22,5 +18,10 @@ namespace Erazer.Domain.Events
         public int Version { get; set; }
         public DateTime Created { get; set; }
         public Guid? UserId { get; set; }
+        
+        public TicketCreateDomainEvent(Guid ticketId)
+        {
+            AggregateRootId = ticketId;
+        }
     }
 }

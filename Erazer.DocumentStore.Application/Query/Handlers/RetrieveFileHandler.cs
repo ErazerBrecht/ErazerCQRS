@@ -1,20 +1,22 @@
-﻿using System.Threading.Tasks;
-using Erazer.Domain.Files.Data.DTOs;
-using Erazer.Infrastructure.DocumentStore;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Erazer.DocumentStore.Application.DTOs;
+using Erazer.DocumentStore.Application.Infrastructure;
 using MediatR;
 
-namespace Erazer.Web.DocumentStore.Query.Handlers
+namespace Erazer.DocumentStore.Application.Query.Handlers
 {
-    internal class RetrieveFileHandler : AsyncRequestHandler<FileRequest, FileContentDto>
+    internal class RetrieveFileHandler : IRequestHandler<FileRequest, FileContentDto>
     {
         private readonly IFileRepository _fileRepository;
 
         public RetrieveFileHandler(IFileRepository fileRepository)
         {
-            _fileRepository = fileRepository;
+            _fileRepository = fileRepository ?? throw new ArgumentNullException(nameof(fileRepository));
         }
 
-        protected override Task<FileContentDto> HandleCore(FileRequest request)
+        public Task<FileContentDto> Handle(FileRequest request, CancellationToken cancellationToken)
         {
             return _fileRepository.Find(request.Id);
         }

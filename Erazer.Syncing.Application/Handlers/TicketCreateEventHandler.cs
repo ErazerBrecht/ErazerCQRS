@@ -21,33 +21,45 @@ namespace Erazer.Syncing.Handlers
     internal class TicketCreateEventHandler : INotificationHandler<TicketCreateDomainEvent>
     {
         private readonly IMapper _mapper;
-        private readonly ITicketQueryRepository _ticketRepository;
-        private readonly IPriorityQueryRepository _priorityRepository;
-        private readonly IStatusQueryRepository _statusRepository;
-        private readonly ITicketEventQueryRepository _eventRepository;
         private readonly IWebsocketEmitter _websocketEmitter;
         private readonly IIntegrationEventPublisher _eventPublisher;
+        private readonly IDbHelper<TicketListDto> _dbTicketList;
+        private readonly IDbHelper<TicketDto> _dbTicket;
+        private readonly IDbHelper<PriorityDto> _dbPriority;
+        private readonly IDbHelper<StatusDto> _dbStatus;
+        private readonly IDbHelper<CreatedEventDto> _dbCreatedEvent;
+
 
         public TicketCreateEventHandler(IMapper mapper, IWebsocketEmitter websocketEmitter,
-            IIntegrationEventPublisher eventPublisher,
-            ITicketQueryRepository ticketRepository, ITicketEventQueryRepository eventRepository,
-            IPriorityQueryRepository priorityRepository, IStatusQueryRepository statusRepository)
+            IIntegrationEventPublisher eventPublisher, IDbHelper<TicketListDto> dbTicketList,
+            IDbHelper<TicketDto> dbTicket, IDbHelper<PriorityDto> dbPriority, IDbHelper<StatusDto> dbStatus,
+            IDbHelper<CreatedEventDto> dbCreatedEvent)
         {
-            _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));
-            _priorityRepository = priorityRepository ?? throw new ArgumentNullException(nameof(priorityRepository));
-            _statusRepository = statusRepository ?? throw new ArgumentNullException(nameof(statusRepository));
-            _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
-            _websocketEmitter = websocketEmitter ?? throw new ArgumentNullException(nameof(websocketEmitter));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _websocketEmitter = websocketEmitter ?? throw new ArgumentNullException(nameof(websocketEmitter));
             _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
+            _dbTicketList = dbTicketList ?? throw new ArgumentNullException(nameof(dbTicketList));
+            _dbTicket = dbTicket ?? throw new ArgumentNullException(nameof(dbTicket));
+            _dbPriority = dbPriority ?? throw new ArgumentNullException(nameof(dbPriority));
+            _dbStatus = dbStatus ?? throw new ArgumentNullException(nameof(dbStatus));
+            _dbCreatedEvent = dbCreatedEvent ?? throw new ArgumentNullException(nameof(dbCreatedEvent));
         }
 
         public async Task Handle(TicketCreateDomainEvent notification, CancellationToken cancellationToken)
         {
-            var priority = _priorityRepository.Find(notification.PriorityId);
-            var status = _statusRepository.Find(notification.StatusId);
+            var priority = _dbPriority.Find(notification.PriorityId, cancellationToken);
+            var status = _dbStatus.Find(notification.StatusId, cancellationToken);
 
             await Task.WhenAll(priority, status);
+
+            var ticketList = new TicketListDto
+            {
+                Id = notification.AggregateRootId.ToString(),
+                Priority = priority.Result,
+                Status = status.Result,
+                Title = notification.Title,
+                FileCount = notification.Files?.Count ?? 0
+            };
 
             var ticket = new TicketDto
             {
@@ -58,7 +70,7 @@ namespace Erazer.Syncing.Handlers
                 Status = status.Result,
                 Files = notification.Files?.Select(f => new FileDto
                 {
-                    Id = f.Id,
+                    Id = f.Id.ToString(),
                     Name = f.Name,
                     Type = f.Type,
                     Size = f.Size
@@ -74,16 +86,17 @@ namespace Erazer.Syncing.Handlers
             };
 
             await Task.WhenAll(
-                AddInDb(ticket, @event),
+                AddInDb(ticketList, ticket, @event),
                 EmitToFrontEnd(ticket, @event),
-                PublishOnBus(ticket, @event)
+                PublishOnBus(notification, priority.Result, status.Result, @event)
             );
         }
 
-        private async Task AddInDb(TicketDto ticketDto, TicketEventDto eventDto)
+        private async Task AddInDb(TicketListDto ticketListDto, TicketDto ticketDto, CreatedEventDto eventDto)
         {
-            await _ticketRepository.Insert(ticketDto);
-            await _eventRepository.Add(eventDto));
+            await _dbTicketList.Add(ticketListDto);
+            await _dbTicket.Add(ticketDto);
+            await _dbCreatedEvent.Add(eventDto);
         }
 
         private Task EmitToFrontEnd(TicketDto ticketDto, TicketEventDto eventDto)
@@ -93,17 +106,18 @@ namespace Erazer.Syncing.Handlers
             return _websocketEmitter.Emit(new ReduxTicketCreateAction(vm));
         }
 
-        private Task PublishOnBus(TicketDto ticketDto, TicketEventDto eventDto)
+        private Task PublishOnBus(TicketCreateDomainEvent notification, PriorityDto priorityDto, StatusDto statusDto,
+            TicketEventDto eventDto)
         {
-            var files = ticketDto.Files.Select(f => new TicketCreatedFile(f.Id, f.Name, f.Type, f.Size));
+            var files = notification.Files.Select(f => new TicketCreatedFile(f.Id, f.Name, f.Type, f.Size));
             var integrationEvent = new TicketCreatedIntegrationEvent(
-                ticketDto.Id,
-                ticketDto.Title,
-                ticketDto.Description,
-                ticketDto.Priority.Id,
-                ticketDto.Priority.Name,
-                ticketDto.Status.Id,
-                ticketDto.Status.Name,
+                notification.AggregateRootId.ToString(),
+                notification.Title,
+                notification.Description,
+                priorityDto.Id,
+                priorityDto.Name,
+                statusDto.Id,
+                statusDto.Name,
                 eventDto.Id,
                 eventDto.Created,
                 eventDto.UserId,

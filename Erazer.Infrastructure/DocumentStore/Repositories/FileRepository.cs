@@ -1,16 +1,20 @@
-﻿using Erazer.Infrastructure.MongoDb.Base;
+﻿using System;
+using System.Threading.Tasks;
+using Erazer.DocumentStore.Application.DTOs;
+using Erazer.DocumentStore.Application.Infrastructure;
+using MongoDB.Driver;
 
 namespace Erazer.Infrastructure.DocumentStore.Repositories
 {
-    public class FileRepository : MongoDbBaseRepository, IFileRepository
+    public class FileRepository : IFileRepository
     {
         private readonly IMongoCollection<FileContentDto> _collection;
 
-        public FileRepository(IMongoDatabase database) : base(database)
+        public FileRepository(IMongoCollection<FileContentDto> collection)
         {
-            _collection = Database.GetCollection<FileContentDto>("Files");
+            _collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }
-
+        
         public Task Save(FileContentDto file)
         {
             return _collection.InsertOneAsync(file);
@@ -18,7 +22,8 @@ namespace Erazer.Infrastructure.DocumentStore.Repositories
 
         public async Task<FileContentDto> Find(Guid id)
         {
-            var files = await _collection.FindAsync(f => f.Id == id);
+            var dtoId = id.ToString();
+            var files = await _collection.FindAsync(f => f.Id == dtoId);
             return await files.SingleOrDefaultAsync();
         }
     }

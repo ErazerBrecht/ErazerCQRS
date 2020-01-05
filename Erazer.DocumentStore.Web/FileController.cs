@@ -1,4 +1,11 @@
-﻿using Erazer.Web.DocumentStore.Query;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using Erazer.DocumentStore.Application.Query;
+using Erazer.Messages.Commands.Models;
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Erazer.Web.DocumentStore
 {
@@ -16,8 +23,35 @@ namespace Erazer.Web.DocumentStore
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var file = await _mediator.Send(new FileRequest { Id = id });
+            var file = await _mediator.Send(new FileRequest {Id = id});
+
+            if (file == null)
+                return NotFound();
+            
             return File(file.Data, file.Type, file.Name);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile formFile)
+        {
+            await using var memoryStream = new MemoryStream();
+            await formFile.CopyToAsync(memoryStream);
+
+            var id = Guid.NewGuid();
+            var content = memoryStream.ToArray();
+
+            var command = new UploadFileCommand
+            {
+                Id = id,
+                Created = DateTime.Now,
+                Data = content,
+                Name = formFile.FileName,
+                Type = formFile.ContentType,
+                UserId = Guid.NewGuid()
+            };
+
+            await _mediator.Send(command);
+            return Ok(id);
         }
     }
 }

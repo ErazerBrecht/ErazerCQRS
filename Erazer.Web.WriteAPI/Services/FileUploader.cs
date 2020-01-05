@@ -44,7 +44,7 @@ namespace Erazer.Web.WriteAPI.Services
             }
         }
 
-        // TODO Move to specfic ImageProcessorService
+        // TODO Move to specific ImageProcessorService
         private static byte[] CompressImage(IFormFile file)
         {
             using (var stream = file.OpenReadStream())

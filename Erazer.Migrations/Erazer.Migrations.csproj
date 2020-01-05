@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Erazer.Infrastructure\Erazer.Infrastructure.csproj" />
+        <ProjectReference Include="..\Erazer.Read.Data\Erazer.Read.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -21,13 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="4.1.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Erazer.Infrastructure\Erazer.Infrastructure.csproj" />
     <ProjectReference Include="..\Erazer.Messages\Erazer.Messages.csproj" />
-    <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />
   </ItemGroup>
 
 </Project>

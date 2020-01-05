@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Erazer.Framework.DTO;
 using Erazer.Read.Application.Infrastructure;
 using Erazer.Read.Data;
 using MongoDB.Driver;
@@ -10,20 +11,20 @@ using MongoDB.Driver.Linq;
 
 namespace Erazer.Infrastructure.ReadStore
 {
-    public class DbQuery<T>: IDbQuery<T> where T : class, IProjection
+    public class DbQuery<T>: IDbQuery<T> where T : class, IDto
     {
         private readonly IMongoCollection<T> _collection;
 
-        public DbQuery(IMongoDatabase database)
+        public DbQuery(IMongoCollection<T> collection)
         {
-            var type = typeof(T);
-            var collectionName = CollectionNameMapping.CollectionNames.ContainsKey(type)
-                ? CollectionNameMapping.CollectionNames[type]
-                : type.Name;
-            
-            _collection = database.GetCollection<T>(collectionName);
+            _collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }
-        
+
+        public Task<T> Single(string id, CancellationToken cancellationToken = default)
+        {
+            return Single(x => x.Id == id, cancellationToken);
+        }
+
         public Task<T> Single(Expression<Func<T, bool>> query, CancellationToken cancellationToken = default)
         {
             return _collection.AsQueryable().SingleOrDefaultAsync(query, cancellationToken);

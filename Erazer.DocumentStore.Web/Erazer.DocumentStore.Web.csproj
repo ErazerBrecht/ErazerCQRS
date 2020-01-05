@@ -8,7 +8,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Erazer.DocumentStore.Application\Erazer.DocumentStore.Application.csproj" />
     <ProjectReference Include="..\Erazer.Infrastructure\Erazer.Infrastructure.csproj" />
-    <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc5" />
   </ItemGroup>
 
 </Project>

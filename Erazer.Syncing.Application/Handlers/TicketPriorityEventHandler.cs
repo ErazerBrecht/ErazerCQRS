@@ -17,19 +17,22 @@ namespace Erazer.Syncing.Handlers
     internal class TicketPriorityEventHandler : INotificationHandler<TicketPriorityDomainEvent>
     {
         private readonly IMapper _mapper;
-        private readonly ITicketQueryRepository _ticketRepository;
-        private readonly IPriorityQueryRepository _priorityRepository;
-        private readonly ITicketEventQueryRepository _eventRepository;
+        private readonly IDbHelper<TicketListDto> _ticketListDbHelper;
+        private readonly IDbHelper<TicketDto> _ticketDbHelper;
+        private readonly IDbHelper<PriorityDto> _priorityDbHelper;
+        private readonly IDbHelper<PriorityEventDto> _priorityEventDbHelper;
         private readonly IWebsocketEmitter _websocketEmitter;
         private readonly IIntegrationEventPublisher _eventPublisher;
 
-        public TicketPriorityEventHandler(ITicketQueryRepository ticketRepository,
-            IPriorityQueryRepository priorityRepository, ITicketEventQueryRepository eventRepository, IMapper mapper,
+        public TicketPriorityEventHandler(IDbHelper<TicketListDto> ticketListDbHelper,
+            IDbHelper<TicketDto> ticketDbHelper, IDbHelper<PriorityDto> priorityDbHelper,
+            IDbHelper<PriorityEventDto> priorityEventDbHelper, IMapper mapper,
             IWebsocketEmitter websocketEmitter, IIntegrationEventPublisher eventPublisher)
         {
-            _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));
-            _priorityRepository = priorityRepository ?? throw new ArgumentNullException(nameof(priorityRepository));
-            _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
+            _ticketListDbHelper = ticketListDbHelper ?? throw new ArgumentNullException(nameof(ticketListDbHelper));
+            _ticketDbHelper = ticketDbHelper ?? throw new ArgumentNullException(nameof(ticketDbHelper));
+            _priorityDbHelper = priorityDbHelper ?? throw new ArgumentNullException(nameof(priorityDbHelper));
+            _priorityEventDbHelper = priorityEventDbHelper ?? throw new ArgumentNullException(nameof(priorityEventDbHelper));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _websocketEmitter = websocketEmitter ?? throw new ArgumentNullException(nameof(websocketEmitter));
             _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
@@ -37,20 +40,15 @@ namespace Erazer.Syncing.Handlers
 
         public async Task Handle(TicketPriorityDomainEvent message, CancellationToken cancellationToken)
         {
-            var ticketTask = _ticketRepository.Find(message.AggregateRootId.ToString());
-            var oldPriorityTask = _priorityRepository.Find(message.FromPriorityId);
-            var newPriorityTask = _priorityRepository.Find(message.ToPriorityId);
+            var ticketList = await _ticketListDbHelper.Find(message.AggregateRootId.ToString(), cancellationToken);
+            var ticket = await _ticketDbHelper.Find(message.AggregateRootId.ToString(), cancellationToken);
+            var oldPriority = await _priorityDbHelper.Find(message.FromPriorityId, cancellationToken);
+            var newPriority = await _priorityDbHelper.Find(message.ToPriorityId, cancellationToken);
 
-            await Task.WhenAll(ticketTask, oldPriorityTask, newPriorityTask);
-
-            var ticket = ticketTask.Result;
-            var oldPriority = oldPriorityTask.Result;
-            var newPriority = newPriorityTask.Result;
-
-            // Update ticket in ReadModel
+            ticketList.Priority = newPriority;
             ticket.Priority = newPriority;
-
-            // Add ticket event in ReadModel
+            
+            // Create ticket priority event
             var ticketEvent = new PriorityEventDto(oldPriority, newPriority)
             {
                 Id = Guid.NewGuid().ToString(),
@@ -60,16 +58,17 @@ namespace Erazer.Syncing.Handlers
             };
 
             await Task.WhenAll(
-                UpdateDb(ticket, ticketEvent),
+                UpdateDb(ticketList, ticket, ticketEvent),
                 EmitToFrontEnd(ticketEvent),
                 AddOnBus(ticket, ticketEvent)
             );
         }
 
-        private async Task UpdateDb(TicketDto ticketDto, PriorityEventDto eventDto)
+        private async Task UpdateDb(TicketListDto ticketListDto, TicketDto ticketDto, PriorityEventDto eventDto)
         {
-            await _ticketRepository.Update(ticketDto);
-            await _eventRepository.Add(eventDto);
+            await _ticketListDbHelper.Mutate(ticketListDto);
+            await _ticketDbHelper.Mutate(ticketDto);
+            await _priorityEventDbHelper.Add(eventDto);
         }
 
         private Task EmitToFrontEnd(PriorityEventDto eventDto)

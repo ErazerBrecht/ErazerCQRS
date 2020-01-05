@@ -1,7 +1,18 @@
-﻿using Erazer.Domain.Data.Repositories;
-using Erazer.Framework.FrontEnd;
-using Erazer.Framework.Events;
-using Erazer.Syncing.Infrastructure;
+﻿using System;
+using System.Reflection;
+using AutoMapper;
+using Erazer.Infrastructure.Logging;
+using Erazer.Infrastructure.ReadStore;
+using Erazer.Infrastructure.ServiceBus;
+using Erazer.Infrastructure.Websockets;
+using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Erazer.Web.ReadAPI
 {
@@ -20,52 +31,27 @@ namespace Erazer.Web.ReadAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(_configuration);
-            services.Configure<MongoDbSettings>(_configuration.GetSection("MongoDbSettings"));
-            services.Configure<WebsocketSettings>(_configuration.GetSection("WebsocketSettings"));
-            services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
 
             // Add Telemetry
-            services.AddSingletonFactory<ITelemetry, TelemeteryFactory>();
+            services.AddSingletonFactory<ITelemetry, TelemetryFactory>();
 
             // Add 'Infrastructure' Providers
-            services.AddSingletonFactory<IStreamStore, EventStoreFactory>();
-            services.AddSingletonFactory<IMongoDatabase, MongoDbFactory>();
-            services.AddScoped<IMongoDbSession, MongoDbSession>();
-            services.AddScoped<IWebsocketEmitter, WebsocketEmittor>();
-            
-            services.AddMongoDbClassMaps();
-            services.AddAutoMapper();
-            services.AddMediatR();
-            services.AddSignalR();
+            services.AddWebsocketEmitter(_configuration.GetSection("WebsocketSettings"));
+            services.AddMongo(_configuration.GetSection("MongoDbSettings"), DbCollectionsSetup.ReadStoreConfiguration);
 
-            // TODO Place in separate file (Arne) > services.AddTicket();
-            // Query repositories
-            services.AddScoped<ITicketQueryRepository, TicketRepository>();
-            services.AddScoped<ITicketEventQueryRepository, TicketEventRepository>();
-            services.AddScoped<IStatusQueryRepository, StatusRepository>();
-            services.AddScoped<IPriorityQueryRepository, PriorityRepository>();
+            // Add 'Application services'
+            services.AddAutoMapper(typeof(Startup).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
 
             // Add MVC
             services
                 .AddControllers()
                 .AddNewtonsoftJson();
-
-            // CQRS
-            services.AddSingleton<IEventStore, EventStore>();
-            services.AddSingleton<IEventTypeMapping, EventTypeMapping>();
-            services.AddSubscriber();
-            
-            // ServiceBus
-            services.AddBus(x =>
-            {
-                x.ConnectionString = _busSettings.ConnectionString;
-                x.UserName = _busSettings.UserName;
-                x.Password = _busSettings.Password;
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServer server)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory,
+            IServer server)
         {
             if (env.IsDevelopment())
             {
@@ -75,18 +61,15 @@ namespace Erazer.Web.ReadAPI
             app.UseRouting();
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:4200")            // Load this from ENV or Config file
-                       .AllowAnyHeader()                                // TODO Temp added for SignalR
-                       .AllowCredentials()                              // Added for SignalR
-                       .WithMethods("GET", "OPTIONS", "POST")           // OPTIONS & POST are for SignalR 
-                       .SetPreflightMaxAge(TimeSpan.FromHours(1));
+                builder.WithOrigins("http://localhost:4200") // Load this from ENV or Config file
+                    .AllowAnyHeader() // TODO Temp added for SignalR
+                    .AllowCredentials() // Added for SignalR
+                    .WithMethods("GET", "OPTIONS", "POST") // OPTIONS & POST are for SignalR 
+                    .SetPreflightMaxAge(TimeSpan.FromHours(1));
             });
 
-            app.UseWebsocketEmittor();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDefaultControllerRoute();
-            });
+            app.UseWebsocketEmitter();
+            app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
         }
     }
 }

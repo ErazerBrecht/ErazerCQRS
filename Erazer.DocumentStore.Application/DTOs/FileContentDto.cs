@@ -1,10 +1,11 @@
 ﻿using System;
+using Erazer.Framework.DTO;
 
-namespace Erazer.Domain.Files.Data.DTOs
+namespace Erazer.DocumentStore.Application.DTOs
 {
-    public class FileContentDto
+    public class FileContentDto: IDto
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public byte[] Data { get; set; }
         
         // Metadata

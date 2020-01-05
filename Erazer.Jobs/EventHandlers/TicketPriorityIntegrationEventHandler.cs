@@ -1,10 +1,12 @@
-﻿using Erazer.Messages.IntegrationEvents.Models;
+﻿using System;
+using Erazer.Messages.IntegrationEvents.Models;
+using MediatR;
 
 namespace Erazer.Jobs.EventHandlers
 {
     public class TicketPriorityIntegrationEventHandler : NotificationHandler<TicketPriorityIntegrationEvent>
     {
-        protected override void HandleCore(TicketPriorityIntegrationEvent notification)
+        protected override void Handle(TicketPriorityIntegrationEvent notification)
         {
             Console.WriteLine("Priority of a ticket was changed!");
             Console.WriteLine($"Ticket title: {notification.TicketTitle}");

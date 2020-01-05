@@ -1,10 +1,14 @@
-﻿namespace Erazer.Infrastructure.Logging
+﻿using System;
+using Erazer.Framework.Factories;
+using Microsoft.Extensions.Logging;
+
+namespace Erazer.Infrastructure.Logging
 {
-    public class TelemeteryFactory : IFactory<ITelemetry>
+    public class TelemetryFactory : IFactory<ITelemetry>
     {
         private readonly ILogger<TelemetryLogging> _logger;
 
-        public TelemeteryFactory(ILogger<TelemetryLogging> logger)
+        public TelemetryFactory(ILogger<TelemetryLogging> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }

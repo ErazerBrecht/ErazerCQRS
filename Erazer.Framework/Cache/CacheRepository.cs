@@ -71,7 +71,7 @@ namespace Erazer.Framework.Cache
             try
             {
                 // Don't add aggregate when there is no Id
-                // Don't add aggregate when the aggregate is just created (It's a personal opnion that I'd like to hit the EventStore atleast once)
+                // Don't add aggregate when the aggregate is just created (It's a personal opinion that I'd like to hit the EventStore at least once)
                 // If the aggregate is already cached don't overwrite it. This is why the caching time shouldn't be that long!!
                 if (aggregate.Id != Guid.Empty && aggregate.Version > -1 && !_cache.IsTracked(aggregate.Id)) 
                 {

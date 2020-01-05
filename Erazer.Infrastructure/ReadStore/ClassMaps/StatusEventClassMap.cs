@@ -1,4 +1,6 @@
-﻿using Erazer.Infrastructure.MongoDb.Base;
+﻿using Erazer.Infrastructure.MongoDb;
+using Erazer.Read.Data.Ticket.Events;
+using MongoDB.Bson.Serialization;
 
 namespace Erazer.Infrastructure.ReadStore.ClassMaps
 {

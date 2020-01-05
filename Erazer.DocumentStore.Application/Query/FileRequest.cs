@@ -1,8 +1,8 @@
 ﻿using System;
-using Erazer.Domain.Files.Data.DTOs;
+using Erazer.DocumentStore.Application.DTOs;
 using MediatR;
 
-namespace Erazer.Web.DocumentStore.Query
+namespace Erazer.DocumentStore.Application.Query
 {
     public class FileRequest: IRequest<FileContentDto>
     {

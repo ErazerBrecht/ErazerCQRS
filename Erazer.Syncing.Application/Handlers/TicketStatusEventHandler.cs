@@ -17,41 +17,38 @@ namespace Erazer.Syncing.Handlers
     internal class TicketStatusEventHandler : INotificationHandler<TicketStatusDomainEvent>
     {
         private readonly IMapper _mapper;
+        private readonly IDbHelper<TicketListDto> _ticketListDbHelper;
+        private readonly IDbHelper<TicketDto> _ticketDbHelper;
+        private readonly IDbHelper<StatusDto> _statusDbHelper;
+        private readonly IDbHelper<StatusEventDto> _statusEventDbHelper;
         private readonly IWebsocketEmitter _websocketEmitter;
-        private readonly ITicketQueryRepository _ticketRepository;
-        private readonly IStatusQueryRepository _statusRepository;
-        private readonly ITicketEventQueryRepository _eventRepository;
         private readonly IIntegrationEventPublisher _eventPublisher;
 
-
-        public TicketStatusEventHandler(IMapper mapper, IWebsocketEmitter websocketEmitter,
-            ITicketQueryRepository ticketRepository, IStatusQueryRepository statusRepository,
-            ITicketEventQueryRepository eventRepository, IIntegrationEventPublisher eventPublisher)
+        public TicketStatusEventHandler(IDbHelper<TicketListDto> ticketListDbHelper,
+            IDbHelper<TicketDto> ticketDbHelper, IDbHelper<StatusDto> statusDbHelper,
+            IDbHelper<StatusEventDto> statusEventDbHelper, IMapper mapper,
+            IWebsocketEmitter websocketEmitter, IIntegrationEventPublisher eventPublisher)
         {
+            _ticketListDbHelper = ticketListDbHelper ?? throw new ArgumentNullException(nameof(ticketListDbHelper));
+            _ticketDbHelper = ticketDbHelper ?? throw new ArgumentNullException(nameof(ticketDbHelper));
+            _statusDbHelper = statusDbHelper ?? throw new ArgumentNullException(nameof(statusDbHelper));
+            _statusEventDbHelper = statusEventDbHelper ?? throw new ArgumentNullException(nameof(statusEventDbHelper));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _websocketEmitter = websocketEmitter ?? throw new ArgumentNullException(nameof(websocketEmitter));
-            _ticketRepository = ticketRepository ?? throw new ArgumentNullException(nameof(ticketRepository));
-            _statusRepository = statusRepository ?? throw new ArgumentNullException(nameof(statusRepository));
-            _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
             _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
         }
 
         public async Task Handle(TicketStatusDomainEvent message, CancellationToken cancellationToken)
         {
-            var ticketTask = _ticketRepository.Find(message.AggregateRootId.ToString());
-            var oldStatusTask = _statusRepository.Find(message.FromStatusId);
-            var newStatusTask = _statusRepository.Find(message.ToStatusId);
+            var ticketList = await _ticketListDbHelper.Find(message.AggregateRootId.ToString(), cancellationToken);
+            var ticket = await _ticketDbHelper.Find(message.AggregateRootId.ToString(), cancellationToken);
+            var oldStatus = await _statusDbHelper.Find(message.FromStatusId, cancellationToken);
+            var newStatus = await _statusDbHelper.Find(message.ToStatusId, cancellationToken);
 
-            await Task.WhenAll(ticketTask, oldStatusTask, newStatusTask);
-
-            var ticket = ticketTask.Result;
-            var oldStatus = oldStatusTask.Result;
-            var newStatus = newStatusTask.Result;
-
-            // Update ticket in ReadModel
+            ticketList.Status = newStatus;
             ticket.Status = newStatus;
-
-            // Add ticket event in ReadModel
+            
+            // Create ticket status event
             var ticketEvent = new StatusEventDto(oldStatus, newStatus)
             {
                 Id = Guid.NewGuid().ToString(),
@@ -61,16 +58,17 @@ namespace Erazer.Syncing.Handlers
             };
 
             await Task.WhenAll(
-                UpdateDb(ticket, ticketEvent),
+                UpdateDb(ticketList, ticket, ticketEvent),
                 EmitToFrontEnd(ticketEvent),
                 AddOnBus(ticket, ticketEvent)
             );
         }
 
-        private async Task UpdateDb(TicketDto ticketDto, StatusEventDto eventDto)
+        private async Task UpdateDb(TicketListDto ticketListDto, TicketDto ticketDto, StatusEventDto eventDto)
         {
-            await _ticketRepository.Update(ticketDto);
-            await _eventRepository.Add(eventDto);
+            await _ticketListDbHelper.Mutate(ticketListDto);
+            await _ticketDbHelper.Mutate(ticketDto);
+            await _statusEventDbHelper.Add(eventDto);
         }
 
         private Task EmitToFrontEnd(StatusEventDto eventDto)

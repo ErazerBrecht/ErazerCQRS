@@ -1,8 +1,22 @@
-﻿namespace Erazer.Infrastructure.Websockets
+﻿using Erazer.Syncing.Infrastructure;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Erazer.Infrastructure.Websockets
 {
     public static class WebsocketExtensions
     {
-        public static void UseWebsocketEmittor(this IApplicationBuilder app)
+        public static IServiceCollection AddWebsocketEmitter(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<WebsocketSettings>(configuration);
+            services.AddScoped<IWebsocketEmitter, WebsocketEmitter>();
+            services.AddSignalR();
+
+            return services;
+        }
+        
+        public static void UseWebsocketEmitter(this IApplicationBuilder app)
         {
             app.UseSignalR(routes => { routes.MapHub<ReduxEventHub>("/events"); });
         }

@@ -1,21 +1,28 @@
-﻿using Erazer.Infrastructure.Logging;
+﻿using System;
+using System.Threading.Tasks;
+using Erazer.Infrastructure.Logging;
+using Erazer.Syncing.Infrastructure;
+using Erazer.Syncing.SeedWork;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Erazer.Infrastructure.Websockets
 {
-    public class WebsocketEmittor : IWebsocketEmittor
+    public class WebsocketEmitter : IWebsocketEmitter
     {
         private readonly IHubContext<ReduxEventHub> _hubContext;
         private readonly ITelemetry _telemetryClient;
-        private readonly ILogger<WebsocketEmittor> _logger;
+        private readonly ILogger<WebsocketEmitter> _logger;
 
-        public WebsocketEmittor(IHubContext<ReduxEventHub> hubContext, ITelemetry telemetryClient, ILogger<WebsocketEmittor> logger)
+        public WebsocketEmitter(IHubContext<ReduxEventHub> hubContext, ITelemetry telemetryClient, ILogger<WebsocketEmitter> logger)
         {
-            _hubContext = hubContext;
-            _telemetryClient = telemetryClient;
-            _logger = logger;
+            _hubContext = hubContext ?? throw new ArgumentNullException(nameof(hubContext));
+            _telemetryClient = telemetryClient ?? throw new ArgumentNullException(nameof(telemetryClient));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task Emit<T>(ReduxAction<T> action) where T : IViewModel
+        public async Task Emit<T>(ReduxAction<T> action) where T : class
         {
             var jsonString = JsonConvert.SerializeObject(action, JsonSettings.JavascriptSerializer);
             var now = DateTime.Now;

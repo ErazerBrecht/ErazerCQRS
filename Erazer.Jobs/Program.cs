@@ -1,4 +1,13 @@
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
+using Erazer.Infrastructure.ServiceBus;
 using Erazer.Messages.IntegrationEvents.Models;
+using MediatR;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Erazer.Jobs
 {
@@ -52,7 +61,7 @@ namespace Erazer.Jobs
                 });
             });
 
-            services.AddMediatR();
+            services.AddMediatR(typeof(Program).GetTypeInfo().Assembly);
         }
     }
 }

@@ -1,4 +1,21 @@
-﻿using Erazer.Migrations.Migrations;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Erazer.Infrastructure.EventStore;
+using Erazer.Infrastructure.EventStore.Subscription;
+using Erazer.Infrastructure.MongoDb;
+using Erazer.Infrastructure.ReadStore;
+using Erazer.Migrations.Migrations;
+using Erazer.Migrations.Seeding;
+using Erazer.Read.Data.Ticket;
+using Erazer.Read.Data.Ticket.Events;
+using FluentMigrator.Runner;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
+using Npgsql;
 
 namespace Erazer.Migrations
 {
@@ -6,7 +23,7 @@ namespace Erazer.Migrations
     {
         private static IConfigurationRoot _config;
 
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             _config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -21,7 +38,8 @@ namespace Erazer.Migrations
             // Put the database update into a scope to ensure
             // that all resources will be disposed.
             using var scope = serviceProvider.CreateScope();
-            UpdateDatabase(scope.ServiceProvider);
+            Migrate(scope.ServiceProvider);
+            await Seed(scope.ServiceProvider);
         }
 
         /// <summary>
@@ -34,10 +52,11 @@ namespace Erazer.Migrations
             return new ServiceCollection()
                 .Configure<MigrationSettings>(_config.GetSection("MigrationSettings"))
                 .Configure<EventStoreSettings>(_config.GetSection("EventStoreSettings"))
+                .AddMongo(_config.GetSection("MongoDbSettings"), DbCollectionsSetup.ReadStoreConfiguration)
                 // Add common FluentMigrator services
                 .AddFluentMigratorCore()
                 .ConfigureRunner(rb => rb
-                    // Add SQLite support to FluentMigrator
+                    // Add Postgres support to FluentMigrator
                     .AddPostgres()
                     // Set the connection string
                     .WithGlobalConnectionString(connectionString)
@@ -62,7 +81,7 @@ namespace Erazer.Migrations
             using (var cmd = new NpgsqlCommand($"SELECT 1 FROM pg_database WHERE datname='{split[1]}'", conn))
                 dbExists = cmd.ExecuteScalar() != null;
 
-            if (!dbExists)
+            if (dbExists) return;
             {
                 var command = $@"CREATE DATABASE ""{split[1]}""";
                 using var cmd = new NpgsqlCommand(command, conn);
@@ -71,15 +90,30 @@ namespace Erazer.Migrations
         }
 
         /// <summary>
-        /// Update the database
+        /// Migrate the database(s)
         /// </summary>
-        private static void UpdateDatabase(IServiceProvider serviceProvider)
+        private static void Migrate(IServiceProvider serviceProvider)
         {
             // Instantiate the runner
             var runner = serviceProvider.GetRequiredService<IMigrationRunner>();
 
             // Execute the migrations
             runner.MigrateUp();
+        }
+        
+        /// <summary>
+        /// Seed the database(s)
+        /// </summary>
+        private static async Task Seed(IServiceProvider serviceProvider)
+        {
+            var mongoDatabase = serviceProvider.GetRequiredService<IMongoDatabase>();
+            var priorityCollection = serviceProvider.GetRequiredService<IMongoCollection<PriorityDto>>();
+            var statusCollection = serviceProvider.GetRequiredService<IMongoCollection<StatusDto>>();
+            var collections = serviceProvider.GetRequiredService<CollectionNameDictionary>();
+
+            await CollectionSeeder.Seed(mongoDatabase, collections);
+            await PrioritySeeder.Seed(priorityCollection);
+            await StatusSeeder.Seed(statusCollection);
         }
     }
 }

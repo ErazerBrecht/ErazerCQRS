@@ -1,7 +1,21 @@
-﻿using Erazer.Framework.Cache;
+﻿using System;
+using AutoMapper;
+using Erazer.Framework.Cache;
 using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
+using Erazer.Infrastructure.EventStore;
+using Erazer.Infrastructure.Logging;
+using Erazer.Infrastructure.Redis;
+using Erazer.Infrastructure.ServiceBus;
+using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.WriteAPI.Services;
+using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using ServiceStack.Redis;
+using SqlStreamStore;
 
 namespace Erazer.Web.WriteAPI
 {
@@ -26,7 +40,7 @@ namespace Erazer.Web.WriteAPI
             services.Configure<RedisSettings>(_configuration.GetSection("CacheSettings"));
 
             // Add Telemetry
-            services.AddSingletonFactory<ITelemetry, TelemeteryFactory>();
+            services.AddSingletonFactory<ITelemetry, TelemetryFactory>();
             
             // Add 'Infrastructure' Providers
             services.AddSingletonFactory<IStreamStore, EventStoreFactory>();
@@ -51,6 +65,7 @@ namespace Erazer.Web.WriteAPI
             // WITHOUT CACHE
             // services.AddScoped<IAggregateRepository, AggregateRepository>();
 
+            // Application Services
             services.AddScoped<IFileUploader, FileUploader>();        
 
             // Add MVC

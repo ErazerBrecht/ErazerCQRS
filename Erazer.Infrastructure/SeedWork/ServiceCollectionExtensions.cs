@@ -1,16 +1,14 @@
-﻿namespace Erazer.Web.Shared.Extensions
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using Erazer.Infrastructure.MongoDb;
+using Erazer.Infrastructure.ReadStore.ClassMaps;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Erazer.Web.Shared.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddSubscriber(this IServiceCollection collection)
-        {
-            collection.AddSingleton<IEventTypeMapping, EventTypeMapping>();
-            collection.AddSingleton<IPositionRepository, PositionRepository>();
-
-            collection.AddSingleton<ISubscription, Subscription>();
-            collection.AddSingleton<IHostedService, SubscriptionBackgroundService>();
-        }
-
         public static void AddMongoDbClassMaps(this IServiceCollection services)
         {
             // This will only work if every class map is in the same assembly!

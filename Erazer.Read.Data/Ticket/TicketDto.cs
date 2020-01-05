@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using Erazer.Framework.DTO;
 using Erazer.Read.Data.File;
 using Erazer.Read.Data.Ticket.Events;
 
 namespace Erazer.Read.Data.Ticket
 {
-    public class TicketDto: IProjection
+    public class TicketDto: IDto
     {
         public string Id { get; set; }
         public string Title { get; set; }

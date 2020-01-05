@@ -1,9 +1,14 @@
-﻿using Erazer.Infrastructure.Logging;
+﻿using System;
+using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ServiceBus;
 using Erazer.Infrastructure.ServiceBus.Commands;
 using Erazer.Infrastructure.ServiceBus.Events;
+using Erazer.Infrastructure.ServiceBus.Extensions;
 using Erazer.Messages.Commands.Infrastructure;
 using Erazer.Messages.IntegrationEvents.Infrastructure;
+using MassTransit;
+using MassTransit.AspNetCoreIntegration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection

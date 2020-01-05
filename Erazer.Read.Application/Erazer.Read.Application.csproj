@@ -5,15 +5,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MediatR" Version="7.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Folder Include="ViewModels" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Erazer.Read.Mapping\Erazer.Read.Mapping.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="7.0.0" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,9 @@
-﻿namespace Erazer.Infrastructure.Websockets
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
+
+namespace Erazer.Infrastructure.Websockets
 {
     public class ReduxEventHub : Hub
     {
@@ -6,7 +11,7 @@
 
         public ReduxEventHub(ILogger<ReduxEventHub> logger)
         {
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public override async Task OnConnectedAsync()

@@ -1,4 +1,7 @@
-﻿namespace Erazer.Infrastructure.Logging
+﻿using System;
+using System.Collections.Generic;
+
+namespace Erazer.Infrastructure.Logging
 {
     public interface ITelemetry
     {

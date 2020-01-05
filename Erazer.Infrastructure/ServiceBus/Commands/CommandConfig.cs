@@ -1,4 +1,6 @@
-﻿using Erazer.Messages.Commands;
+﻿using System;
+using System.Collections.Generic;
+using Erazer.Messages.Commands;
 
 namespace Erazer.Infrastructure.ServiceBus.Commands
 {

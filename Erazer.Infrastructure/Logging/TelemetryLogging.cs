@@ -1,4 +1,9 @@
-﻿namespace Erazer.Infrastructure.Logging
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+
+namespace Erazer.Infrastructure.Logging
 {
     public class TelemetryLogging : ITelemetry
     {

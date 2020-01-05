@@ -1,24 +1,31 @@
-﻿using Erazer.Infrastructure.Logging;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Erazer.Framework.Events;
+using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.MongoDb;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Erazer.Infrastructure.EventStore.Subscription
 {
     public class Subscription : ISubscription
     {
         private readonly IEventStore _eventStore;
-        private readonly IPositionRepository _positionRepository;
+        private readonly IPositionStore _positionStore;
         private readonly ITelemetry _telemetryClient;
         private readonly IServiceProvider _provider;
         private readonly ILogger<Subscription> _logger;
 
         private IDisposable _subscription;
 
-        public Subscription(IEventStore eventStore, IPositionRepository positionRepository,
-            ITelemetry telemetryClient, IEventTypeMapping eventMap, IServiceProvider provider,
-            ILogger<Subscription> logger)
+        public Subscription(IEventStore eventStore, IPositionStore positionStore,
+            ITelemetry telemetryClient, IServiceProvider provider, ILogger<Subscription> logger)
         {
             _eventStore = eventStore;
-            _positionRepository = positionRepository;
+            _positionStore = positionStore;
             _telemetryClient = telemetryClient;
             _provider = provider;
             _logger = logger;
@@ -26,7 +33,7 @@ namespace Erazer.Infrastructure.EventStore.Subscription
 
         public async Task Connect()
         {
-            var position = await _positionRepository.GetCurrentPosition();
+            var position = await _positionStore.GetCurrentPosition();
             _logger.LogInformation($"Started subscribing from position {position?.CheckPoint ?? -1}");
             _subscription = _eventStore.Subscribe(position?.CheckPoint, EventAppeared, SubscriptionDropped);
         }
@@ -54,28 +61,25 @@ namespace Erazer.Infrastructure.EventStore.Subscription
                 {"Created (Epoch)", @event.Created.ToLongDateString()}
             });
 
-            using (var scope = _provider.CreateScope())
-            {
-                var session = scope.ServiceProvider.GetRequiredService<IMongoDbSession>();
-                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            using var scope = _provider.CreateScope();
+            var session = scope.ServiceProvider.GetRequiredService<IDbSession>();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
+            try
+            {
                 await session.StartTransaction();
 
-                try
-                {
-                    await mediator.Publish(@event, token);
-                    await _positionRepository.SetCurrentPosition(session, position, DateTimeOffset.UtcNow);
+                await mediator.Publish(@event, token);
+                await _positionStore.SetCurrentPosition(session, position, DateTimeOffset.UtcNow);
 
-                    await session.Commit();
-                    await session.ExecuteSideEffects();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, $"Event handling failed for {@event.GetType()} on position {position.ToString()}");
-                    await session.Abort();
+                await session.Commit();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Event handling failed for {@event.GetType()} on position {position.ToString()}");
+                await session.Abort();
 
-                    throw;
-                }
+                throw;
             }
         }
 

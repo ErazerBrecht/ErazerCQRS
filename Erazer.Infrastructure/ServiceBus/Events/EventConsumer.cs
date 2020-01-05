@@ -1,5 +1,11 @@
-﻿using Erazer.Infrastructure.Logging;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Erazer.Infrastructure.Logging;
 using Erazer.Messages.IntegrationEvents;
+using MassTransit;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Erazer.Infrastructure.ServiceBus.Events
 {
@@ -23,17 +29,15 @@ namespace Erazer.Infrastructure.ServiceBus.Events
 
             try
             {
-                using (var scope = _provider.CreateScope())
-                {
-                    _telemetry.TrackEvent($"Received event {typeName} | {messageId}");
+                using var scope = _provider.CreateScope();
+                _telemetry.TrackEvent($"Received event {typeName} | {messageId}");
 
-                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                    await mediator.Publish(context.Message);
+                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                await mediator.Publish(context.Message);
                     
-                    _telemetry.TrackSpan("Event consumer", $"Handled event {typeName} | {messageId}", now, sw.Elapsed, true);
-                }
+                _telemetry.TrackSpan("Event consumer", $"Handled event {typeName} | {messageId}", now, sw.Elapsed, true);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 _telemetry.TrackSpan("Event consumer", $"Exception when executing event {context.Message} | {messageId}", now, sw.Elapsed, false);
                 throw;

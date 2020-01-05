@@ -1,19 +1,22 @@
-﻿namespace Erazer.Infrastructure.MongoDb
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
+
+namespace Erazer.Infrastructure.MongoDb
 {
-    public interface IMongoDbSession: IDisposable
+    public interface IDbSession: IDisposable
     {
         IClientSessionHandle Handle { get; }
 
         Task StartTransaction();
         Task Commit();
         Task Abort();
-
-        void AddSideEffect(Func<Task> sideEffect);
-        Task ExecuteSideEffects();
     }
 
     // TODO Fix Exceptions to more correct exceptions...
-    public class MongoDbSession: IMongoDbSession
+    public class MongoDbSession: IDbSession
     {
         private readonly IList<Func<Task>> _sideEffects;
         private readonly IMongoDatabase _mongoDb;
@@ -70,16 +73,6 @@
                 throw new Exception("Cannot commit when there is no transaction started!");
 
             return _mongoSession.AbortTransactionAsync();
-        }
-
-        public void AddSideEffect(Func<Task> sideEffect)
-        {
-            _sideEffects.Add(sideEffect);
-        }
-
-        public Task ExecuteSideEffects()
-        {
-            return Task.WhenAll(_sideEffects.Select(a => a()));
         }
     }
 }

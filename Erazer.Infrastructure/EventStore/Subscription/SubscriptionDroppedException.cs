@@ -1,4 +1,7 @@
-﻿namespace Erazer.Infrastructure.EventStore.Subscription
+﻿using System;
+using SqlStreamStore.Subscriptions;
+
+namespace Erazer.Infrastructure.EventStore.Subscription
 {
     public class SubscriptionDroppedException : Exception
     {
