@@ -11,4 +11,8 @@
       <ProjectReference Include="..\Erazer.Read.Mapping\Erazer.Read.Mapping.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    </ItemGroup>
+
 </Project>

@@ -20,6 +20,7 @@ namespace Erazer.Web.DocumentStore
         }
 
         // GET api/file/52666af8-9af3-4771-8d71-4f11e6c96211
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any, NoStore = false)]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {

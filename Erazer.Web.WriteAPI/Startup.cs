@@ -7,11 +7,11 @@ using Erazer.Infrastructure.EventStore;
 using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.Redis;
 using Erazer.Infrastructure.ServiceBus;
-using Erazer.Web.Shared.Extensions.DependencyInjection;
 using Erazer.Web.WriteAPI.Services;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServiceStack.Redis;
@@ -52,8 +52,7 @@ namespace Erazer.Web.WriteAPI
                 x.UserName = _busSettings.UserName;
                 x.Password = _busSettings.Password;
             });
-
-            services.AddAutoMapper();
+            
             services.AddMediatR();
 
             // TODO Place in separate file (Arne)

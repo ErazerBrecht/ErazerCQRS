@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Read.Mapping", "Eraz
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Erazer.Syncing", "Erazer.Syncing", "{88932E30-9ED1-4285-BCF6-18247E23EC86}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erazer.Syncing.ConsoleRunner", "Erazer.Syncing.ConsoleRunner\Erazer.Syncing.ConsoleRunner.csproj", "{D4C62EDE-56FF-41DA-A330-CF36CAE275DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,10 @@ Global
 		{D32978B9-5EC5-4647-A248-00E647E5E992}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D32978B9-5EC5-4647-A248-00E647E5E992}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D32978B9-5EC5-4647-A248-00E647E5E992}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4C62EDE-56FF-41DA-A330-CF36CAE275DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4C62EDE-56FF-41DA-A330-CF36CAE275DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4C62EDE-56FF-41DA-A330-CF36CAE275DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4C62EDE-56FF-41DA-A330-CF36CAE275DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,5 +126,6 @@ Global
 		{EFB089A1-462B-4F41-BF03-96446B2671F8} = {A7E19D2F-A29F-4C82-AE16-4E071F80306F}
 		{D32978B9-5EC5-4647-A248-00E647E5E992} = {A7E19D2F-A29F-4C82-AE16-4E071F80306F}
 		{C6A79619-710C-476F-B9A4-6FC22EDF4B68} = {88932E30-9ED1-4285-BCF6-18247E23EC86}
+		{D4C62EDE-56FF-41DA-A330-CF36CAE275DD} = {88932E30-9ED1-4285-BCF6-18247E23EC86}
 	EndGlobalSection
 EndGlobal

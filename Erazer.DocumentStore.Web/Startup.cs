@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Reflection;
-using AutoMapper;
 using Erazer.DocumentStore.Application.DTOs;
 using Erazer.DocumentStore.Application.Infrastructure;
 using Erazer.DocumentStore.Application.Query;
 using Erazer.Infrastructure.DocumentStore.Repositories;
 using Erazer.Infrastructure.Logging;
-using Erazer.Infrastructure.MongoDb;
 using Erazer.Infrastructure.ServiceBus;
 using Erazer.Messages.Commands;
 using Erazer.Messages.Commands.Models;
@@ -17,7 +15,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using MongoDB.Driver;
 
 namespace Erazer.Web.DocumentStore
 {
@@ -51,7 +48,7 @@ namespace Erazer.Web.DocumentStore
             
             // Add MVC
             services.AddControllers();
-            
+
             // Add Swagger
             services.AddSwaggerGen(c =>
             {
@@ -76,8 +73,15 @@ namespace Erazer.Web.DocumentStore
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment()) 
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Document API");
+                });
+            }
 
             app.UseRouting();
             app.UseCors(builder =>
@@ -87,14 +91,6 @@ namespace Erazer.Web.DocumentStore
                     .AllowAnyHeader()
                     .SetPreflightMaxAge(TimeSpan.FromHours(1));
             });
-
-            // Swagger
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Document API");
-            });
-
             
             app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
         }

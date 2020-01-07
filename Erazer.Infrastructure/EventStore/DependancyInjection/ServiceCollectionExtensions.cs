@@ -4,6 +4,7 @@ using Erazer.Infrastructure.EventStore;
 using Erazer.Infrastructure.EventStore.MongoDb;
 using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.Logging;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SqlStreamStore;
@@ -17,11 +18,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Add 'EventStore' related stuff to IoC
         /// </summary>
         /// <param name="services">The services</param>
-        /// <param name="configure">Action to be able to configure the eventstore</param>
+        /// <param name="configuration">ConfigurationRoot to be able to configure the eventstore</param>
         /// <returns></returns>
-        public static EventStoreBuilder AddEventStore(this IServiceCollection services, Action<EventStoreSettings> configure)
+        public static EventStoreBuilder AddEventStore(this IServiceCollection services,  IConfiguration configuration)
         {
-            services.Configure(configure);
+            services.Configure<EventStoreSettings>(configuration);
             
             services.TryAddSingletonFactory<IStreamStore, EventStoreFactory>();
             services.TryAddSingleton<IEventStore, EventStore>();
