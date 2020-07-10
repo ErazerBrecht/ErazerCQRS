@@ -7,9 +7,8 @@ namespace Erazer.Infrastructure.Websockets
 {
     public static class WebsocketExtensions
     {
-        public static IServiceCollection AddWebsocketEmitter(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddWebsocketEmitter(this IServiceCollection services)
         {
-            services.Configure<WebsocketSettings>(configuration);
             services.AddScoped<IWebsocketEmitter, WebsocketEmitter>();
             services.AddSignalR();
 

@@ -18,7 +18,6 @@ namespace Erazer.Infrastructure.MongoDb
     // TODO Fix Exceptions to more correct exceptions...
     public class MongoDbSession: IDbSession
     {
-        private readonly IList<Func<Task>> _sideEffects;
         private readonly IMongoDatabase _mongoDb;
         private readonly ILogger<MongoDbSession> _logger;
         private IClientSessionHandle _mongoSession;
@@ -27,7 +26,7 @@ namespace Erazer.Infrastructure.MongoDb
         {
             get
             {
-                if(_mongoSession == null)
+                if (_mongoSession == null)
                     throw new Exception("Transaction is not started yet!");
 
                 return _mongoSession;
@@ -36,9 +35,8 @@ namespace Erazer.Infrastructure.MongoDb
 
         public MongoDbSession(IMongoDatabase mongoDb, ILogger<MongoDbSession> logger)
         {
-            _mongoDb = mongoDb;
-            _logger = logger;
-            _sideEffects = new List<Func<Task>>();
+            _mongoDb = mongoDb ?? throw new ArgumentNullException(nameof(mongoDb));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public void Dispose()

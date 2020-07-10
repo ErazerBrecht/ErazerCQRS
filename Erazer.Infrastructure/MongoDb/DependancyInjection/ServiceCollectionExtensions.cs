@@ -1,22 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Erazer.Framework.DTO;
-using Erazer.Framework.Events;
-using Erazer.Framework.Factories;
-using Erazer.Infrastructure.EventStore;
-using Erazer.Infrastructure.EventStore.MongoDb;
-using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.MongoDb;
 using Erazer.Infrastructure.ReadStore.ClassMaps;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
-using SqlStreamStore;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -51,6 +43,7 @@ namespace Microsoft.Extensions.DependencyInjection
         private static IServiceCollection AddMongoInternal(this IServiceCollection services, IEnumerable<Assembly> assemblies)
         {
             services.TryAddSingletonFactory<IMongoDatabase, MongoDbFactory>();
+            services.AddScoped<IDbSession, MongoDbSession>();
 
             services.AddMongoCollections(assemblies);
             services.AddMongoDbClassMaps();

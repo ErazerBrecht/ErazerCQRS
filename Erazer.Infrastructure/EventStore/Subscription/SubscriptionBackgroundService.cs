@@ -13,15 +13,15 @@ namespace Erazer.Infrastructure.EventStore.Subscription
 
         public SubscriptionBackgroundService(ISubscription subscription, ILogger<SubscriptionBackgroundService> logger)
         {
-            _subscription = subscription;
-            _logger = logger;
+            _subscription = subscription ?? throw new ArgumentNullException(nameof(subscription));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             try
             {
-                _logger.LogDebug("Started subscribing on EventStore");
+                _logger.LogDebug("Start subscribing on EventStore");
                 await _subscription.Connect();
             }
             catch (Exception ex)

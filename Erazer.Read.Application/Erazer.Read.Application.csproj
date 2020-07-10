@@ -5,10 +5,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="ViewModels" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Erazer.Read.Mapping\Erazer.Read.Mapping.csproj" />
     </ItemGroup>
 

@@ -11,16 +11,16 @@ using MediatR;
 
 namespace Erazer.Syncing.Handlers
 {
-    internal class TicketCommentEventHandler : INotificationHandler<TicketCommentDomainEvent>
+    public class TicketCommentEventHandler : INotificationHandler<TicketCommentDomainEvent>
     {
-        private readonly IDbHelper<CommentEventDto> _dbHelper;
+        private readonly IDbRepository<CommentEventDto> _db;
         private readonly IWebsocketEmitter _websocketEmitter;
         private readonly IMapper _mapper;
 
-        public TicketCommentEventHandler(IDbHelper<CommentEventDto> dbHelper, IWebsocketEmitter websocketEmitter,
+        public TicketCommentEventHandler(IDbRepository<CommentEventDto> db, IWebsocketEmitter websocketEmitter,
             IMapper mapper)
         {
-            _dbHelper = dbHelper ?? throw new ArgumentNullException(nameof(dbHelper));
+            _db = db ?? throw new ArgumentNullException(nameof(db));
             _websocketEmitter = websocketEmitter ?? throw new ArgumentNullException(nameof(websocketEmitter));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -44,7 +44,7 @@ namespace Erazer.Syncing.Handlers
 
         private async Task AddInDb(CommentEventDto eventDto)
         {
-            await _dbHelper.Add(eventDto);
+            await _db.Add(eventDto);
         }
 
         private Task EmitToFrontEnd(CommentEventDto eventDto)

@@ -4,37 +4,38 @@ using System.Threading;
 using System.Threading.Tasks;
 using Erazer.Framework.Events;
 using Erazer.Infrastructure.Logging;
-using Erazer.Infrastructure.MongoDb;
+using Erazer.Read.Application.Infrastructure;
+using Erazer.Syncing.Infrastructure;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Erazer.Infrastructure.EventStore.Subscription
 {
-    public class Subscription : ISubscription
+    public class LiveSubscription : ISubscription
     {
         private readonly IEventStore _eventStore;
-        private readonly IPositionStore _positionStore;
+        private readonly IDbQuery<PositionDto> _positionDbQuery;
         private readonly ITelemetry _telemetryClient;
         private readonly IServiceProvider _provider;
-        private readonly ILogger<Subscription> _logger;
+        private readonly ILogger<LiveSubscription> _logger;
 
         private IDisposable _subscription;
 
-        public Subscription(IEventStore eventStore, IPositionStore positionStore,
-            ITelemetry telemetryClient, IServiceProvider provider, ILogger<Subscription> logger)
+        public LiveSubscription(IEventStore eventStore, IDbQuery<PositionDto> positionDbQuery,
+            ITelemetry telemetryClient, IServiceProvider provider, ILogger<LiveSubscription> logger)
         {
-            _eventStore = eventStore;
-            _positionStore = positionStore;
-            _telemetryClient = telemetryClient;
-            _provider = provider;
-            _logger = logger;
+            _eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
+            _positionDbQuery = positionDbQuery ?? throw new ArgumentNullException(nameof(positionDbQuery));
+            _telemetryClient = telemetryClient ?? throw new ArgumentNullException(nameof(telemetryClient));
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task Connect()
         {
-            var position = await _positionStore.GetCurrentPosition();
-            _logger.LogInformation($"Started subscribing from position {position?.CheckPoint ?? -1}");
+            var position = await _positionDbQuery.Single(_ => true);
+            _logger.LogInformation($"Started a 'live' subscription from position {position?.CheckPoint ?? -1}");
             _subscription = _eventStore.Subscribe(position?.CheckPoint, EventAppeared, SubscriptionDropped);
         }
 
@@ -62,23 +63,18 @@ namespace Erazer.Infrastructure.EventStore.Subscription
             });
 
             using var scope = _provider.CreateScope();
-            var session = scope.ServiceProvider.GetRequiredService<IDbSession>();
+            var session = scope.ServiceProvider.GetRequiredService<IDbUnitOfWork>();
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
             try
             {
-                await session.StartTransaction();
-
+                await session.Start();
                 await mediator.Publish(@event, token);
-                await _positionStore.SetCurrentPosition(session, position, DateTimeOffset.UtcNow);
-
-                await session.Commit();
+                await session.Commit(position);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Event handling failed for {@event.GetType()} on position {position.ToString()}");
-                await session.Abort();
-
                 throw;
             }
         }

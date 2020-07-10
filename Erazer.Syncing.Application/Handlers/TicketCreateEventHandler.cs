@@ -18,45 +18,32 @@ using MediatR;
 
 namespace Erazer.Syncing.Handlers
 {
-    internal class TicketCreateEventHandler : INotificationHandler<TicketCreateDomainEvent>
+    public class TicketCreateEventHandler : INotificationHandler<TicketCreateDomainEvent>
     {
         private readonly IMapper _mapper;
         private readonly IWebsocketEmitter _websocketEmitter;
         private readonly IIntegrationEventPublisher _eventPublisher;
-        private readonly IDbHelper<TicketListDto> _dbTicketList;
-        private readonly IDbHelper<TicketDto> _dbTicket;
-        private readonly IDbHelper<PriorityDto> _dbPriority;
-        private readonly IDbHelper<StatusDto> _dbStatus;
-        private readonly IDbHelper<CreatedEventDto> _dbCreatedEvent;
-
+        private readonly IDbUnitOfWork _ctx;
 
         public TicketCreateEventHandler(IMapper mapper, IWebsocketEmitter websocketEmitter,
-            IIntegrationEventPublisher eventPublisher, IDbHelper<TicketListDto> dbTicketList,
-            IDbHelper<TicketDto> dbTicket, IDbHelper<PriorityDto> dbPriority, IDbHelper<StatusDto> dbStatus,
-            IDbHelper<CreatedEventDto> dbCreatedEvent)
+            IIntegrationEventPublisher eventPublisher, IDbUnitOfWork ctx)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _websocketEmitter = websocketEmitter ?? throw new ArgumentNullException(nameof(websocketEmitter));
             _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
-            _dbTicketList = dbTicketList ?? throw new ArgumentNullException(nameof(dbTicketList));
-            _dbTicket = dbTicket ?? throw new ArgumentNullException(nameof(dbTicket));
-            _dbPriority = dbPriority ?? throw new ArgumentNullException(nameof(dbPriority));
-            _dbStatus = dbStatus ?? throw new ArgumentNullException(nameof(dbStatus));
-            _dbCreatedEvent = dbCreatedEvent ?? throw new ArgumentNullException(nameof(dbCreatedEvent));
+            _ctx = ctx ?? throw new ArgumentNullException(nameof(ctx));
         }
 
         public async Task Handle(TicketCreateDomainEvent notification, CancellationToken cancellationToken)
         {
-            var priority = _dbPriority.Find(notification.PriorityId, cancellationToken);
-            var status = _dbStatus.Find(notification.StatusId, cancellationToken);
-
-            await Task.WhenAll(priority, status);
-
+            var priority = await _ctx.Priorities.Find(notification.PriorityId, cancellationToken);
+            var status = await _ctx.Statuses.Find(notification.StatusId, cancellationToken);
+            
             var ticketList = new TicketListDto
             {
                 Id = notification.AggregateRootId.ToString(),
-                Priority = priority.Result,
-                Status = status.Result,
+                Priority = priority,
+                Status = status,
                 Title = notification.Title,
                 FileCount = notification.Files?.Count ?? 0
             };
@@ -66,8 +53,8 @@ namespace Erazer.Syncing.Handlers
                 Id = notification.AggregateRootId.ToString(),
                 Description = notification.Description,
                 Title = notification.Title,
-                Priority = priority.Result,
-                Status = status.Result,
+                Priority = priority,
+                Status = status,
                 Files = notification.Files?.Select(f => new FileDto
                 {
                     Id = f.Id.ToString(),
@@ -85,18 +72,19 @@ namespace Erazer.Syncing.Handlers
                 UserId = notification.UserId.ToString(),
             };
 
-            await Task.WhenAll(
-                AddInDb(ticketList, ticket, @event),
-                EmitToFrontEnd(ticket, @event),
-                PublishOnBus(notification, priority.Result, status.Result, @event)
-            );
+            await AddInDb(ticketList, ticket, @event);
+            // await Task.WhenAll(
+            //     AddInDb(ticketList, ticket, @event),
+            //     EmitToFrontEnd(ticket, @event),
+            //     PublishOnBus(notification, priority, status, @event)
+            // );
         }
 
         private async Task AddInDb(TicketListDto ticketListDto, TicketDto ticketDto, CreatedEventDto eventDto)
         {
-            await _dbTicketList.Add(ticketListDto);
-            await _dbTicket.Add(ticketDto);
-            await _dbCreatedEvent.Add(eventDto);
+            await _ctx.TicketList.Add(ticketListDto);
+            await _ctx.Tickets.Add(ticketDto);
+            await _ctx.TicketEvents.Add(eventDto);
         }
 
         private Task EmitToFrontEnd(TicketDto ticketDto, TicketEventDto eventDto)
