@@ -1,28 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
+// ReSharper disable UnusedMember.Local
 
 namespace Erazer.Messages.IntegrationEvents.Models
 {
     public class TicketCreatedIntegrationEvent : IIntegrationEvent
     {
-        public string Id { get; }
-        public string Title { get; }
-        public string Description { get; }
+        public string Id { get; private set; }
+        public string Title { get; private set; }
+        public string Description { get; private set; }
 
-        public string PriorityId { get; }
-        public string PriorityName { get; }
+        public string PriorityId { get; private set;}
+        public string PriorityName { get; private set;}
 
-        public string StatusId { get; }
-        public string StatusName { get; }
+        public string StatusId { get; private set;}
+        public string StatusName { get; private set;}
 
-        public string CreateEventId { get; }
-        public DateTime Created { get; }
-        public string UserId { get; }
+        public string CreateEventId { get; private set;}
+        public long Created { get; private set;}
 
-        public IEnumerable<TicketCreatedFile> Files { get; set; }
+        public IEnumerable<TicketCreatedFile> Files { get; private set; }
 
+        private TicketCreatedIntegrationEvent()
+        {
+        }
+        
         public TicketCreatedIntegrationEvent(string id, string title, string description, string priorityId, string priorityName,
-            string statusId, string statusName, string createEventId, DateTime created, string userId, IEnumerable<TicketCreatedFile> files)
+            string statusId, string statusName, string createEventId, long created, IEnumerable<TicketCreatedFile> files)
         {
             Id = id;
             Title = title;
@@ -33,7 +38,6 @@ namespace Erazer.Messages.IntegrationEvents.Models
             StatusName = statusName;
             CreateEventId = createEventId;
             Created = created;
-            UserId = userId;
 
             Files = files;
         }
@@ -41,11 +45,15 @@ namespace Erazer.Messages.IntegrationEvents.Models
 
     public class TicketCreatedFile
     {
-        public Guid Id { get; }
-        public string Name { get; }
-        public string Type { get; }
-        public int Size { get; }
+        public Guid Id { get; private set;}
+        public string Name { get; private set;}
+        public string Type { get; private set;}
+        public int Size { get; private set;}
 
+        private TicketCreatedFile()
+        {
+        }
+        
         public TicketCreatedFile(Guid id, string name, string type, int size)
         {
             Id = id;

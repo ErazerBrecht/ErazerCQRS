@@ -47,7 +47,7 @@ namespace Erazer.Infrastructure.ReadStore
             {
                 Id = "ERAZER_CQRS_SUBSCRIPTION_POSITION",
                 CheckPoint = position,
-                UpdatedAt = DateTimeOffset.Now.ToUnixTimeSeconds()
+                UpdatedAt = DateTimeOffset.Now.ToUnixTimeMilliseconds()
             };
                 
             try

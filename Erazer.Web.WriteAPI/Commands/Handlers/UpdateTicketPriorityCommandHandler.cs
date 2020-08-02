@@ -1,4 +1,5 @@
 ﻿using Erazer.Domain;
+using Erazer.Domain.Ticket;
 using Erazer.Framework.Domain;
 using Erazer.Web.WriteAPI.Commands.Requests;
 

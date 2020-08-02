@@ -44,11 +44,10 @@ namespace Erazer.Web.DocumentStore
             var command = new UploadFileCommand
             {
                 Id = id,
-                Created = DateTime.Now,
+                Created = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
                 Data = content,
                 Name = formFile.FileName,
                 Type = formFile.ContentType,
-                UserId = Guid.NewGuid()
             };
 
             await _mediator.Send(command);

@@ -5,7 +5,7 @@ namespace Erazer.Infrastructure.EventStore
 {
     public interface IEventTypeMapping
     {
-        string GetName<T>(T @event) where T : IDomainEvent;
+        string GetName<T>(T @event) where T : IEvent;
         Type GetType(string eventName);
     }
 }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Erazer.Framework.Events;
+using Erazer.Framework.Events.Envelope;
 using Erazer.Infrastructure.Logging;
+using Erazer.Infrastructure.ReadStore;
 using Erazer.Read.Application.Infrastructure;
 using Erazer.Syncing.Infrastructure;
 using MediatR;
@@ -23,20 +25,23 @@ namespace Erazer.Infrastructure.EventStore.Subscription
         private IDisposable _subscription;
 
         public LiveSubscription(IEventStore eventStore, IDbQuery<PositionDto> positionDbQuery,
-            ITelemetry telemetryClient, IServiceProvider provider, ILogger<LiveSubscription> logger)
+            IServiceCollection serviceCollection, ITelemetry telemetryClient, ILogger<LiveSubscription> logger)
         {
             _eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
             _positionDbQuery = positionDbQuery ?? throw new ArgumentNullException(nameof(positionDbQuery));
             _telemetryClient = telemetryClient ?? throw new ArgumentNullException(nameof(telemetryClient));
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            
+            if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
+            serviceCollection.AddScoped<IDbUnitOfWork, DbUnitOfWork>();
+            _provider = serviceCollection.BuildServiceProvider();
         }
 
         public async Task Connect()
         {
             var position = await _positionDbQuery.Single(_ => true);
-            _logger.LogInformation($"Started a 'live' subscription from position {position?.CheckPoint ?? -1}");
-            _subscription = _eventStore.Subscribe(position?.CheckPoint, EventAppeared, SubscriptionDropped);
+            _logger.LogInformation($"Started a 'Live' subscription from position {position?.CheckPoint.ToString() ?? "NULL"}");
+            _subscription = _eventStore.Subscribe(position?.CheckPoint, EventAppeared, SubscriptionDropped, HasCaughtUp);
         }
 
         private void SubscriptionDropped(Exception ex)
@@ -52,14 +57,14 @@ namespace Erazer.Infrastructure.EventStore.Subscription
             Connect().Wait();
         }
 
-        private async Task EventAppeared(long position, IDomainEvent @event, CancellationToken token)
+        private async Task EventAppeared(IEventEnvelope<IEvent> eventEnvelope, CancellationToken token)
         {
             _telemetryClient.TrackEvent("New event appeared from EventStore subscription", new Dictionary<string, string>
             {
-                {"Type", @event.GetType().Name},
-                {"Position", position.ToString()},
-                {"StreamVersion", @event.Version.ToString()},
-                {"Created (Epoch)", @event.Created.ToLongDateString()}
+                {"Type", eventEnvelope.Event.GetType().Name},
+                {"Position", eventEnvelope.Position.ToString()},
+                {"StreamVersion", eventEnvelope.Version.ToString()},
+                {"Created (Epoch)", eventEnvelope.Created.ToString()}
             });
 
             using var scope = _provider.CreateScope();
@@ -69,14 +74,21 @@ namespace Erazer.Infrastructure.EventStore.Subscription
             try
             {
                 await session.Start();
-                await mediator.Publish(@event, token);
-                await session.Commit(position);
+                await mediator.Publish(eventEnvelope, token);
+                await session.Commit(eventEnvelope.Position);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Event handling failed for {@event.GetType()} on position {position.ToString()}");
+                _logger.LogError(ex, $"Event handling failed for {eventEnvelope.GetType()} on position {eventEnvelope.Position.ToString()}");
                 throw;
             }
+        }
+        
+        private void HasCaughtUp(bool hasCaughtUp)
+        {
+            if (hasCaughtUp)
+                _telemetryClient.TrackEvent("Live subscription has caught up to the end of the stream!");
+
         }
 
         public void Dispose()

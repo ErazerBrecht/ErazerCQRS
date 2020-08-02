@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
+using Erazer.Framework.Events.Envelope;
 using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.Logging;
 using Newtonsoft.Json;
@@ -29,11 +30,11 @@ namespace Erazer.Infrastructure.EventStore
             _eventMap = eventMap ?? throw new ArgumentNullException(nameof(eventMap));
         }
 
-        public async Task Save<T>(Guid aggregateId, int expectedVersion, IEnumerable<IDomainEvent> events,
+        public async Task Save<T>(Guid aggregateId, int expectedVersion, IEnumerable<IEvent> events,
             CancellationToken cancellationToken) where T : AggregateRoot
         {
             var now = DateTimeOffset.Now;
-            var domainEvents = events as List<IDomainEvent> ?? events.ToList();
+            var domainEvents = events as List<IEvent> ?? events.ToList();
 
             var streamName = GetStreamName<T>(aggregateId);
             var messages = GenerateStreamMessage<T>(streamName, expectedVersion, domainEvents).ToArray();
@@ -44,42 +45,56 @@ namespace Erazer.Infrastructure.EventStore
                 DateTimeOffset.Now - now, true);
         }
 
-        public async Task<IEnumerable<IDomainEvent>> Get<T>(Guid aggregateId, int fromVersion,
+        public async Task<IEnumerable<IEventEnvelope<IEvent>>> Get<T>(Guid aggregateId, int fromVersion,
             CancellationToken cancellationToken) where T : AggregateRoot
         {
             var now = DateTimeOffset.Now;
             var streamName = GetStreamName<T>(aggregateId);
-            var streamEvents = new List<StreamMessage>();
+            var streamMessages = new List<StreamMessage>();
 
             ReadStreamPage eventCollection;
 
             do
             {
-                eventCollection = await _storeConnection.ReadStreamForwards(streamName, fromVersion, 1000, cancellationToken);
-                streamEvents.AddRange(eventCollection.Messages);
+                eventCollection =
+                    await _storeConnection.ReadStreamForwards(streamName, fromVersion, 1000, cancellationToken);
+                streamMessages.AddRange(eventCollection.Messages);
                 fromVersion = eventCollection.NextStreamVersion;
             } while (!eventCollection.IsEnd);
 
             _telemetryClient.TrackDependency("DB", "EventStore (SQL)",
-                $"Retrieving events succeeded - AggregateId: {aggregateId} EventCount: {streamEvents.Count}", now,
+                $"Retrieving events succeeded - AggregateId: {aggregateId} EventCount: {streamMessages.Count}", now,
                 DateTimeOffset.Now - now, true);
 
-            return (await DeserializeEvents(streamEvents)).ToList();
+            return (await DeserializeMessages(streamMessages)).ToList();
+        }
+
+        public async Task<(bool IsEnd, IEnumerable<IEventEnvelope<IEvent>> EventEnvelopes)> GetAll(long fromPosition,
+            int pageSize, CancellationToken cancellationToken = default)
+        {
+            var page = await _storeConnection.ReadAllForwards(fromPosition, pageSize, true, cancellationToken);
+            var events = (await DeserializeMessages(page.Messages)).ToList();
+            return (page.IsEnd, events);
         }
 
         public IDisposable Subscribe(long? continueAfterPosition,
-            Func<long, IDomainEvent, CancellationToken, Task> streamMessageReceived,
-            Action<Exception> subscriptionDropped = null)
+            Func<IEventEnvelope<IEvent>, CancellationToken, Task> streamMessageReceived,
+            Action<Exception> subscriptionDropped = null, Action<bool> hasCaughtUp = null, int? pageSize = null)
         {
-            return _storeConnection.SubscribeToAll(continueAfterPosition, async (subscription, message, token) =>
+            var allStreamSubscription = _storeConnection.SubscribeToAll(continueAfterPosition,
+                async (subscription, message, token) =>
                 {
-                    var @event = await DeserializeEvent(message);
-                    await streamMessageReceived(message.Position, @event, token);
+                    var eventEnvelope = await DeserializeMessage(message);
+                    await streamMessageReceived(eventEnvelope, token);
                 },
                 (subscription, reason, exception) =>
                 {
-                    subscriptionDropped(new SubscriptionDroppedException(reason, exception));
-                });
+                    subscriptionDropped?.Invoke(new SubscriptionDroppedException(reason, exception));
+                },
+                up => { hasCaughtUp?.Invoke(up); });
+
+            allStreamSubscription.MaxCountPerRead = pageSize ?? 500;
+            return allStreamSubscription;
         }
 
         #region Helpers
@@ -96,7 +111,7 @@ namespace Erazer.Infrastructure.EventStore
         }
 
         private IEnumerable<NewStreamMessage> GenerateStreamMessage<T>(string streamName, int expectedVersion,
-            IEnumerable<IDomainEvent> events) where T : AggregateRoot
+            IEnumerable<IEvent> events) where T : AggregateRoot
         {
             var generator = new DeterministicGuidGenerator(ConstantGuid);
 
@@ -108,21 +123,21 @@ namespace Erazer.Infrastructure.EventStore
             }
         }
 
-        private Task<IDomainEvent[]> DeserializeEvents(IEnumerable<StreamMessage> messages)
+        private Task<IEventEnvelope<IEvent>[]> DeserializeMessages(IEnumerable<StreamMessage> messages)
         {
-            return Task.WhenAll(messages.Select(async m => await DeserializeEvent(m)));
+            return Task.WhenAll(messages.Select(DeserializeMessage));
         }
 
-        private async Task<IDomainEvent> DeserializeEvent(StreamMessage message)
+        private async Task<IEventEnvelope<IEvent>> DeserializeMessage(StreamMessage message)
         {
+            var aggregateId = GetAggregateId(message.StreamId);
+            var date = new DateTimeOffset(message.CreatedUtc);
             var json = await message.GetJsonData();
             var eventType = _eventMap.GetType(message.Type);
-            var @event = (IDomainEvent) JsonConvert.DeserializeObject(json, eventType, JsonSettings.EventSerializerSettings);
-            // TODO remove setters from 'event'
-            @event.AggregateRootId = GetAggregateId(message.StreamId);
-            @event.Created = message.CreatedUtc;
-            @event.Version = message.StreamVersion;
-            return @event;
+            var @event = (IEvent) JsonConvert.DeserializeObject(json, eventType, JsonSettings.EventSerializerSettings);
+
+            return EventEnvelopeFactory.Build(@event, aggregateId, date.ToUnixTimeMilliseconds(),
+                message.StreamVersion, message.Position);
         }
 
         #endregion

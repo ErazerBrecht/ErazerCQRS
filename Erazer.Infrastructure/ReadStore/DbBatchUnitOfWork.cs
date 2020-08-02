@@ -22,7 +22,6 @@ namespace Erazer.Infrastructure.ReadStore
         public IDbRepository<TicketEventDto> TicketEvents { get; }
         private IDbRepository<PositionDto> Position { get; }
 
-        
         public DbBatchUnitOfWork(IMongoDatabase db, IDbSession dbSession, ILogger<DbBatchUnitOfWork> logger)
         {
             if (db == null) throw new ArgumentNullException(nameof(db));
@@ -48,14 +47,14 @@ namespace Erazer.Infrastructure.ReadStore
             {
                 Id = "ERAZER_CQRS_SUBSCRIPTION_POSITION",
                 CheckPoint = position,
-                UpdatedAt = DateTimeOffset.Now.ToUnixTimeSeconds()
+                UpdatedAt = DateTimeOffset.Now.ToUnixTimeMilliseconds()
             };
             
             await Position.Mutate(newPosition);
-            await _dbSession.StartTransaction();
 
             try
             {
+                await _dbSession.StartTransaction();
                 await ((DbBatchRepository<StatusDto>) Statuses).Flush(_dbSession);
                 await ((DbBatchRepository<PriorityDto>) Priorities).Flush(_dbSession);
                 await ((DbBatchRepository<TicketListDto>) TicketList).Flush(_dbSession);

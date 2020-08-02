@@ -26,17 +26,12 @@ namespace Erazer.Web.WriteAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTicket(NewTicketViewModel model)
         {
-            var id = Guid.NewGuid();
-            var userId = Guid.Parse("88888888-8888-8888-8888-888888888888");
-
-            var files = model.Files == null || !model.Files.Any()
+           var files = model.Files == null || !model.Files.Any()
                 ? new List<File>()
-                : await _fileUploader.UploadFiles(userId, model.Files.ToArray());
+                : await _fileUploader.UploadFiles( model.Files.ToArray());
 
-            await _mediator.Send(new NewTicketCommand
+            var id = await _mediator.Send(new NewTicketCommand
             {
-                Id = id,
-                UserId = userId,
                 Title = model.Title,
                 Description = model.Description,
                 PriorityId = model.PriorityId,

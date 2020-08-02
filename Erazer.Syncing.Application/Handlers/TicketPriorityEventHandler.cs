@@ -2,7 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Erazer.Domain.Events;
+using Erazer.Domain.Ticket.Events;
+using Erazer.Framework.Events;
+using Erazer.Framework.Events.Envelope;
 using Erazer.Messages.IntegrationEvents.Infrastructure;
 using Erazer.Messages.IntegrationEvents.Models;
 using Erazer.Read.Data.Ticket;
@@ -14,7 +16,7 @@ using MediatR;
 
 namespace Erazer.Syncing.Handlers
 {
-    public class TicketPriorityEventHandler : INotificationHandler<TicketPriorityDomainEvent>
+    public class TicketPriorityEventHandler : IEventHandler<TicketPriorityChangedEvent>
     {
         private readonly IMapper _mapper;
         private readonly IDbRepository<TicketListDto> _ticketListDb;
@@ -38,12 +40,12 @@ namespace Erazer.Syncing.Handlers
             _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
         }
 
-        public async Task Handle(TicketPriorityDomainEvent message, CancellationToken cancellationToken)
+        public async Task Handle(EventEnvelope<TicketPriorityChangedEvent> eventEnvelope, CancellationToken cancellationToken)
         {
-            var ticketList = await _ticketListDb.Find(message.AggregateRootId.ToString(), cancellationToken);
-            var ticket = await _ticketDb.Find(message.AggregateRootId.ToString(), cancellationToken);
-            var oldPriority = await _priorityDb.Find(message.FromPriorityId, cancellationToken);
-            var newPriority = await _priorityDb.Find(message.ToPriorityId, cancellationToken);
+            var ticketList = await _ticketListDb.Find(eventEnvelope.AggregateRootId.ToString(), cancellationToken);
+            var ticket = await _ticketDb.Find(eventEnvelope.AggregateRootId.ToString(), cancellationToken);
+            var oldPriority = await _priorityDb.Find(eventEnvelope.Event.FromPriorityId, cancellationToken);
+            var newPriority = await _priorityDb.Find(eventEnvelope.Event.ToPriorityId, cancellationToken);
 
             ticketList.Priority = newPriority;
             ticket.Priority = newPriority;
@@ -52,9 +54,8 @@ namespace Erazer.Syncing.Handlers
             var ticketEvent = new PriorityEventDto(oldPriority, newPriority)
             {
                 Id = Guid.NewGuid().ToString(),
-                TicketId = message.AggregateRootId.ToString(),
-                Created = message.Created,
-                UserId = message.UserId.ToString(),
+                TicketId = eventEnvelope.AggregateRootId.ToString(),
+                Created = eventEnvelope.Created,
             };
 
             await Task.WhenAll(
@@ -85,8 +86,7 @@ namespace Erazer.Syncing.Handlers
                 ticketDto.Id,
                 ticketDto.Title,
                 eventDto.Id,
-                eventDto.Created,
-                eventDto.UserId
+                eventDto.Created
             );
 
             return _eventPublisher.Publish(integrationEvent);

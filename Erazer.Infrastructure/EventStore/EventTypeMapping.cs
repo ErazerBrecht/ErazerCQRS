@@ -12,7 +12,7 @@ namespace Erazer.Infrastructure.EventStore
 
         public EventTypeMapping(params Assembly[] assemblies)
         {
-            var type = typeof(IDomainEvent);
+            var type = typeof(IEvent);
 
             if (assemblies == null || !assemblies.Any()) 
                 assemblies = AppDomain.CurrentDomain.GetAssemblies().ToArray();
@@ -23,7 +23,7 @@ namespace Erazer.Infrastructure.EventStore
             _map = types.Select(t => new {Type = t, Name = GetEventName(t)}).ToDictionary(t => t.Name, t => t.Type);
         }
 
-        public string GetName<T>(T @event) where T : IDomainEvent
+        public string GetName<T>(T @event) where T : IEvent
         {
             return _map.Single(m => m.Value == @event.GetType()).Key;
         }

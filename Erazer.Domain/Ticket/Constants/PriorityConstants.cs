@@ -1,6 +1,6 @@
 ﻿namespace Erazer.Domain.Constants
 {
-    public class PriorityConstants
+    public static class PriorityConstants
     {
         public const string Lowest = "50c8608e-8de0-4e6d-bd89-21efe29afa81";
         public const string Low = "646be77c-bc46-429f-a3ab-ae19516dcb6a";

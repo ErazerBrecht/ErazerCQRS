@@ -2,16 +2,17 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Erazer.Domain.Events;
+using Erazer.Domain.Ticket.Events;
+using Erazer.Framework.Events;
+using Erazer.Framework.Events.Envelope;
 using Erazer.Read.Data.Ticket.Events;
 using Erazer.Read.ViewModels.Ticket.Events;
 using Erazer.Syncing.Infrastructure;
 using Erazer.Syncing.SeedWork.Redux;
-using MediatR;
 
 namespace Erazer.Syncing.Handlers
 {
-    public class TicketCommentEventHandler : INotificationHandler<TicketCommentDomainEvent>
+    public class TicketCommentEventHandler : IEventHandler<TicketCommentPlacedEvent>
     {
         private readonly IDbRepository<CommentEventDto> _db;
         private readonly IWebsocketEmitter _websocketEmitter;
@@ -25,15 +26,14 @@ namespace Erazer.Syncing.Handlers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task Handle(TicketCommentDomainEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(EventEnvelope<TicketCommentPlacedEvent> eventEnvelope, CancellationToken cancellationToken)
         {
             var ticketEvent = new CommentEventDto
             {
                 Id = Guid.NewGuid().ToString(),
-                TicketId = notification.AggregateRootId.ToString(),
-                Created = notification.Created,
-                UserId = notification.UserId.ToString(),
-                Comment = notification.Comment
+                TicketId = eventEnvelope.AggregateRootId.ToString(),
+                Created = eventEnvelope.Created,
+                Comment = eventEnvelope.Event.Comment
             };
 
             await Task.WhenAll(
@@ -42,9 +42,9 @@ namespace Erazer.Syncing.Handlers
             );
         }
 
-        private async Task AddInDb(CommentEventDto eventDto)
+        private Task AddInDb(CommentEventDto eventDto)
         {
-            await _db.Add(eventDto);
+            return _db.Add(eventDto);
         }
 
         private Task EmitToFrontEnd(CommentEventDto eventDto)

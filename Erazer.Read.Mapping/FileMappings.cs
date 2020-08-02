@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Erazer.Read.Data.File;
-using Erazer.Web.ReadAPI.ViewModels;
+using Erazer.Read.ViewModels.File;
 
 namespace Erazer.Read.Mapping
 {

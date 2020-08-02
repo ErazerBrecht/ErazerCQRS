@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Erazer.Domain.Events;
+using Erazer.Domain.Ticket.Events;
+using Erazer.Framework.Events;
+using Erazer.Framework.Events.Envelope;
 using Erazer.Messages.IntegrationEvents.Infrastructure;
 using Erazer.Messages.IntegrationEvents.Models;
 using Erazer.Read.Data.File;
@@ -14,11 +16,10 @@ using Erazer.Read.ViewModels.Ticket;
 using Erazer.Read.ViewModels.Ticket.Events;
 using Erazer.Syncing.Infrastructure;
 using Erazer.Syncing.SeedWork.Redux;
-using MediatR;
 
 namespace Erazer.Syncing.Handlers
 {
-    public class TicketCreateEventHandler : INotificationHandler<TicketCreateDomainEvent>
+    public class TicketCreateEventHandler : IEventHandler<TicketCreatedEvent>
     {
         private readonly IMapper _mapper;
         private readonly IWebsocketEmitter _websocketEmitter;
@@ -34,28 +35,28 @@ namespace Erazer.Syncing.Handlers
             _ctx = ctx ?? throw new ArgumentNullException(nameof(ctx));
         }
 
-        public async Task Handle(TicketCreateDomainEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(EventEnvelope<TicketCreatedEvent> eventEnvelope, CancellationToken cancellationToken)
         {
-            var priority = await _ctx.Priorities.Find(notification.PriorityId, cancellationToken);
-            var status = await _ctx.Statuses.Find(notification.StatusId, cancellationToken);
+            var priority = await _ctx.Priorities.Find(eventEnvelope.Event.PriorityId, cancellationToken);
+            var status = await _ctx.Statuses.Find(eventEnvelope.Event.StatusId, cancellationToken);
             
             var ticketList = new TicketListDto
             {
-                Id = notification.AggregateRootId.ToString(),
+                Id = eventEnvelope.AggregateRootId.ToString(),
                 Priority = priority,
                 Status = status,
-                Title = notification.Title,
-                FileCount = notification.Files?.Count ?? 0
+                Title = eventEnvelope.Event.Title,
+                FileCount = eventEnvelope.Event.Files?.Count ?? 0
             };
 
             var ticket = new TicketDto
             {
-                Id = notification.AggregateRootId.ToString(),
-                Description = notification.Description,
-                Title = notification.Title,
+                Id = eventEnvelope.AggregateRootId.ToString(),
+                Description = eventEnvelope.Event.Description,
+                Title = eventEnvelope.Event.Title,
                 Priority = priority,
                 Status = status,
-                Files = notification.Files?.Select(f => new FileDto
+                Files = eventEnvelope.Event.Files?.Select(f => new FileDto
                 {
                     Id = f.Id.ToString(),
                     Name = f.Name,
@@ -67,9 +68,8 @@ namespace Erazer.Syncing.Handlers
             var @event = new CreatedEventDto
             {
                 Id = Guid.NewGuid().ToString(),
-                TicketId = notification.AggregateRootId.ToString(),
-                Created = notification.Created,
-                UserId = notification.UserId.ToString(),
+                TicketId = eventEnvelope.AggregateRootId.ToString(),
+                Created = eventEnvelope.Created,
             };
 
             await AddInDb(ticketList, ticket, @event);
@@ -94,21 +94,20 @@ namespace Erazer.Syncing.Handlers
             return _websocketEmitter.Emit(new ReduxTicketCreateAction(vm));
         }
 
-        private Task PublishOnBus(TicketCreateDomainEvent notification, PriorityDto priorityDto, StatusDto statusDto,
+        private Task PublishOnBus(IEventEnvelope<TicketCreatedEvent> eventEnvelope, PriorityDto priorityDto, StatusDto statusDto,
             TicketEventDto eventDto)
         {
-            var files = notification.Files.Select(f => new TicketCreatedFile(f.Id, f.Name, f.Type, f.Size));
+            var files = eventEnvelope.Event.Files.Select(f => new TicketCreatedFile(f.Id, f.Name, f.Type, f.Size));
             var integrationEvent = new TicketCreatedIntegrationEvent(
-                notification.AggregateRootId.ToString(),
-                notification.Title,
-                notification.Description,
+                eventEnvelope.AggregateRootId.ToString(),
+                eventEnvelope.Event.Title,
+                eventEnvelope.Event.Description,
                 priorityDto.Id,
                 priorityDto.Name,
                 statusDto.Id,
                 statusDto.Name,
                 eventDto.Id,
                 eventDto.Created,
-                eventDto.UserId,
                 files);
 
             return _eventPublisher.Publish(integrationEvent);

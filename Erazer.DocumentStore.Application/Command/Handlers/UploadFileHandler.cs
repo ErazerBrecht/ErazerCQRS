@@ -23,13 +23,12 @@ namespace Erazer.DocumentStore.Application.Command.Handlers
         {
             var dto = new FileContentDto
             {
+                Id = message.Id.ToString(),
                 Created = message.Created,
                 Data = message.Data,
-                Id = message.Id.ToString(),
                 Name = message.Name,
                 Size = message.Data.Length,
                 Type = message.Type,
-                UserId = message.UserId
             };
 
             await _fileRepository.Save(dto);

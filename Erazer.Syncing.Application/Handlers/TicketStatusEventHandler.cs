@@ -2,7 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Erazer.Domain.Events;
+using Erazer.Domain.Ticket.Events;
+using Erazer.Framework.Events;
+using Erazer.Framework.Events.Envelope;
 using Erazer.Messages.IntegrationEvents.Infrastructure;
 using Erazer.Messages.IntegrationEvents.Models;
 using Erazer.Read.Data.Ticket;
@@ -14,7 +16,7 @@ using MediatR;
 
 namespace Erazer.Syncing.Handlers
 {
-    public class TicketStatusEventHandler : INotificationHandler<TicketStatusDomainEvent>
+    public class TicketStatusEventHandler : IEventHandler<TicketStatusChangedEvent>
     {
         private readonly IMapper _mapper;
         private readonly IDbRepository<TicketListDto> _ticketListDb;
@@ -38,12 +40,12 @@ namespace Erazer.Syncing.Handlers
             _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
         }
 
-        public async Task Handle(TicketStatusDomainEvent message, CancellationToken cancellationToken)
+        public async Task Handle(EventEnvelope<TicketStatusChangedEvent> eventEnvelope, CancellationToken cancellationToken)
         {
-            var ticketList = await _ticketListDb.Find(message.AggregateRootId.ToString(), cancellationToken);
-            var ticket = await _ticketDb.Find(message.AggregateRootId.ToString(), cancellationToken);
-            var oldStatus = await _statusDb.Find(message.FromStatusId, cancellationToken);
-            var newStatus = await _statusDb.Find(message.ToStatusId, cancellationToken);
+            var ticketList = await _ticketListDb.Find(eventEnvelope.AggregateRootId.ToString(), cancellationToken);
+            var ticket = await _ticketDb.Find(eventEnvelope.AggregateRootId.ToString(), cancellationToken);
+            var oldStatus = await _statusDb.Find(eventEnvelope.Event.FromStatusId, cancellationToken);
+            var newStatus = await _statusDb.Find(eventEnvelope.Event.ToStatusId, cancellationToken);
 
             ticketList.Status = newStatus;
             ticket.Status = newStatus;
@@ -52,9 +54,8 @@ namespace Erazer.Syncing.Handlers
             var ticketEvent = new StatusEventDto(oldStatus, newStatus)
             {
                 Id = Guid.NewGuid().ToString(),
-                TicketId = message.AggregateRootId.ToString(),
-                Created = message.Created,
-                UserId = message.UserId.ToString(),
+                TicketId = eventEnvelope.AggregateRootId.ToString(),
+                Created = eventEnvelope.Created,
             };
 
             await Task.WhenAll(
@@ -85,8 +86,7 @@ namespace Erazer.Syncing.Handlers
                 ticketDto.Id,
                 ticketDto.Title,
                 eventDto.Id,
-                eventDto.Created,
-                eventDto.UserId
+                eventDto.Created
             );
 
             return _eventPublisher.Publish(integrationEvent);

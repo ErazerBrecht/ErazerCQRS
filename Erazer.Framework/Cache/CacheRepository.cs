@@ -35,15 +35,16 @@ namespace Erazer.Framework.Cache
                 if (_cache.IsTracked(aggregateId))
                 {
                     aggregate = (T) _cache.Get(aggregateId);
-                    var events = (await _eventStore.Get<T>(aggregateId, aggregate.Version + 1)).ToList();
-
-                    if (events.Any() && events.First().Version != aggregate.Version + 1)
+                    var result = (await _eventStore.Get<T>(aggregateId, aggregate.Version + 1)).ToList();
+                    
+                    if (result.Any() && result.First().Version != aggregate.Version + 1)
                     {
                         _cache.Remove(aggregateId);
                     }
                     else
                     {
-                        aggregate.LoadFromHistory(events);
+                        var events = result.Select(x => x.Event).ToList();
+                        aggregate.LoadFromHistory(aggregateId, events);
                         return aggregate;
                     }
                 }

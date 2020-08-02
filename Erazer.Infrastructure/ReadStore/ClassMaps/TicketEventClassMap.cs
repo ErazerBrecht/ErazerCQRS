@@ -12,7 +12,6 @@ namespace Erazer.Infrastructure.ReadStore.ClassMaps
 
             cm.MapProperty(x => x.TicketId).SetElementName("ticketId");
             cm.MapProperty(x => x.Created).SetElementName("created");
-            cm.MapProperty(x => x.UserId).SetElementName("userId");
         }
     }
 }

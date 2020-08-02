@@ -8,8 +8,4 @@
       <ProjectReference Include="..\Erazer.Read.Data\Erazer.Read.Data.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Mappings" />
-    </ItemGroup>
-
 </Project>

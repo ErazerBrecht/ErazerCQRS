@@ -39,22 +39,32 @@ namespace Microsoft.Extensions.DependencyInjection
         public static EventStoreBuilder AddLiveSubscriber(this EventStoreBuilder builder)
         {
             builder.Collection.AddReadOnlyStore();
-            builder.Collection.AddScoped<IDbUnitOfWork, DbUnitOfWork>();
-
-
             builder.Collection.AddSingleton<ISubscription, LiveSubscription>();
             builder.Collection.AddSingleton<IHostedService, SubscriptionBackgroundService>();
 
+            builder.Collection.AddSingleton(_ => builder.Collection);
+            
             return builder;
         }
         
         public static EventStoreBuilder AddReSyncSubscriber(this EventStoreBuilder builder)
         {
             builder.Collection.AddReadOnlyStore();
-            builder.Collection.AddScoped<IDbUnitOfWork, DbBatchUnitOfWork>();
-
             builder.Collection.AddSingleton<ISubscription, ReSyncSubscription>();
             builder.Collection.AddSingleton<IHostedService, SubscriptionBackgroundService>();
+
+            builder.Collection.AddSingleton(_ => builder.Collection);
+
+            return builder;
+        }
+        
+        public static EventStoreBuilder AddComboSubscriber(this EventStoreBuilder builder)
+        {
+            builder.Collection.AddReadOnlyStore();
+            builder.Collection.AddSingleton<ISubscription, ComboSubscription>();
+            builder.Collection.AddSingleton<IHostedService, SubscriptionBackgroundService>();
+
+            builder.Collection.AddSingleton(_ => builder.Collection);
 
             return builder;
         }

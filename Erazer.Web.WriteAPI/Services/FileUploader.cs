@@ -12,7 +12,7 @@ using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
-using TicketFile = Erazer.Domain.Files.File;
+using File = Erazer.Domain.Files.File;
 
 namespace Erazer.Web.WriteAPI.Services
 {
@@ -22,15 +22,15 @@ namespace Erazer.Web.WriteAPI.Services
 
         public FileUploader(ICommandPublisher publisher)
         {
-            if (publisher != null) _publisher = publisher;
+            _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
         }
 
-        public async Task<IEnumerable<TicketFile>> UploadFiles(Guid userId, params IFormFile[] formFiles)
+        public async Task<IEnumerable<File>> UploadFiles(Guid userId, params IFormFile[] formFiles)
         {
             var files = GenerateFileUploadCommands(userId, formFiles).ToList();
-            await _publisher.Publish<UploadFileCommand>(files, CommandBusEndPoints.ErazerDocumentStore);
+            await _publisher.Publish(files, CommandBusEndPoints.ErazerDocumentStore);
 
-            return files.Select(f => new TicketFile(f.Id, f.Name, f.Type, f.Data.Length, f.Created, f.UserId));
+            return files.Select(f => new File(f.Id, f.Name, f.Type, f.Data.Length, f.Created));
         }
 
         private static IEnumerable<UploadFileCommand> GenerateFileUploadCommands(Guid userId, params IFormFile[] files)
@@ -46,8 +46,7 @@ namespace Erazer.Web.WriteAPI.Services
                 yield return new UploadFileCommand
                 {
                     Id = Guid.NewGuid(),
-                    Created = DateTime.UtcNow,
-                    UserId = userId,
+                    Created = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
                     Name = file.FileName,
                     Type = file.ContentType,
                     Data = data

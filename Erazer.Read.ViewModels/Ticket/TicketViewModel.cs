@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using Erazer.Read.ViewModels.File;
 using Erazer.Read.ViewModels.Ticket.Events;
-using Erazer.Web.ReadAPI.ViewModels;
 
 namespace Erazer.Read.ViewModels.Ticket
 {
@@ -13,7 +13,7 @@ namespace Erazer.Read.ViewModels.Ticket
         public StatusViewModel Status { get; set; }
 
         public string Description { get; set; }
-        public IList<TicketEventViewModel> Events { get; set; }
-        public IList<FileViewModel> Files { get; set; }
+        public List<TicketEventViewModel> Events { get; set; }
+        public List<FileViewModel> Files { get; set; }
     }
 }

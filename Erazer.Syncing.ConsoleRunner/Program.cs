@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
-using Erazer.Domain.Events;
+using Erazer.Domain.Ticket.Events;
 using Erazer.Infrastructure.ReadStore;
 using Erazer.Infrastructure.ServiceBus;
 using Erazer.Infrastructure.Websockets;
@@ -20,7 +20,7 @@ namespace Erazer.Syncing.ConsoleRunner
     {
         private static IConfigurationRoot _configuration;
         private static ServiceBusSettings _busSettings;
-        
+
 
         public static async Task Main(string[] args)
         {
@@ -34,7 +34,10 @@ namespace Erazer.Syncing.ConsoleRunner
                     _configuration = config.Build();
                     _busSettings = _configuration.GetSection("ServiceBusSettings").Get<ServiceBusSettings>();
                 })
-                .ConfigureLogging((hostContext, config) => { config.AddConsole(); })
+                .ConfigureLogging((hostContext, config) =>
+                {
+                    config.AddConsole().AddConfiguration(hostContext.Configuration.GetSection("Logging"));
+                })
                 .ConfigureServices(ConfigureServices);
 
 
@@ -49,10 +52,11 @@ namespace Erazer.Syncing.ConsoleRunner
             // Add Eventstore + subscriber
             services
                 .AddMongo(_configuration.GetSection("MongoDbSettings"), DbCollectionsSetup.ReadStoreConfiguration)
-                .AddEventStore(_configuration.GetSection("EventStoreSettings"), typeof(TicketCreateDomainEvent))
+                .AddEventStore(_configuration.GetSection("EventStoreSettings"), typeof(TicketCreatedEvent))
+                .AddComboSubscriber();
                 //.AddLiveSubscriber();
-                .AddReSyncSubscriber();
-            
+                //.AddReSyncSubscriber();
+
             // Add ServiceBus
             services.AddBus(x =>
             {

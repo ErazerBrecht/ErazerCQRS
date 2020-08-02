@@ -9,10 +9,9 @@ namespace Erazer.Domain.Files
         public string Name { get; }
         public string Type { get; }
         public int Size { get; set; }
-        public DateTime Created { get;}
-        public Guid UserId { get; }
+        public long Created { get;}
 
-        public File(Guid id, string name, string type, int size, DateTime created, Guid userId)
+        public File(Guid id, string name, string type, int size, long created)
         {
             if (Equals(id, default(Guid)))
                 throw new ArgumentException("The Id cannot be the default value", nameof(id));
@@ -22,7 +21,6 @@ namespace Erazer.Domain.Files
             Type = type;
             Size = size;
             Created = created;
-            UserId = userId;
         }
 
         public override int GetHashCode()

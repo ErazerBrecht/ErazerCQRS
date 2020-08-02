@@ -13,7 +13,6 @@ namespace Erazer.DocumentStore.Application.DTOs
         public string Type { get; set; }
         public int Size { get; set; }
 
-        public DateTime Created { get; set; }
-        public Guid UserId { get; set; }
+        public long Created { get; set; }
     }
 }

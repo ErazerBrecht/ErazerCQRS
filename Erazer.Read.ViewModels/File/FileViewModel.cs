@@ -1,4 +1,4 @@
-﻿namespace Erazer.Web.ReadAPI.ViewModels
+﻿namespace Erazer.Read.ViewModels.File
 {
     public class FileViewModel
     {
