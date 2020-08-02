@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Erazer.Domain.Files;
 using Erazer.Messages.Commands;
 
-namespace Erazer.Web.WriteAPI.Commands.Requests
+namespace Erazer.Write.Application.Commands
 {
-    public class NewTicketCommand : ICommand<Guid>
+    public class CreateTicketCommand : ICommand<Guid>
     {
         public string Title { get; set; }
         public string Description { get; set; }

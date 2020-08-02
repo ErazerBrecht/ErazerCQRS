@@ -1,12 +1,11 @@
-﻿using Erazer.Messages.Commands;
+﻿using System;
+using Erazer.Messages.Commands;
 
-namespace Erazer.Web.WriteAPI.Commands.Requests
+namespace Erazer.Write.Application.Commands
 {
     public class UpdateTicketPriorityCommand : ICommand
     {
         public Guid TicketId { get; set; }
-        public Guid UserId { get; set; }
-
         public string PriorityId { get; set; }
     }
 }

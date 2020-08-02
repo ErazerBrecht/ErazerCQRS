@@ -59,7 +59,7 @@ namespace Erazer.Web.DocumentStore
             services.AddBus(x =>
             {
                 x.ConnectionString = _busSettings.ConnectionString;
-                x.ConnectionName = "Erazer.Web.DocumentStore";
+                x.ConnectionName = "Erazer.DocumentStore.Web";
                 x.UserName = _busSettings.UserName;
                 x.Password = _busSettings.Password;
                 x.AddCommands(y =>

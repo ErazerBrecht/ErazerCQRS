@@ -1,5 +1,6 @@
 ﻿using System;
-using AutoMapper;
+using System.Reflection;
+using Erazer.Domain.Ticket.Events;
 using Erazer.Framework.Cache;
 using Erazer.Framework.Domain;
 using Erazer.Framework.Events;
@@ -7,7 +8,8 @@ using Erazer.Infrastructure.EventStore;
 using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.Redis;
 using Erazer.Infrastructure.ServiceBus;
-using Erazer.Web.WriteAPI.Services;
+using Erazer.Write.Application.Commands;
+using Erazer.Write.Application.Services;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,7 +19,7 @@ using Microsoft.Extensions.Hosting;
 using ServiceStack.Redis;
 using SqlStreamStore;
 
-namespace Erazer.Web.WriteAPI
+namespace Erazer.Write.Web
 {
     public class Startup
     {
@@ -26,7 +28,7 @@ namespace Erazer.Web.WriteAPI
 
         public Startup(IConfiguration configuration)
         {
-            _configuration = configuration;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _busSettings = configuration.GetSection("ServiceBusSettings").Get<ServiceBusSettings>();
         }
 
@@ -36,7 +38,6 @@ namespace Erazer.Web.WriteAPI
         {
             // Add 'Configuration'
             services.AddSingleton(_configuration);
-            services.Configure<EventStoreSettings>(_configuration.GetSection("EventStoreSettings"));
             services.Configure<RedisSettings>(_configuration.GetSection("CacheSettings"));
 
             // Add Telemetry
@@ -48,16 +49,17 @@ namespace Erazer.Web.WriteAPI
             services.AddBus(x =>
             {
                 x.ConnectionString = _busSettings.ConnectionString;
-                x.ConnectionName = "Erazer.Web.WriteAPI";
+                x.ConnectionName = "Erazer.Write.Web";
                 x.UserName = _busSettings.UserName;
                 x.Password = _busSettings.Password;
             });
             
-            services.AddMediatR();
-
-            // TODO Place in separate file (Arne)
-            services.AddSingleton<IEventStore, EventStore>();
-            services.AddSingleton<IEventTypeMapping, EventTypeMapping>();
+            services.AddMediatR
+            (
+                typeof(CreateTicketCommand).GetTypeInfo().Assembly
+            );
+            
+            services.AddEventStore(_configuration.GetSection("EventStoreSettings"), typeof(TicketCreatedEvent));
             // WITH CACHE
             services.AddScoped<ICache, RedisCache>();
             services.AddScoped<IAggregateRepository>(y => new CacheRepository(new AggregateRepository(y.GetService<IEventStore>()), y.GetService<IEventStore>(), y.GetService<ICache>()));

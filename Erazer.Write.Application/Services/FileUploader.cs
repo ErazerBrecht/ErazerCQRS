@@ -14,8 +14,13 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
 using File = Erazer.Domain.Files.File;
 
-namespace Erazer.Web.WriteAPI.Services
+namespace Erazer.Write.Application.Services
 {
+    public interface IFileUploader
+    {
+        Task<IEnumerable<File>> UploadFiles(params IFormFile[] files);
+    }
+    
     public class FileUploader : IFileUploader
     {
         private readonly ICommandPublisher _publisher;
@@ -25,15 +30,15 @@ namespace Erazer.Web.WriteAPI.Services
             _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
         }
 
-        public async Task<IEnumerable<File>> UploadFiles(Guid userId, params IFormFile[] formFiles)
+        public async Task<IEnumerable<File>> UploadFiles(params IFormFile[] formFiles)
         {
-            var files = GenerateFileUploadCommands(userId, formFiles).ToList();
+            var files = GenerateFileUploadCommands(formFiles).ToList();
             await _publisher.Publish(files, CommandBusEndPoints.ErazerDocumentStore);
 
             return files.Select(f => new File(f.Id, f.Name, f.Type, f.Data.Length, f.Created));
         }
 
-        private static IEnumerable<UploadFileCommand> GenerateFileUploadCommands(Guid userId, params IFormFile[] files)
+        private static IEnumerable<UploadFileCommand> GenerateFileUploadCommands(params IFormFile[] files)
         {
             foreach (var file in files)
             {
@@ -60,20 +65,16 @@ namespace Erazer.Web.WriteAPI.Services
             using var stream = file.OpenReadStream();
             using var image = Image.Load(stream);
             using var output = new MemoryStream();
-            IImageEncoder encoder;
 
             #region Content Checking + Compression
-            switch (file.ContentType)
+
+            IImageEncoder encoder = file.ContentType switch
             {
-                case "image/jpeg":
-                    encoder = new JpegEncoder { IgnoreMetadata = true, Quality = 60 };
-                    break;
-                case "image/png":
-                    encoder = new PngEncoder { CompressionLevel = 5 };
-                    break;
-                default:
-                    throw new NotSupportedException($"File with content type {file.ContentType} is not supported!");
-            }
+                "image/jpeg" => new JpegEncoder {Quality = 60},
+                "image/png" => new PngEncoder {CompressionLevel = PngCompressionLevel.Level7},
+                _ => throw new NotSupportedException($"File with content type {file.ContentType} is not supported!")
+            };
+
             #endregion
 
             #region Resizing

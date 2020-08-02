@@ -4,11 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0005" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\Erazer.Infrastructure\Erazer.Infrastructure.csproj" />
     <ProjectReference Include="..\Erazer.Messages\Erazer.Messages.csproj" />
-    <ProjectReference Include="..\Erazer.Web.Shared\Erazer.Web.Shared.csproj" />
+    <ProjectReference Include="..\Erazer.Write.Application\Erazer.Write.Application.csproj" />
   </ItemGroup>
 
 </Project>

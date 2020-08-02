@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { CreateTicket } from '../../entities/write/createTicket';
 import { WRITE_API } from "../../configuration/config";
-import { Headers, RequestOptions } from '@angular/http';
 
 
 @Injectable()

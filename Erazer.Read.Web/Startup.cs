@@ -4,6 +4,8 @@ using AutoMapper;
 using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ReadStore;
 using Erazer.Infrastructure.Websockets;
+using Erazer.Read.Application.Queries;
+using Erazer.Read.Mapping;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,10 +34,11 @@ namespace Erazer.Web.ReadAPI
 
             // Add 'Infrastructure' Providers
             services.AddMongo(_configuration.GetSection("MongoDbSettings"), DbCollectionsSetup.ReadStoreConfiguration);
-
+            services.AddReadOnlyStore();
+            
             // Add 'Application services'
-            services.AddAutoMapper(typeof(Startup).GetTypeInfo().Assembly);
-            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
+            services.AddAutoMapper(typeof(TicketMappings).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(TicketQuery).GetTypeInfo().Assembly);
 
             // Add MVC
             services
@@ -55,13 +58,10 @@ namespace Erazer.Web.ReadAPI
             app.UseCors(builder =>
             {
                 builder.WithOrigins("http://localhost:4200") // Load this from ENV or Config file
-                    .AllowAnyHeader() // TODO Temp added for SignalR
-                    .AllowCredentials() // Added for SignalR
-                    .WithMethods("GET", "OPTIONS", "POST") // OPTIONS & POST are for SignalR 
+                    .WithMethods("GET")
                     .SetPreflightMaxAge(TimeSpan.FromHours(1));
             });
-
-            app.UseWebsocketEmitter();
+            
             app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
         }
     }

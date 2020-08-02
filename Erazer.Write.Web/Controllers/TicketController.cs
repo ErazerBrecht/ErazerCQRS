@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Erazer.Web.WriteAPI.Commands.Requests;
-using Erazer.Web.WriteAPI.ViewModels;
-using Erazer.Web.WriteAPI.Services;
 using Erazer.Domain.Files;
+using Erazer.Write.Application.Commands;
+using Erazer.Write.Application.Services;
+using Erazer.Write.Web.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Erazer.Web.WriteAPI.Controllers
+namespace Erazer.Write.Web.Controllers
 {
     [Route("[controller]")]
     public class TicketController : ControllerBase
@@ -30,7 +29,7 @@ namespace Erazer.Web.WriteAPI.Controllers
                 ? new List<File>()
                 : await _fileUploader.UploadFiles( model.Files.ToArray());
 
-            var id = await _mediator.Send(new NewTicketCommand
+            var id = await _mediator.Send(new CreateTicketCommand
             {
                 Title = model.Title,
                 Description = model.Description,
@@ -47,8 +46,7 @@ namespace Erazer.Web.WriteAPI.Controllers
             await _mediator.Send(new AddTicketCommentCommand
             {
                 Comment = model.Comment,
-                TicketId = model.TicketId,
-                UserId = Guid.Parse("88888888-8888-8888-8888-888888888888")
+                TicketId = model.TicketId
             });
 
             return Ok();
@@ -60,8 +58,7 @@ namespace Erazer.Web.WriteAPI.Controllers
             await _mediator.Send(new UpdateTicketPriorityCommand
             {
                 PriorityId = model.PriorityId,
-                TicketId = model.TicketId,
-                UserId = Guid.Parse("88888888-8888-8888-8888-888888888888")
+                TicketId = model.TicketId
             });
 
             return Ok();
@@ -73,8 +70,7 @@ namespace Erazer.Web.WriteAPI.Controllers
             await _mediator.Send(new UpdateTicketStatusCommand
             {
                 StatusId = model.StatusId,
-                TicketId = model.TicketId,
-                UserId = Guid.Parse("88888888-8888-8888-8888-888888888888")
+                TicketId = model.TicketId
             });
 
             return Ok();

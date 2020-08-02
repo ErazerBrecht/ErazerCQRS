@@ -1,4 +1,6 @@
-﻿namespace Erazer.Web.WriteAPI.ViewModels
+﻿using System;
+
+namespace Erazer.Write.Web.ViewModels
 {
     public class AddTicketCommentViewModel
     {
