@@ -15,7 +15,7 @@ namespace Erazer.Domain.Ticket
         public string Description { get; private set; }
         public string PriorityId { get; private set; }
         public string StatusId { get; private set; }
-        public List<string> Comments { get; } = new List<string>();
+        public List<string> Comments { get; private set; } = new List<string>();
         public List<File> Files { get; private set; } = new List<File>();
 
         #region Constructors
@@ -42,6 +42,7 @@ namespace Erazer.Domain.Ticket
             Handles<TicketCreatedEvent>(Apply);
             Handles<TicketPriorityChangedEvent>(Apply);
             Handles<TicketStatusChangedEvent>(Apply);
+            Handles<TicketCommentPlacedEvent>(Apply);
         }
 
         #endregion
