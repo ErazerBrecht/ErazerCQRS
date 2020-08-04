@@ -8,7 +8,9 @@ using Erazer.Infrastructure.ServiceBus;
 using Erazer.Infrastructure.Websockets;
 using Erazer.Read.Mapping;
 using Erazer.Syncing.Handlers;
+using Erazer.Syncing.Handlers.TicketSyncHandlers;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,59 +18,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Erazer.Syncing.ConsoleRunner
 {
-    class Program
+    public class Program
     {
-        private static IConfigurationRoot _configuration;
-        private static ServiceBusSettings _busSettings;
-
-
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
-            var hostBuilder = new HostBuilder()
-                .ConfigureAppConfiguration((hostContext, config) =>
-                {
-                    config.SetBasePath(Environment.CurrentDirectory);
-                    config.AddJsonFile("appsettings.json", false);
-                    config.AddEnvironmentVariables();
-
-                    _configuration = config.Build();
-                    _busSettings = _configuration.GetSection("ServiceBusSettings").Get<ServiceBusSettings>();
-                })
-                .ConfigureLogging((hostContext, config) =>
-                {
-                    config.AddConsole().AddConfiguration(hostContext.Configuration.GetSection("Logging"));
-                })
-                .ConfigureServices(ConfigureServices);
-
-
-            await hostBuilder.RunConsoleAsync();
+            CreateHostBuilder(args).Build().Run();
         }
 
-
-        private static void ConfigureServices(HostBuilderContext hostContext, IServiceCollection services)
-        {
-            services.AddLogging();
-
-            // Add Eventstore + subscriber
-            services
-                .AddMongo(_configuration.GetSection("MongoDbSettings"), DbCollectionsSetup.ReadStoreConfiguration)
-                .AddEventStore(_configuration.GetSection("EventStoreSettings"), typeof(TicketCreatedEvent))
-                .AddComboSubscriber();
-                //.AddLiveSubscriber();
-                //.AddReSyncSubscriber();
-
-            // Add ServiceBus
-            services.AddBus(x =>
-            {
-                x.ConnectionString = _busSettings.ConnectionString;
-                x.ConnectionName = "Erazer.Syncing.ConsoleRunner";
-                x.UserName = _busSettings.UserName;
-                x.Password = _busSettings.Password;
-            });
-
-            services.AddWebsocketEmitter();
-            services.AddAutoMapper(typeof(TicketMappings).GetTypeInfo().Assembly);
-            services.AddMediatR(typeof(TicketCreateEventHandler).GetTypeInfo().Assembly);
-        }
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
     }
 }

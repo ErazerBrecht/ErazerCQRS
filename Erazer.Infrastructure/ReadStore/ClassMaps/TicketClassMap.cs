@@ -1,5 +1,6 @@
 ﻿using Erazer.Infrastructure.MongoDb;
 using Erazer.Read.Data.Ticket;
+using Erazer.Read.Data.Ticket.Detail;
 using MongoDB.Bson.Serialization;
 
 namespace Erazer.Infrastructure.ReadStore.ClassMaps
@@ -22,6 +23,9 @@ namespace Erazer.Infrastructure.ReadStore.ClassMaps
             cm.MapProperty(x => x.Title)
                 .SetElementName("title");
 
+            cm.MapProperty(x => x.Events)
+                .SetElementName("events");
+            
             cm.MapProperty(x => x.Files)
                 .SetElementName("files");
         }

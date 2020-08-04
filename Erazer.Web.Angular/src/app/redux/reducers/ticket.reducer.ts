@@ -13,11 +13,11 @@ export function ticketsReducer(state: Array<Ticket> = [], action: TicketActions.
         case SharedActions.ADD_TICKET:
             return [...state, TicketFactory.BuildFromDetail(action.payload)];
         case SharedActions.UPDATE_TICKET_STATUS:
-            return state.map(ticket => ticket.id === action.payload.ticketId ? Object.assign({}, ticket, { status: action.payload.toStatus}) : ticket);   
+            return state.map(ticket => ticket.id === action.ticketId ? Object.assign({}, ticket, { status: action.payload.toStatus}) : ticket);   
         case SharedActions.UPDATE_TICKET_PRIORITY:
-            return state.map(ticket => ticket.id === action.payload.ticketId ? Object.assign({}, ticket, { priority: action.payload.toPriority}) : ticket);
+            return state.map(ticket => ticket.id === action.ticketId ? Object.assign({}, ticket, { priority: action.payload.toPriority}) : ticket);
         case SharedActions.ADD_TICKET_COMMENT:
-            return state.map(ticket => ticket.id === action.payload.ticketId ? Object.assign({}, ticket, { }) : ticket);  
+            return state.map(ticket => ticket.id === action.ticketId ? Object.assign({}, ticket, { }) : ticket);  
         default:
             return state; 
     }

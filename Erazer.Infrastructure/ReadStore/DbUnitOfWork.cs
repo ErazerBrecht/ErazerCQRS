@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.MongoDb;
 using Erazer.Read.Data.Ticket;
+using Erazer.Read.Data.Ticket.Detail;
 using Erazer.Read.Data.Ticket.Events;
 using Erazer.Syncing.Infrastructure;
+using Erazer.Syncing.Models;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
@@ -19,8 +21,7 @@ namespace Erazer.Infrastructure.ReadStore
         public IDbRepository<PriorityDto> Priorities { get; }
         public IDbRepository<TicketListDto> TicketList { get; }
         public IDbRepository<TicketDto> Tickets { get; }
-        public IDbRepository<TicketEventDto> TicketEvents { get; }
-        private IDbRepository<PositionDto> Position { get; }
+        public IDbRepository<SubscriptionDto> Subscriptions { get; }
 
         public DbUnitOfWork(IMongoDatabase db, IDbSession dbSession, ILogger<DbUnitOfWork> logger)
         {
@@ -32,8 +33,7 @@ namespace Erazer.Infrastructure.ReadStore
             Priorities = new DbRepository<PriorityDto>(db, dbSession);
             TicketList = new DbRepository<TicketListDto>(db, dbSession);
             Tickets = new DbRepository<TicketDto>(db, dbSession);
-            TicketEvents = new DbRepository<TicketEventDto>(db, dbSession);
-            Position = new DbRepository<PositionDto>(db, dbSession);
+            Subscriptions = new DbRepository<SubscriptionDto>(db, dbSession);
         }
         
         public Task Start()
@@ -41,18 +41,10 @@ namespace Erazer.Infrastructure.ReadStore
             return _dbSession.StartTransaction();
         }
 
-        public async Task Commit(long position)
+        public async Task Commit()
         {
-            var newPosition = new PositionDto
-            {
-                Id = "ERAZER_CQRS_SUBSCRIPTION_POSITION",
-                CheckPoint = position,
-                UpdatedAt = DateTimeOffset.Now.ToUnixTimeMilliseconds()
-            };
-                
             try
             {
-                await Position.Mutate(newPosition);
                 await _dbSession.Commit();
             }
             catch (Exception e)

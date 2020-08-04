@@ -8,6 +8,8 @@ using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ReadStore;
 using Erazer.Read.Application.Infrastructure;
 using Erazer.Syncing.Infrastructure;
+using Erazer.Syncing.Models;
+using Erazer.Syncing.SeedWork;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,29 +19,26 @@ namespace Erazer.Infrastructure.EventStore.Subscription
     public class LiveSubscription : ISubscription
     {
         private readonly IEventStore _eventStore;
-        private readonly IDbQuery<PositionDto> _positionDbQuery;
-        private readonly ITelemetry _telemetryClient;
+        private readonly IDbQuery<SubscriptionDto> _subscriptionDbQuery;
         private readonly IServiceProvider _provider;
+        private readonly ITelemetry _telemetryClient;
         private readonly ILogger<LiveSubscription> _logger;
 
         private IDisposable _subscription;
 
-        public LiveSubscription(IEventStore eventStore, IDbQuery<PositionDto> positionDbQuery,
-            IServiceCollection serviceCollection, ITelemetry telemetryClient, ILogger<LiveSubscription> logger)
+        public LiveSubscription(IEventStore eventStore, IDbQuery<SubscriptionDto> subscriptionDbQuery,
+            IServiceProvider provider, ITelemetry telemetryClient, ILogger<LiveSubscription> logger)
         {
             _eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
-            _positionDbQuery = positionDbQuery ?? throw new ArgumentNullException(nameof(positionDbQuery));
+            _subscriptionDbQuery = subscriptionDbQuery ?? throw new ArgumentNullException(nameof(subscriptionDbQuery));
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             _telemetryClient = telemetryClient ?? throw new ArgumentNullException(nameof(telemetryClient));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            
-            if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
-            serviceCollection.AddScoped<IDbUnitOfWork, DbUnitOfWork>();
-            _provider = serviceCollection.BuildServiceProvider();
         }
 
         public async Task Connect()
         {
-            var position = await _positionDbQuery.Single(_ => true);
+            var position = await _subscriptionDbQuery.Single(_ => true);
             _logger.LogInformation($"Started a 'Live' subscription from position {position?.CheckPoint.ToString() ?? "NULL"}");
             _subscription = _eventStore.Subscribe(position?.CheckPoint, EventAppeared, SubscriptionDropped, HasCaughtUp);
         }
@@ -68,6 +67,9 @@ namespace Erazer.Infrastructure.EventStore.Subscription
             });
 
             using var scope = _provider.CreateScope();
+            var ctx = (SubscriptionContext) scope.ServiceProvider.GetRequiredService<ISubscriptionContext>();
+            ctx.InitializeContext(SubscriptionType.Live);
+            
             var session = scope.ServiceProvider.GetRequiredService<IDbUnitOfWork>();
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
@@ -75,7 +77,17 @@ namespace Erazer.Infrastructure.EventStore.Subscription
             {
                 await session.Start();
                 await mediator.Publish(eventEnvelope, token);
-                await session.Commit(eventEnvelope.Position);
+                
+                var updatedSubscription = new SubscriptionDto
+                {
+                    Id = "ERAZER_CQRS_SUBSCRIPTION_POSITION",
+                    CheckPoint = eventEnvelope.Position,
+                    UpdatedAt = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+                    Type = SubscriptionType.Live
+                };
+            
+                await session.Subscriptions.Mutate(updatedSubscription, token);
+                await session.Commit();
             }
             catch (Exception ex)
             {

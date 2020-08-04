@@ -1,27 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.0" />
-      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Erazer.Infrastructure\Erazer.Infrastructure.csproj" />
         <ProjectReference Include="..\Erazer.Syncing.Application\Erazer.Syncing.Application.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="appsettings.json">
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </Content>
-    </ItemGroup>
-
 </Project>

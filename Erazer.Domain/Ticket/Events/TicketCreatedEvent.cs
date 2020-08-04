@@ -11,6 +11,12 @@ namespace Erazer.Domain.Ticket.Events
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     public class TicketCreatedEvent : IEvent
     {
+        public string Title { get; private set; }
+        public string Description { get; private set; }
+        public string PriorityId { get; private set; }
+        public string StatusId { get; private set; }
+        public List<File> Files { get; private set; }
+        
         private TicketCreatedEvent()
         {
         }
@@ -24,11 +30,5 @@ namespace Erazer.Domain.Ticket.Events
             StatusId = statusId ?? throw new ArgumentNullException(nameof(statusId));
             Files = files ?? throw new ArgumentNullException(nameof(files));
         }
-
-        public string Title { get; private set; }
-        public string Description { get; private set; }
-        public string PriorityId { get; private set; }
-        public string StatusId { get; private set; }
-        public List<File> Files { get; private set; }
     }
 }

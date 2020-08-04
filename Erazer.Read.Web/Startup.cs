@@ -3,7 +3,6 @@ using System.Reflection;
 using AutoMapper;
 using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ReadStore;
-using Erazer.Infrastructure.Websockets;
 using Erazer.Read.Application.Queries;
 using Erazer.Read.Mapping;
 using MediatR;
@@ -13,7 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Erazer.Web.ReadAPI
+namespace Erazer.Read.Web
 {
     public class Startup
     {

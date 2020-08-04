@@ -16,7 +16,7 @@ namespace Erazer.Web.DocumentStore
 
         public FileController(IMediator mediator)
         {
-            _mediator = mediator;
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         // GET api/file/52666af8-9af3-4771-8d71-4f11e6c96211

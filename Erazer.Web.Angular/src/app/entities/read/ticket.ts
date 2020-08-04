@@ -1,6 +1,5 @@
 import { Priority } from "./priority";
 import { Status } from "./status";
-import { TicketDetail } from "./ticketDetail";
 
 export class Ticket {
     id: string;

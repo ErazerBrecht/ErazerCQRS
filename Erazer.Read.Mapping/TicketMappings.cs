@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Erazer.Read.Data.Ticket;
+using Erazer.Read.Data.Ticket.Detail;
 using Erazer.Read.Data.Ticket.Events;
 using Erazer.Read.ViewModels.Ticket;
 using Erazer.Read.ViewModels.Ticket.Events;

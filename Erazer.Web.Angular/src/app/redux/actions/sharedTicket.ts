@@ -20,19 +20,19 @@ export class AddTicket implements Action {
 export class UpdateTicketSatus implements Action {
     readonly type = UPDATE_TICKET_STATUS;
 
-    constructor(public payload: StatusEvent) { }
+    constructor(public ticketId: string, public payload: StatusEvent) { }
 }
 
 export class UpdateTicketPriority implements Action {
     readonly type = UPDATE_TICKET_PRIORITY;
 
-    constructor(public payload: PriorityEvent) { }
+    constructor(public ticketId: string, public payload: PriorityEvent) { }
 }
 
 export class AddTicketComment implements Action {
     readonly type = ADD_TICKET_COMMENT;
 
-    constructor(public payload: IEvent) { }
+    constructor(public ticketId: string, public payload: IEvent) { }
 }
 
 export type Actions =

@@ -14,10 +14,5 @@ namespace Erazer.Infrastructure.Websockets
 
             return services;
         }
-        
-        public static void UseWebsocketEmitter(this IApplicationBuilder app)
-        {
-            app.UseSignalR(routes => { routes.MapHub<ReduxEventHub>("/events"); });
-        }
     }
 }

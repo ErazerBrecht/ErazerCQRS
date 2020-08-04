@@ -9,8 +9,6 @@ namespace Erazer.Infrastructure.ReadStore.ClassMaps
         public override void Map(BsonClassMap<TicketEventDto> cm)
         {
             cm.MapIdProperty(x => x.Id);
-
-            cm.MapProperty(x => x.TicketId).SetElementName("ticketId");
             cm.MapProperty(x => x.Created).SetElementName("created");
         }
     }

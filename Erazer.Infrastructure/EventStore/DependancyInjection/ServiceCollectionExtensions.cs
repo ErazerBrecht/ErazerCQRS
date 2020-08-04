@@ -7,9 +7,9 @@ using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ReadStore;
 using Erazer.Syncing.Infrastructure;
+using Erazer.Syncing.SeedWork;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using SqlStreamStore;
 
 // ReSharper disable once CheckNamespace
@@ -39,21 +39,26 @@ namespace Microsoft.Extensions.DependencyInjection
         public static EventStoreBuilder AddLiveSubscriber(this EventStoreBuilder builder)
         {
             builder.Collection.AddReadOnlyStore();
-            builder.Collection.AddSingleton<ISubscription, LiveSubscription>();
-            builder.Collection.AddSingleton<IHostedService, SubscriptionBackgroundService>();
 
-            builder.Collection.AddSingleton(_ => builder.Collection);
+            builder.Collection.AddScoped<ISubscriptionContext, SubscriptionContext>();
+            builder.Collection.AddScoped<IDbUnitOfWork, DbUnitOfWork>();
+
             
+            builder.Collection.AddSingleton<ISubscription, LiveSubscription>();
+            builder.Collection.AddHostedService<SubscriptionBackgroundService>();
+
             return builder;
         }
         
         public static EventStoreBuilder AddReSyncSubscriber(this EventStoreBuilder builder)
         {
             builder.Collection.AddReadOnlyStore();
+            
+            builder.Collection.AddScoped<ISubscriptionContext, SubscriptionContext>();
+            builder.Collection.AddScoped<IDbUnitOfWork, DbBatchUnitOfWork>();
+            
             builder.Collection.AddSingleton<ISubscription, ReSyncSubscription>();
-            builder.Collection.AddSingleton<IHostedService, SubscriptionBackgroundService>();
-
-            builder.Collection.AddSingleton(_ => builder.Collection);
+            builder.Collection.AddHostedService<SubscriptionBackgroundService>();
 
             return builder;
         }
@@ -61,10 +66,14 @@ namespace Microsoft.Extensions.DependencyInjection
         public static EventStoreBuilder AddComboSubscriber(this EventStoreBuilder builder)
         {
             builder.Collection.AddReadOnlyStore();
-            builder.Collection.AddSingleton<ISubscription, ComboSubscription>();
-            builder.Collection.AddSingleton<IHostedService, SubscriptionBackgroundService>();
 
-            builder.Collection.AddSingleton(_ => builder.Collection);
+            builder.Collection.AddScoped<ISubscriptionContext, SubscriptionContext>();
+            builder.Collection.AddScoped<DbUnitOfWork>();
+            builder.Collection.AddScoped<DbBatchUnitOfWork>();
+            builder.Collection.AddScopedFactory<IDbUnitOfWork, SubscriptionDbUnitOfWorkFactory>();
+            
+            builder.Collection.AddSingleton<ISubscription, ComboSubscription>();
+            builder.Collection.AddHostedService<SubscriptionBackgroundService>();
 
             return builder;
         }

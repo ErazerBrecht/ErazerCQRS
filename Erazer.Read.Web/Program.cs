@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Erazer.Web.ReadAPI
+namespace Erazer.Read.Web
 {
     public class Program
     {

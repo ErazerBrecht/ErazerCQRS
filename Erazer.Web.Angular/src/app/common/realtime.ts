@@ -1,8 +1,8 @@
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { State } from '../redux/state/state';
-import { HubConnection, HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
-import { READ_API } from '../configuration/config';
+import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import { WEBSOCKETS_API } from '../configuration/config';
 
 @Injectable()
 export class RealTime {
@@ -10,7 +10,7 @@ export class RealTime {
 
     constructor(private store: Store<State>) {
         this._hubConnection = new HubConnectionBuilder()
-            .withUrl(`${READ_API}/events`)
+            .withUrl(`${WEBSOCKETS_API}/events`)
             .configureLogging(LogLevel.Information)
             .build();
     }

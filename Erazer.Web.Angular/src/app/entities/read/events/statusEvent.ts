@@ -4,7 +4,6 @@ import { Status } from "../status";
 
 export class StatusEvent implements IEvent{
     id: string;
-    ticketId: string;
     created: Date;
     userName: string;
     type: EventType;

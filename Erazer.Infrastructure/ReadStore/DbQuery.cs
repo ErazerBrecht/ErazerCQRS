@@ -53,7 +53,6 @@ namespace Erazer.Infrastructure.ReadStore
         public async Task<IList<T>> All(int limit, CancellationToken cancellationToken = default)
         {
             return await _collection.AsQueryable().Take(limit).ToListAsync(cancellationToken);
-
         }
 
         public async Task<IList<T>> All(int limit, int skip, CancellationToken cancellationToken = default)

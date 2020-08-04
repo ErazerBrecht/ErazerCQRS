@@ -4,7 +4,6 @@ import { Priority } from "../priority";
 
 export class PriorityEvent implements IEvent {
     id: string;
-    ticketId: string;
     created: Date;
     userName: string;
     type: EventType;

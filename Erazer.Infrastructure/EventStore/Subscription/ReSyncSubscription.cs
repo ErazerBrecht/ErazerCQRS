@@ -9,6 +9,8 @@ using Erazer.Infrastructure.Logging;
 using Erazer.Infrastructure.ReadStore;
 using Erazer.Read.Application.Infrastructure;
 using Erazer.Syncing.Infrastructure;
+using Erazer.Syncing.Models;
+using Erazer.Syncing.SeedWork;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -18,28 +20,25 @@ namespace Erazer.Infrastructure.EventStore.Subscription
     public class ReSyncSubscription : ISubscription
     {
         private readonly IEventStore _eventStore;
-        private readonly IDbQuery<PositionDto> _positionDbQuery;
+        private readonly IDbQuery<SubscriptionDto> _subscriptionDbQuery;
         private readonly ITelemetry _telemetryClient;
         private readonly ILogger<ReSyncSubscription> _logger;
         private readonly IServiceProvider _provider;
 
-        public ReSyncSubscription(IEventStore eventStore, IDbQuery<PositionDto> positionDbQuery, IServiceCollection serviceCollection,
+        public ReSyncSubscription(IEventStore eventStore, IDbQuery<SubscriptionDto> subscriptionDbQuery, IServiceProvider provider,
             ITelemetry telemetryClient, ILogger<ReSyncSubscription> logger)
         {
             _eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
-            _positionDbQuery = positionDbQuery ?? throw new ArgumentNullException(nameof(positionDbQuery));
+            _subscriptionDbQuery = subscriptionDbQuery ?? throw new ArgumentNullException(nameof(subscriptionDbQuery));
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
             _telemetryClient = telemetryClient ?? throw new ArgumentNullException(nameof(telemetryClient));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            
-            if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
-            serviceCollection.AddScoped<IDbUnitOfWork, DbBatchUnitOfWork>();
-            _provider = serviceCollection.BuildServiceProvider();
         }
 
         public async Task Connect()
         {
             var isEnd = false;
-            var position = await _positionDbQuery.Single(_ => true);
+            var position = await _subscriptionDbQuery.Single(_ => true);
             var nextPosition = (position?.CheckPoint ?? -1) + 1;
 
             _telemetryClient.TrackEvent("Started 'ReSync' subscription!", new Dictionary<string, string>
@@ -50,7 +49,9 @@ namespace Erazer.Infrastructure.EventStore.Subscription
             do
             {
                 using var scope = _provider.CreateScope();
-                var ctx = scope.ServiceProvider.GetRequiredService<IDbUnitOfWork>();
+                var ctx = (SubscriptionContext) scope.ServiceProvider.GetRequiredService<ISubscriptionContext>();
+                ctx.InitializeContext(SubscriptionType.ReSync);
+                var dbSession = scope.ServiceProvider.GetRequiredService<IDbUnitOfWork>();
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                 
                 try
@@ -68,7 +69,16 @@ namespace Erazer.Infrastructure.EventStore.Subscription
                         await EventAppeared(eventEnvelope, mediator);
                     
                     var lastPosition = eventEnvelopes.Last().Position;
-                    await ctx.Commit(lastPosition);
+                    var updatedSubscription = new SubscriptionDto
+                    {
+                        Id = "ERAZER_CQRS_SUBSCRIPTION_POSITION",
+                        CheckPoint = lastPosition,
+                        UpdatedAt = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+                        Type = SubscriptionType.ReSync
+                    };
+                    
+                    await dbSession.Subscriptions.Mutate(updatedSubscription);
+                    await dbSession.Commit();
 
                     nextPosition = lastPosition + 1;
                     isEnd = result.IsEnd;
