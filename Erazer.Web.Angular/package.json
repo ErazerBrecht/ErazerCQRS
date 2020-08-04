@@ -15,7 +15,6 @@
     "@angular/compiler": "6.0.4",
     "@angular/core": "6.0.4",
     "@angular/forms": "6.0.4",
-    "@angular/http": "6.0.4",
     "@angular/platform-browser": "6.0.4",
     "@angular/platform-browser-dynamic": "6.0.4",
     "@angular/router": "6.0.4",
@@ -31,7 +30,7 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.1",
     "moment": "^2.18.1",
-    "ngx-filepond": "^2.0.5",
+    "ngx-filepond": "^5.0.1",
     "rxjs": "^6.2.0",
     "simplemde": "^1.11.2",
     "zone.js": "^0.8.26"
