@@ -8,7 +8,7 @@ import * as Marked from 'marked';
 })
 export class MarkdownViewerComponent implements AfterViewInit {
   @Input() data: string
-  @ViewChild('marked') div: ElementRef
+  @ViewChild('marked', { static: true }) div: ElementRef
 
   constructor() { }
 

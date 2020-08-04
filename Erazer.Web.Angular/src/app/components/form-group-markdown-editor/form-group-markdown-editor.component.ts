@@ -11,7 +11,7 @@ export class FormGroupMarkdownEditorComponent implements AfterViewInit {
   @Input() label: string
   @Input() control: FormControl
   @Input() previewMode: boolean;
-  @ViewChild('simplemde') textarea: ElementRef
+  @ViewChild('simplemde', { static: true }) textarea: ElementRef
   private simplemde: SimpleMDE;
 
   constructor() { }

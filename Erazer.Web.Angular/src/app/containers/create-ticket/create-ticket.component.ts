@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./create-ticket.component.css']
 })
 export class CreateTicketComponent {
-  @ViewChild('modal') modal: TicketCreateModalComponent;
+  @ViewChild('modal', { static: true }) modal: TicketCreateModalComponent;
 
   today = new Date();
   priorityValues = PriorityValues;

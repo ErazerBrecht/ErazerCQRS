@@ -6,7 +6,7 @@ let initialState: AppState = {
 };
 
 export function appReducer(state: AppState = initialState,
-                                          action: sidebar.Actions): AppState {
+    action: sidebar.Actions): AppState {
     switch (action.type) {
         case sidebar.TOGGLE_SIDEBAR:
             return {
