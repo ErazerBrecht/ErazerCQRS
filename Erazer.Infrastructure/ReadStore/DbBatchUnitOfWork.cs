@@ -3,14 +3,16 @@ using System.Threading.Tasks;
 using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.MongoDb;
 using Erazer.Read.Data.Ticket;
+using Erazer.Read.Data.Ticket.Detail;
 using Erazer.Read.Data.Ticket.Events;
 using Erazer.Syncing.Infrastructure;
+using Erazer.Syncing.Models;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
 namespace Erazer.Infrastructure.ReadStore
 {
-    public class DbBatchUnitOfWork: IDbUnitOfWork
+    public class DbBatchUnitOfWork : IDbUnitOfWork
     {
         private readonly IDbSession _dbSession;
         private readonly ILogger<DbBatchUnitOfWork> _logger;
@@ -19,8 +21,7 @@ namespace Erazer.Infrastructure.ReadStore
         public IDbRepository<PriorityDto> Priorities { get; }
         public IDbRepository<TicketListDto> TicketList { get; }
         public IDbRepository<TicketDto> Tickets { get; }
-        public IDbRepository<TicketEventDto> TicketEvents { get; }
-        private IDbRepository<PositionDto> Position { get; }
+        public IDbRepository<SubscriptionDto> Subscriptions { get; }
 
         public DbBatchUnitOfWork(IMongoDatabase db, IDbSession dbSession, ILogger<DbBatchUnitOfWork> logger)
         {
@@ -32,26 +33,16 @@ namespace Erazer.Infrastructure.ReadStore
             Priorities = new DbBatchRepository<PriorityDto>(db);
             TicketList = new DbBatchRepository<TicketListDto>(db);
             Tickets = new DbBatchRepository<TicketDto>(db);
-            TicketEvents = new DbBatchRepository<TicketEventDto>(db);
-            Position = new DbBatchRepository<PositionDto>(db);
+            Subscriptions = new DbBatchRepository<SubscriptionDto>(db);
         }
-        
+
         public Task Start()
         {
             throw new NotSupportedException("Batch UOW -> Doesn't support starting a transaction");
         }
 
-        public async Task Commit(long position)
+        public async Task Commit()
         {
-            var newPosition = new PositionDto
-            {
-                Id = "ERAZER_CQRS_SUBSCRIPTION_POSITION",
-                CheckPoint = position,
-                UpdatedAt = DateTimeOffset.Now.ToUnixTimeMilliseconds()
-            };
-            
-            await Position.Mutate(newPosition);
-
             try
             {
                 await _dbSession.StartTransaction();
@@ -59,8 +50,7 @@ namespace Erazer.Infrastructure.ReadStore
                 await ((DbBatchRepository<PriorityDto>) Priorities).Flush(_dbSession);
                 await ((DbBatchRepository<TicketListDto>) TicketList).Flush(_dbSession);
                 await ((DbBatchRepository<TicketDto>) Tickets).Flush(_dbSession);
-                await ((DbBatchRepository<TicketEventDto>) TicketEvents).Flush(_dbSession);
-                await ((DbBatchRepository<PositionDto>) Position).Flush(_dbSession);
+                await ((DbBatchRepository<SubscriptionDto>) Subscriptions).Flush(_dbSession);
 
                 await _dbSession.Commit();
             }

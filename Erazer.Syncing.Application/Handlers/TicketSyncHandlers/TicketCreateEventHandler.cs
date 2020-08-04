@@ -11,34 +11,39 @@ using Erazer.Messages.IntegrationEvents.Infrastructure;
 using Erazer.Messages.IntegrationEvents.Models;
 using Erazer.Read.Data.File;
 using Erazer.Read.Data.Ticket;
+using Erazer.Read.Data.Ticket.Detail;
 using Erazer.Read.Data.Ticket.Events;
 using Erazer.Read.ViewModels.Ticket;
 using Erazer.Read.ViewModels.Ticket.Events;
 using Erazer.Syncing.Infrastructure;
+using Erazer.Syncing.Models;
+using Erazer.Syncing.SeedWork;
 using Erazer.Syncing.SeedWork.Redux;
 
-namespace Erazer.Syncing.Handlers
+namespace Erazer.Syncing.Handlers.TicketSyncHandlers
 {
     public class TicketCreateEventHandler : IEventHandler<TicketCreatedEvent>
     {
+        private readonly ISubscriptionContext _ctx;
         private readonly IMapper _mapper;
         private readonly IWebsocketEmitter _websocketEmitter;
         private readonly IIntegrationEventPublisher _eventPublisher;
-        private readonly IDbUnitOfWork _ctx;
+        private readonly IDbUnitOfWork _db;
 
-        public TicketCreateEventHandler(IMapper mapper, IWebsocketEmitter websocketEmitter,
-            IIntegrationEventPublisher eventPublisher, IDbUnitOfWork ctx)
+        public TicketCreateEventHandler(ISubscriptionContext ctx, IMapper mapper, IWebsocketEmitter websocketEmitter,
+            IIntegrationEventPublisher eventPublisher, IDbUnitOfWork db)
         {
+            _ctx = ctx ?? throw new ArgumentNullException(nameof(ctx));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _websocketEmitter = websocketEmitter ?? throw new ArgumentNullException(nameof(websocketEmitter));
             _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
-            _ctx = ctx ?? throw new ArgumentNullException(nameof(ctx));
+            _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
         public async Task Handle(EventEnvelope<TicketCreatedEvent> eventEnvelope, CancellationToken cancellationToken)
         {
-            var priority = await _ctx.Priorities.Find(eventEnvelope.Event.PriorityId, cancellationToken);
-            var status = await _ctx.Statuses.Find(eventEnvelope.Event.StatusId, cancellationToken);
+            var priority = await _db.Priorities.Find(eventEnvelope.Event.PriorityId, cancellationToken);
+            var status = await _db.Statuses.Find(eventEnvelope.Event.StatusId, cancellationToken);
             
             var ticketList = new TicketListDto
             {
@@ -49,6 +54,12 @@ namespace Erazer.Syncing.Handlers
                 FileCount = eventEnvelope.Event.Files?.Count ?? 0
             };
 
+            var ticketEvent = new CreatedEventDto
+            {
+                Id = Guid.NewGuid().ToString(),
+                Created = eventEnvelope.Created,
+            };
+            
             var ticket = new TicketDto
             {
                 Id = eventEnvelope.AggregateRootId.ToString(),
@@ -56,6 +67,7 @@ namespace Erazer.Syncing.Handlers
                 Title = eventEnvelope.Event.Title,
                 Priority = priority,
                 Status = status,
+                Events = new List<TicketEventDto> { ticketEvent },
                 Files = eventEnvelope.Event.Files?.Select(f => new FileDto
                 {
                     Id = f.Id.ToString(),
@@ -65,38 +77,34 @@ namespace Erazer.Syncing.Handlers
                 }).ToList()
             };
 
-            var @event = new CreatedEventDto
-            {
-                Id = Guid.NewGuid().ToString(),
-                TicketId = eventEnvelope.AggregateRootId.ToString(),
-                Created = eventEnvelope.Created,
-            };
-
-            await AddInDb(ticketList, ticket, @event);
-            // await Task.WhenAll(
-            //     AddInDb(ticketList, ticket, @event),
-            //     EmitToFrontEnd(ticket, @event),
-            //     PublishOnBus(notification, priority, status, @event)
-            // );
+            await Task.WhenAll(
+                AddInDb(ticketList, ticket),
+                EmitToFrontEnd(ticket),
+                PublishOnBus(eventEnvelope, priority, status, ticketEvent)
+            );
         }
 
-        private async Task AddInDb(TicketListDto ticketListDto, TicketDto ticketDto, CreatedEventDto eventDto)
+        private async Task AddInDb(TicketListDto ticketListDto, TicketDto ticketDto)
         {
-            await _ctx.TicketList.Add(ticketListDto);
-            await _ctx.Tickets.Add(ticketDto);
-            await _ctx.TicketEvents.Add(eventDto);
+            await _db.TicketList.Add(ticketListDto);
+            await _db.Tickets.Add(ticketDto);
         }
 
-        private Task EmitToFrontEnd(TicketDto ticketDto, TicketEventDto eventDto)
+        private Task EmitToFrontEnd(TicketDto ticketDto)
         {
+            if (_ctx.SubscriptionType == SubscriptionType.ReSync)
+                return Task.CompletedTask;
+            
             var vm = _mapper.Map<TicketViewModel>(ticketDto);
-            vm.Events = new List<TicketEventViewModel> {_mapper.Map<TicketCreatedEventViewModel>(eventDto)};
             return _websocketEmitter.Emit(new ReduxTicketCreateAction(vm));
         }
 
         private Task PublishOnBus(IEventEnvelope<TicketCreatedEvent> eventEnvelope, PriorityDto priorityDto, StatusDto statusDto,
             TicketEventDto eventDto)
         {
+            if (_ctx.SubscriptionType == SubscriptionType.ReSync)
+                return Task.CompletedTask;
+            
             var files = eventEnvelope.Event.Files.Select(f => new TicketCreatedFile(f.Id, f.Name, f.Type, f.Size));
             var integrationEvent = new TicketCreatedIntegrationEvent(
                 eventEnvelope.AggregateRootId.ToString(),

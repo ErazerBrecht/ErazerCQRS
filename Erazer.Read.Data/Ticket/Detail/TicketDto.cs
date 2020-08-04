@@ -3,7 +3,7 @@ using Erazer.Framework.DTO;
 using Erazer.Read.Data.File;
 using Erazer.Read.Data.Ticket.Events;
 
-namespace Erazer.Read.Data.Ticket
+namespace Erazer.Read.Data.Ticket.Detail
 {
     public class TicketDto: IDto
     {
