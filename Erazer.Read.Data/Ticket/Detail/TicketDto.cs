@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Erazer.Framework.DTO;
 using Erazer.Read.Data.File;
-using Erazer.Read.Data.Ticket.Events;
+using Erazer.Read.Data.Ticket.Detail.Events;
 
 namespace Erazer.Read.Data.Ticket.Detail
 {

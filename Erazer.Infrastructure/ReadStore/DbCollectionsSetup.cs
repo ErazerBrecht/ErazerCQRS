@@ -2,6 +2,7 @@
 using System.Reflection;
 using Erazer.Read.Data.Ticket;
 using Erazer.Read.Data.Ticket.Detail;
+using Erazer.Read.Data.Ticket.List;
 using Erazer.Syncing.Models;
 using Microsoft.Extensions.DependencyInjection;
 

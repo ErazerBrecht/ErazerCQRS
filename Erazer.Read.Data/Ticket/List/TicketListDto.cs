@@ -1,6 +1,6 @@
 ﻿using Erazer.Framework.DTO;
 
-namespace Erazer.Read.Data.Ticket
+namespace Erazer.Read.Data.Ticket.List
 {
     public class TicketListDto : IDto
     {

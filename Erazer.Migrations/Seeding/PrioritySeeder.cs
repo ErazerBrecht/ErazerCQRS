@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Erazer.Domain.Constants;
+using Erazer.Domain.Ticket.Constants;
 using Erazer.Read.Data.Ticket;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;

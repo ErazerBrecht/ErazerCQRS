@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Erazer.Infrastructure.MongoDb;
 using Erazer.Read.Data.Ticket;
 using Erazer.Read.Data.Ticket.Detail;
+using Erazer.Read.Data.Ticket.List;
 using Erazer.Syncing.Infrastructure;
 using Erazer.Syncing.Models;
 using Microsoft.Extensions.Logging;

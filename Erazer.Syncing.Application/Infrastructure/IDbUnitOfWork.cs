@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Erazer.Read.Data.Ticket;
 using Erazer.Read.Data.Ticket.Detail;
+using Erazer.Read.Data.Ticket.List;
 using Erazer.Syncing.Models;
 
 namespace Erazer.Syncing.Infrastructure

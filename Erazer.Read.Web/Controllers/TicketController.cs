@@ -4,7 +4,7 @@ using Erazer.Read.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Erazer.Web.ReadAPI.Controllers
+namespace Erazer.Read.Web.Controllers
 {
     [Route("[controller]")]
     public class TicketController : ControllerBase

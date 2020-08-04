@@ -1,4 +1,4 @@
-﻿namespace Erazer.Read.Data.Ticket.Events
+﻿namespace Erazer.Read.Data.Ticket.Detail.Events
 {
     public class CommentEventDto : TicketEventDto
     {

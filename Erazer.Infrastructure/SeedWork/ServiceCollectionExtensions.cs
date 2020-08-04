@@ -5,7 +5,7 @@ using Erazer.Infrastructure.MongoDb;
 using Erazer.Infrastructure.ReadStore.ClassMaps;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Erazer.Web.Shared.Extensions
+namespace Erazer.Infrastructure.SeedWork
 {
     public static class ServiceCollectionExtensions
     {

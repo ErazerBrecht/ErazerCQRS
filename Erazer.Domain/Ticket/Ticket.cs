@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Erazer.Domain.Constants;
 using Erazer.Domain.Files;
+using Erazer.Domain.Ticket.Constants;
 using Erazer.Domain.Ticket.Events;
 using Erazer.Framework.Domain;
 

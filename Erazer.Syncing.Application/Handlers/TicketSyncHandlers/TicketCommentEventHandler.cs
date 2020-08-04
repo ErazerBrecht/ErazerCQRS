@@ -7,7 +7,7 @@ using Erazer.Domain.Ticket.Events;
 using Erazer.Framework.Events;
 using Erazer.Framework.Events.Envelope;
 using Erazer.Read.Data.Ticket.Detail;
-using Erazer.Read.Data.Ticket.Events;
+using Erazer.Read.Data.Ticket.Detail.Events;
 using Erazer.Read.ViewModels.Ticket.Events;
 using Erazer.Syncing.Infrastructure;
 using Erazer.Syncing.Models;

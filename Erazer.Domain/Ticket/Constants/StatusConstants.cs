@@ -1,4 +1,4 @@
-﻿namespace Erazer.Domain.Constants
+﻿namespace Erazer.Domain.Ticket.Constants
 {
     public static class StatusConstants
     {
