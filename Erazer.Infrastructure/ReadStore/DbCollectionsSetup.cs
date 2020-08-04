@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Reflection;
-using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Read.Data.Ticket;
 using Erazer.Read.Data.Ticket.Detail;
-using Erazer.Read.Data.Ticket.Events;
 using Erazer.Syncing.Models;
 using Microsoft.Extensions.DependencyInjection;
 

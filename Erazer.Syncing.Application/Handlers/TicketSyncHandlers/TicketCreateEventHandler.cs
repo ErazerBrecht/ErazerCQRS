@@ -14,7 +14,6 @@ using Erazer.Read.Data.Ticket;
 using Erazer.Read.Data.Ticket.Detail;
 using Erazer.Read.Data.Ticket.Events;
 using Erazer.Read.ViewModels.Ticket;
-using Erazer.Read.ViewModels.Ticket.Events;
 using Erazer.Syncing.Infrastructure;
 using Erazer.Syncing.Models;
 using Erazer.Syncing.SeedWork;

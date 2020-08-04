@@ -1,5 +1,4 @@
 ﻿using Erazer.Read.Application.Infrastructure;
-using Erazer.Syncing.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Erazer.Infrastructure.ReadStore

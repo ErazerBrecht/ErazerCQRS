@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using Erazer.Infrastructure.EventStore.Subscription;
-using Erazer.Read.Data.Ticket;
-using Erazer.Read.Data.Ticket.Events;
 
 namespace Erazer.Infrastructure.MongoDb
 {

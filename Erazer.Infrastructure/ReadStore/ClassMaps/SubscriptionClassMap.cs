@@ -1,5 +1,4 @@
-﻿using Erazer.Infrastructure.EventStore.Subscription;
-using Erazer.Infrastructure.MongoDb;
+﻿using Erazer.Infrastructure.MongoDb;
 using Erazer.Syncing.Models;
 using MongoDB.Bson.Serialization;
 

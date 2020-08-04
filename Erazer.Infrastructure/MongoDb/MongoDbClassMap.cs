@@ -1,5 +1,4 @@
-﻿using Erazer.Framework.DTO;
-using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson.Serialization;
 
 namespace Erazer.Infrastructure.MongoDb
 {

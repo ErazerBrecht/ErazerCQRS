@@ -1,16 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Erazer.Infrastructure.EventStore;
-using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.MongoDb;
 using Erazer.Infrastructure.ReadStore;
 using Erazer.Migrations.Migrations;
 using Erazer.Migrations.Seeding;
 using Erazer.Read.Data.Ticket;
-using Erazer.Read.Data.Ticket.Events;
 using FluentMigrator.Runner;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

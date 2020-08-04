@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Erazer.Read.Application.Infrastructure;
-using Erazer.Read.Data.Ticket;
 using Erazer.Read.Data.Ticket.Detail;
 using Erazer.Read.ViewModels.Ticket;
 using MediatR;

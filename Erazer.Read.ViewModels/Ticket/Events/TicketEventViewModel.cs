@@ -1,5 +1,4 @@
-﻿using System;
-using Erazer.Read.ViewModels.Ticket.Events.Enums;
+﻿using Erazer.Read.ViewModels.Ticket.Events.Enums;
 
 namespace Erazer.Read.ViewModels.Ticket.Events
 {

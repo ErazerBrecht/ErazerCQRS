@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Erazer.Framework.DTO;
 using Erazer.Read.Application.Infrastructure;
-using Erazer.Read.Data;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 

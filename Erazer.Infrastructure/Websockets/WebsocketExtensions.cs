@@ -1,6 +1,4 @@
 ﻿using Erazer.Syncing.Infrastructure;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Erazer.Infrastructure.Websockets

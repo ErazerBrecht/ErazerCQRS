@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Erazer.Infrastructure.EventStore.Subscription;
 using Erazer.Infrastructure.MongoDb;
 using Erazer.Read.Data.Ticket;
 using Erazer.Read.Data.Ticket.Detail;
-using Erazer.Read.Data.Ticket.Events;
 using Erazer.Syncing.Infrastructure;
 using Erazer.Syncing.Models;
 using Microsoft.Extensions.Logging;

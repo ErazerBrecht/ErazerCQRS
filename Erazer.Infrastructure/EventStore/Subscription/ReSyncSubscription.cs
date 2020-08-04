@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Erazer.Framework.Events;
 using Erazer.Framework.Events.Envelope;
 using Erazer.Infrastructure.Logging;
-using Erazer.Infrastructure.ReadStore;
 using Erazer.Read.Application.Infrastructure;
 using Erazer.Syncing.Infrastructure;
 using Erazer.Syncing.Models;

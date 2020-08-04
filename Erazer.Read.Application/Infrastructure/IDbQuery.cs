@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Erazer.Framework.DTO;
-using Erazer.Read.Data;
 
 namespace Erazer.Read.Application.Infrastructure
 {

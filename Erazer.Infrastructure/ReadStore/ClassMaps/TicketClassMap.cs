@@ -1,5 +1,4 @@
 ﻿using Erazer.Infrastructure.MongoDb;
-using Erazer.Read.Data.Ticket;
 using Erazer.Read.Data.Ticket.Detail;
 using MongoDB.Bson.Serialization;
 

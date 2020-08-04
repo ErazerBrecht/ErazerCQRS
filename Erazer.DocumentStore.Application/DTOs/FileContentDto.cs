@@ -1,5 +1,4 @@
-﻿using System;
-using Erazer.Framework.DTO;
+﻿using Erazer.Framework.DTO;
 
 namespace Erazer.DocumentStore.Application.DTOs
 {
