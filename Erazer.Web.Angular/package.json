@@ -6,10 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e",
-    "analyze": "ng build --prod --stats-json && webpack-bundle-analyzer dist/stats.json"
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -32,7 +29,7 @@
     "filepond-plugin-image-crop": "^1.0.2",
     "filepond-plugin-image-preview": "^1.0.10",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.2.1",
+    "jquery": "^3.5.1",
     "moment": "^2.18.1",
     "ngx-filepond": "^2.0.5",
     "rxjs": "^6.2.0",
@@ -47,18 +44,7 @@
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
-    "codelyzer": "~4.2.1",
-    "jasmine-core": "~2.99.1",
-    "jasmine-spec-reporter": "~4.2.1",
-    "karma": "~1.7.1",
-    "karma-chrome-launcher": "~2.2.0",
-    "karma-coverage-istanbul-reporter": "~2.0.0",
-    "karma-jasmine": "~1.1.1",
-    "karma-jasmine-html-reporter": "^0.2.2",
-    "protractor": "~5.3.0",
-    "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
-    "typescript": "~2.7.2",
-    "webpack-bundle-analyzer": "^2.13.1"
+    "typescript": "~2.7.2"
   }
 }
