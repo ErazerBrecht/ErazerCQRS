@@ -1,12 +1,13 @@
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { State } from '../../redux/state/state';
 import * as TicketDetailSelectors from '../../redux/selectors/ticketDetail.selector';
 
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TicketDetail } from '../../entities/read/ticketDetail';
 import { DetailTicketService } from './detail-ticket.service';
+import { CommentBoxComponent } from '../../components/comment-box/comment-box.component';
 
 @Component({
   selector: 'app-detail-ticket',
@@ -16,19 +17,22 @@ import { DetailTicketService } from './detail-ticket.service';
 export class DetailTicketComponent {
   id: string = this.route.snapshot.params['id'];
   ticket$: Observable<TicketDetail> = this.store.select(TicketDetailSelectors.getTicketDetail(this.id));
+  
+  @ViewChild(CommentBoxComponent) commentBox: CommentBoxComponent;
 
   constructor(private route: ActivatedRoute, private store: Store<State>, private httpService: DetailTicketService) {
   }
 
-  onCommentAdded(comment: string) {
-    this.httpService.addComment(this.id, comment).subscribe();
+  async onCommentAdded(comment: string) {
+    await this.httpService.addComment(this.id, comment);
+    this.commentBox.reset();
   }
 
-  onPriorityChanged(priorityId: string) {
-    this.httpService.updatePriority(this.id, priorityId).subscribe();
+  async onPriorityChanged(priorityId: string) {
+    await this.httpService.updatePriority(this.id, priorityId);
   }
 
-  onStatusChanged(statusId: string) {
-    this.httpService.updateStatus(this.id, statusId).subscribe();
+  async onStatusChanged(statusId: string) {
+    await this.httpService.updateStatus(this.id, statusId);
   }
 }

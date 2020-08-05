@@ -1,11 +1,11 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CreateTicket } from '../../entities/write/createTicket';
 import { CreateTicketService } from './create-ticket.service';
 import { PriorityValues } from '../../configuration/priorityConstants';
 import { State } from '../../redux/state/state';
 import * as TicketDetailSelectors from "../../redux/selectors/ticketDetail.selector";
-import { Subscription, Observable, pipe } from 'rxjs';
+import { Observable } from 'rxjs';
 import { take, tap, mergeMap, map, startWith } from 'rxjs/operators';
 import { TicketCreateModalComponent } from '../../components/ticket-create-modal/ticket-create-modal.component';
 import { Router } from '@angular/router';
@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./create-ticket.component.css']
 })
 export class CreateTicketComponent {
-  @ViewChild('modal', { static: true }) modal: TicketCreateModalComponent;
+  @ViewChild('modal') modal: TicketCreateModalComponent;
 
   today = new Date();
   priorityValues = PriorityValues;

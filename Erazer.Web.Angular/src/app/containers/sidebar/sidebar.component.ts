@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../redux/state/appState';
 import { State } from '../../redux/state/state';
 import { ToggleSidebar } from '../../redux/actions/sidebar';
 
@@ -20,5 +19,4 @@ export class SidebarComponent implements OnInit {
   toggle() {
     this.store.dispatch(new ToggleSidebar());
   }
-
 }

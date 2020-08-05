@@ -6,11 +6,8 @@ import { Ticket } from "./entities/read/ticket";
 import { AllTicketsService } from './containers/all-tickets/all-tickets.service'
 import { State } from "./redux/state/state";
 import { SetAllTickets } from "./redux/actions/ticket";
-import { AddTicketDetails } from "./redux/actions/ticketDetail";
 
 import { RealTime } from "./common/realtime";
-import { TicketDetail } from "./entities/read/ticketDetail";
-import { PriorityEvent } from "./entities/read/events/priorityEvent";
 
 @Component({
   selector: 'app-root',

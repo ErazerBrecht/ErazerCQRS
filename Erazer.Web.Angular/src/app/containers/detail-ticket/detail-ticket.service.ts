@@ -8,19 +8,19 @@ import { TicketDetail } from "../../entities/read/ticketDetail";
 export class DetailTicketService {
     constructor(private http: HttpClient) { }
 
-    get (id: string): Observable<TicketDetail> {
+    get(id: string): Observable<TicketDetail> {
         return this.http.get<TicketDetail>(`${READ_API}/ticket/${id}`);
     }
 
-    updatePriority (ticketId: string, priorityId: string){
-        return this.http.patch(`${WRITE_API}/ticket/priority`, { ticketId, priorityId });
+    updatePriority(ticketId: string, priorityId: string) {
+        return this.http.patch(`${WRITE_API}/ticket/priority`, { ticketId, priorityId }).toPromise();
     }
 
-    updateStatus (ticketId: string, statusId: string){
-        return this.http.patch(`${WRITE_API}/ticket/status`, { ticketId, statusId });
+    updateStatus(ticketId: string, statusId: string) {
+        return this.http.patch(`${WRITE_API}/ticket/status`, { ticketId, statusId }).toPromise();
     }
 
-    addComment (ticketId: string, comment: string){
-        return this.http.patch(`${WRITE_API}/ticket/comment`, { ticketId, comment });
+    addComment(ticketId: string, comment: string) {
+        return this.http.patch(`${WRITE_API}/ticket/comment`, { ticketId, comment }).toPromise();
     }
 }

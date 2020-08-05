@@ -1,7 +1,6 @@
 import { IEvent } from './interfaces/iEvent';
 import { Priority } from "./priority";
 import { Status } from "./status";
-import { Ticket } from './ticket';
 
 export class TicketDetail {
     id: string;
@@ -13,4 +12,5 @@ export class TicketDetail {
     description: string;
     //type: Priority;             // TODO => Create 'Type' entity
     events: Array<IEvent>;
+    files: Array<any> 
 }

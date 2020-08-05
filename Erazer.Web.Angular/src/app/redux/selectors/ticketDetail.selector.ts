@@ -1,4 +1,4 @@
-import { createSelector, createFeatureSelector, State } from '@ngrx/store';
+import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { DataState } from '../state/dataState';
 
 const selectData = createFeatureSelector<DataState>('data');

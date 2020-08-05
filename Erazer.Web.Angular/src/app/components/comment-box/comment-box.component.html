@@ -9,7 +9,7 @@
       <div class="row">
         <form class="col-md-12">
           <form-group-markdown-editor [control]="commentControl"></form-group-markdown-editor>
-          <button (click)="addComment()" [disabled]="!commentControl.valid" class="btn btn-default">Add</button>
+          <button (click)="addComment()" [disabled]="invalid$ | async" class="btn btn-default">Add</button>
         </form>
       </div>
     </div>
